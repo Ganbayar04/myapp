@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const tuluwluguutOrlogoSchema = new mongoose.Schema(
+const TuluwluguutOrlogoSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -27,4 +27,4 @@ const tuluwluguutOrlogoSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("tuluwluguutOrlogo", tuluwluguutOrlogoSchema);
+module.exports = mongoose.model("TuluwluguutOrlogo", TuluwluguutOrlogoSchema);
