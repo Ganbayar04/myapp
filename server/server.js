@@ -14,6 +14,7 @@ app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/dans", dansRouter);
 app.use("/api/dansTurul", dansTurulRouter);
+// Өрх_төсөв
 app.use("/api/tusuw", tusuwRouter);
 
 app.listen(9090, "192.168.100.68", () => {
