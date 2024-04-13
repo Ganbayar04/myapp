@@ -23,10 +23,8 @@ exports.createTuluwluguutOrlogo = async (req, res) => {
 
 exports.getAllTuluwluguutOrlogo = async (req, res) => {
   try {
-    const TuluwluguutOrlogo = await TuluwluguutOrlogo.find().populate(
-      "tusuw_id"
-    );
-    res.status(200).json(TuluwluguutOrlogo);
+    const allOrlogo = await TuluwluguutOrlogo.find().populate("tusuw_id");
+    res.status(200).json(allOrlogo);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -35,16 +33,17 @@ exports.getAllTuluwluguutOrlogo = async (req, res) => {
 
 exports.getTuluwluguutOrlogo = async (req, res) => {
   try {
-    const TuluwluguutOrlogo = await TuluwluguutOrlogo.findById(
-      req.params.id
-    ).populate("tusuw_id");
-    if (!TuluwluguutOrlogo) {
+    const oneOrlogo = await TuluwluguutOrlogo.findById(req.params.id).populate(
+      "tusuw_id"
+    );
+    if (!oneOrlogo) {
       return res
         .status(404)
         .json({ message: "Уучлаарай! төлөвлөгөөт орлого олдсонгүй." });
     }
-    res.status(200).json(TuluwluguutOrlogo);
+    res.status(200).json(oneOrlogo);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -80,15 +79,15 @@ exports.updateTuluwluguutOrlogo = async (req, res) => {
 
 exports.deleteTuluwluguutOrlogo = async (req, res) => {
   try {
-    const TuluwluguutOrlogo = await TuluwluguutOrlogo.findByIdAndDelete(
+    const deletedOrlogo = await TuluwluguutOrlogo.findByIdAndDelete(
       req.params.id
     );
-    if (!plannedIncome) {
+    if (!deletedOrlogo) {
       return res
         .status(404)
         .json({ message: "Уучлаарай! төлөвлөгөөт орлого олдсонгүй." });
     }
-    res.status(204).json({ message: "Амжилттай устгалаа." });
+    res.status(200).json({ message: "Амжилттай устгалаа." });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
