@@ -20,3 +20,15 @@ exports.createTuluwluguutOrlogo = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+exports.getAllTuluwluguutOrlogo = async (req, res) => {
+  try {
+    const TuluwluguutOrlogo = await TuluwluguutOrlogo.find().populate(
+      "tusuw_id"
+    );
+    res.status(200).json(TuluwluguutOrlogo);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
