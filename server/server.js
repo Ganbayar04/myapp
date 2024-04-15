@@ -1,9 +1,12 @@
 const express = require("express");
 const app = express();
-
+// Админ, хэрэглэгч
 const userRouter = require("../server/router/userRouter.js");
+// Данс
 const dansRouter = require("../server/router/dansRouter.js");
+// Данс_төрөл
 const dansTurulRouter = require("../server/router/dansTurulRouter.js");
+// Өрх_төсөв
 const tusuwRouter = require("../server/router/tusuwRouter.js");
 // Төлөвлөгөөт орлого
 const tuluwluguutOrlogoRouter = require("../server/router/tuluwluguutOrlogoRouter.js");
@@ -11,14 +14,19 @@ const tuluwluguutOrlogoRouter = require("../server/router/tuluwluguutOrlogoRoute
 const tuluwluguutZarlagaRouter = require("../server/router/tuluwluguutZarlagaRouter.js");
 // Орлого_төрөл
 const orlogoTurulRouter = require("../server/router/orlogoTurulRouter.js");
+// Зарлага_төрөл
+const zarlagaTurulRouter = require("../server/router/zarlagaTurulRouter.js");
 
 require("dotenv").config({ path: "../server/config/.env" });
 require("../server/config/db.js");
 
 app.use(express.json());
 
+// Админ, хэрэглэгч
 app.use("/api/users", userRouter);
+// Данс
 app.use("/api/dans", dansRouter);
+// Данс_төрөл
 app.use("/api/dansTurul", dansTurulRouter);
 // Өрх_төсөв
 app.use("/api/tusuw", tusuwRouter);
@@ -28,6 +36,8 @@ app.use("/api/tuluw", tuluwluguutOrlogoRouter);
 app.use("/api/tZarlaga", tuluwluguutZarlagaRouter);
 // Орлого_төрөл
 app.use("/api/oTurul", orlogoTurulRouter);
+// Зарлага_төрөл
+app.use("/api/zTurul", zarlagaTurulRouter);
 
 app.listen(9090, "192.168.1.229", () => {
   console.log("port is listening");
