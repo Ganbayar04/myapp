@@ -18,6 +18,8 @@ const orlogoTurulRouter = require("../server/router/orlogoTurulRouter.js");
 const zarlagaTurulRouter = require("../server/router/zarlagaTurulRouter.js");
 // Орлого
 const orlogoRouter = require("../server/router/orlogoRouter.js");
+// Зарлага
+const zarlagaRouter = require("../server/router/zarlagaRouter.js");
 
 require("dotenv").config({ path: "../server/config/.env" });
 require("../server/config/db.js");
@@ -42,6 +44,8 @@ app.use("/api/oTurul", orlogoTurulRouter);
 app.use("/api/zTurul", zarlagaTurulRouter);
 // Орлого
 app.use("/api/orlogo", orlogoRouter);
+// Зарлага
+app.use("/api/zarlaga", zarlagaRouter);
 
 app.listen(9090, "192.168.1.229", () => {
   console.log("port is listening");
