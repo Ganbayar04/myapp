@@ -1,5 +1,5 @@
 const express = require("express");
-const router = require.Router();
+const router = express.Router();
 const orlogoController = require("../controller/orlogoController.js");
 
 router.post("/", orlogoController.createOrlogo);

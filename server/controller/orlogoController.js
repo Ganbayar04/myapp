@@ -33,17 +33,13 @@ exports.getAllOrlogo = async (req, res) => {
 
 exports.getOrlogo = async (req, res) => {
   try {
-    const Orlogo = await Orlogo.findById(req.params.id).populate(
-      "dans_id",
-      "orlogo_turul_id",
-      "t_orlogo_id"
-    );
-    if (!Orlogo) {
+    const orlogo = await Orlogo.findById(req.params.id);
+    if (!orlogo) {
       return res.status(404).json({
         message: "Уучлаарай тухайн ID - тай орлого олдсонгүй!...",
       });
     }
-    res.status(200).json(Orlogo);
+    res.status(200).json(orlogo);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -68,9 +64,9 @@ exports.updateOrlogo = async (req, res) => {
 
 exports.deleteOrlogo = async (req, res) => {
   try {
-    const Orlogo = await Orlogo.findByIdAndDelete(req.params.id);
+    const orlogo = await Orlogo.findByIdAndDelete(req.params.id);
     console.log("Орлого амжилттай устгалаа.");
-    if (!Orlogo) {
+    if (!orlogo) {
       return res
         .status(404)
         .json({ message: "Уучлаарай тухайн ID - тай орлого олдсонгүй!..." });
