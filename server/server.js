@@ -6,6 +6,7 @@ const dansRouter = require("../server/router/dansRouter.js");
 const dansTurulRouter = require("../server/router/dansTurulRouter.js");
 const tusuwRouter = require("../server/router/tusuwRouter.js");
 const tuluwluguutOrlogoRouter = require("../server/router/tuluwluguutOrlogoRouter.js");
+const tuluwluguutZarlagaRouter = require("../server/router/tuluwluguutZarlagaRouter.js");
 
 require("dotenv").config({ path: "../server/config/.env" });
 require("../server/config/db.js");
@@ -19,6 +20,8 @@ app.use("/api/dansTurul", dansTurulRouter);
 app.use("/api/tusuw", tusuwRouter);
 // Төлөвлөгөөт орлого
 app.use("/api/tuluw", tuluwluguutOrlogoRouter);
+// Төлөвлөгөөт зарлага
+app.use("/api/tZarlaga", tuluwluguutZarlagaRouter);
 
 app.listen(9090, "192.168.1.229", () => {
   console.log("port is listening");
