@@ -20,6 +20,6 @@ app.use("/api/tusuw", tusuwRouter);
 // Төлөвлөгөөт орлого
 app.use("/api/tuluw", tuluwluguutOrlogoRouter);
 
-app.listen(9090, "192.168.100.68", () => {
+app.listen(9090, "192.168.1.229", () => {
   console.log("port is listening");
 });
