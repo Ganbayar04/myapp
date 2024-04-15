@@ -31,7 +31,7 @@ exports.getAllTuluwluguutZarlaga = async (req, res) => {
   }
 };
 
-exports.getAllTuluwluguutZarlaga = async (req, res) => {
+exports.getTuluwluguutZarlaga = async (req, res) => {
   try {
     const oneZarlaga = await TuluwluguutZarlaga.findById(
       req.params.id
