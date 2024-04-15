@@ -33,7 +33,7 @@ exports.getZarlagaTurul = async (req, res) => {
     if (!oneZturul) {
       return res
         .status(404)
-        .json({ message: "Уучлаарай! орлогын төрөл олдсонгүй." });
+        .json({ message: "Уучлаарай! зарлагын төрөл олдсонгүй." });
     }
     res.status(200).json(oneZturul);
   } catch (error) {
@@ -55,7 +55,7 @@ exports.updateZarlagaTurul = async (req, res) => {
         .json({ message: "Уучлаарай! зарлагын төрөл олдсонгүй." });
     }
     res.status(200).json({
-      message: "Зарлагын төрлийн мэдээлэл амжилттай солигдлоо.",
+      message: "Зарлага төрлийн мэдээлэл амжилттай солигдлоо.",
       data: {
         id: updatedZarlagaTurul._id,
         name: updatedZarlagaTurul.name,
