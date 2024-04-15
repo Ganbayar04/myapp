@@ -3,9 +3,9 @@ const Zarlaga = require("../models/zarlagaModel.js");
 exports.createZarlaga = async (req, res) => {
   try {
     const newZarlaga = await Zarlaga.create(req.body);
-    console.log("Орлого амжилттай үүсгэлээ.");
+    console.log("Зарлага амжилттай үүсгэлээ.");
     res.status(201).json({
-      message: "Орлого амжилттай үүсгэлээ.",
+      message: "Зарлага амжилттай үүсгэлээ.",
       data: {
         id: newZarlaga._id,
         name: newZarlaga.name,
@@ -36,7 +36,7 @@ exports.getZarlaga = async (req, res) => {
     const zarlaga = await Zarlaga.findById(req.params.id);
     if (!zarlaga) {
       return res.status(404).json({
-        message: "Уучлаарай тухайн ID - тай орлого олдсонгүй!...",
+        message: "Уучлаарай тухайн ID - тай зарлага олдсонгүй!...",
       });
     }
     res.status(200).json(zarlaga);
@@ -55,6 +55,11 @@ exports.updateZarlaga = async (req, res) => {
         new: true,
       }
     );
+    if (!zarlaga) {
+      return res
+        .status(404)
+        .json({ message: "Уучлаарай тухайн ID - тай зарлага олдсонгүй!..." });
+    }
     res.status(200).json(updatedZarlaga);
   } catch (error) {
     console.log(error);
@@ -64,14 +69,14 @@ exports.updateZarlaga = async (req, res) => {
 
 exports.deleteZarlaga = async (req, res) => {
   try {
-    const zarlaga = await Orlogo.findByIdAndDelete(req.params.id);
-    console.log("Орлого амжилттай устгалаа.");
+    const zarlaga = await Zarlaga.findByIdAndDelete(req.params.id);
+    console.log("Зарлага амжилттай устгалаа.");
     if (!zarlaga) {
       return res
         .status(404)
-        .json({ message: "Уучлаарай тухайн ID - тай орлого олдсонгүй!..." });
+        .json({ message: "Уучлаарай тухайн ID - тай зарлага олдсонгүй!..." });
     }
-    res.status(200).json({ message: "Орлого амжилттай устгалаа..." });
+    res.status(200).json({ message: "Зарлага амжилттай устгалаа..." });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
