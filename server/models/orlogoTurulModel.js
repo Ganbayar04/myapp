@@ -6,7 +6,7 @@ const orlogoTurulModel = new mongoose.Schema(
       type: String,
     },
   },
-  { timeseries: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("OrlogoTurul", orlogoTurulModel);
