@@ -35,7 +35,7 @@ exports.getOrlogoTurul = async (req, res) => {
         .status(404)
         .json({ message: "Уучлаарай! орлогын төрөл олдсонгүй." });
     }
-    res.status(200).json(oneOrlogo);
+    res.status(200).json(oneOturul);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
