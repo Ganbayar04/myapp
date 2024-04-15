@@ -84,7 +84,7 @@ exports.deleteTuluwluguutZarlaga = async (req, res) => {
     if (!deletedZarlaga) {
       return res
         .status(404)
-        .json({ message: "Уучлаарай! төлөвлөгөөт орлого олдсонгүй." });
+        .json({ message: "Уучлаарай! төлөвлөгөөт зарлага олдсонгүй." });
     }
     res.status(200).json({ message: "Амжилттай устгалаа." });
   } catch (error) {
