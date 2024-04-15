@@ -5,11 +5,11 @@ exports.createTuluwluguutZarlaga = async (req, res) => {
     const newTuluwluguutZarlaga = await TuluwluguutZarlaga.create(req.body);
     console.log(" Төлөвлөгөөт зарлага амжилттай үүсгэлээ.");
     res.status(201).json({
-      message: "Төлөвлөгөөт орлого амжилттай үүсгэлээ.",
+      message: "Төлөвлөгөөт зарлага амжилттай үүсгэлээ.",
       data: {
         id: newTuluwluguutZarlaga._id,
         name: newTuluwluguutZarlaga.name,
-        tailbar: ewTunewTuluwluguutZarlaga.tailbar,
+        tailbar: newTuluwluguutZarlaga.tailbar,
         dun: newTuluwluguutZarlaga.dun,
         tusuw_id: newTuluwluguutZarlaga.tusuw_id,
         guitsetgel: newTuluwluguutZarlaga.guitsetgel,
