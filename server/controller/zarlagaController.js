@@ -55,7 +55,7 @@ exports.updateZarlaga = async (req, res) => {
         new: true,
       }
     );
-    if (!zarlaga) {
+    if (!updatedZarlaga) {
       return res
         .status(404)
         .json({ message: "Уучлаарай тухайн ID - тай зарлага олдсонгүй!..." });
