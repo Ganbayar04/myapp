@@ -1,22 +1,34 @@
-import React from 'react';
-import {StatusBar, Text, View,StyleSheet} from 'react-native';
-import Navigation from './components/Navigation';
-import {AuthProvider} from './context/AuthContext';
-const App = () => {
-  return (
-    <AuthProvider>
-      <StatusBar backgroundColor="#06bcee" />
-      <Navigation />
-    </AuthProvider>
-  );
-};
+import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet, Text, View } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import HomeScreen from "./screens/HomeScreen";
+import AdminScreen from "./screens/AdminScreen";
 
-export default App;
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Admin" component={AdminScreen} />
+      </Stack.Navigator>
+      <StatusBar style="auto" />
+    </NavigationContainer>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

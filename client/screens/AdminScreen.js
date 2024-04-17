@@ -1,13 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 
-const HomeScreen = ({ route, navigation }) => {
+const AdminScreen = ({ route, navigation }) => {
   const username = route.params?.username || "Guest";
-  console.log("Хэрэглэгчийн нэр:", username);
+  console.log("Админ хуудсанд нэвтэрсэн хэрэглэгчийн нэр:", username);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Тавтай морил, хэрэглэгчийн хуудас:  {username}!</Text>
+      <Text style={styles.text}>Админ хуудсанд тавтай морил, {username}!</Text>
       <Button title="Гарах" onPress={() => navigation.replace("Login")} />
     </View>
   );
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default AdminScreen;
