@@ -27,6 +27,18 @@ cd client (Frontend)
 - Admin нууц үг : admin123
 - user нууц үг : 12345678
 
+# Frontend тохиргоо
+# Татах сан
+- expo install @react-navigation/native react-native-screens react-native-safe-area-context
+  expo install @react-navigation/native-stack
+# Axios - ийг татах
+- npm i axios
+
+# congif.js дээр хэрэглэж буй IP хаягаа тохируулах
+- Жишээ : "baseURL: "http:/Ашиглаж буй IP хаяг/:9090/api","
+
+# Backend тохиргоо ->
+
 # Хамааралтай сангуудыг суулгах
 npm install
 - express
@@ -36,6 +48,11 @@ npm install
 - jsonwebtoken
 - mongoose
 - path
+
+# Server.js дээр дээр хэрэглэж буй IP хаягаа тохируулах
+- Жишээ : "app.listen(9090, "Ашиглаж буй IP хаяг", () => {
+  console.log("port is listening");
+});"
 
 # Сервер асаах
 npm start
