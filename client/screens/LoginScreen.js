@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image } from "react-native";
+import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
 import API from "../config.js";
 import CustomButton from "../styles/customButton1.js";
 
@@ -7,6 +7,7 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDarkmode, setIsDarkmode] = useState(false); // State for theme
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -32,15 +33,19 @@ const LoginScreen = ({ navigation }) => {
 
   const welcomeImage = require("../assets/urkhiintusuv.png");
 
+  const toggleTheme = () => {
+    setIsDarkmode(!isDarkmode); // Toggle theme
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
       <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
       
       <TextInput
         placeholder="Email Address"
         value={email}
         onChangeText={setEmail}
-        style={styles.input}
+        style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -48,7 +53,7 @@ const LoginScreen = ({ navigation }) => {
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
-        style={styles.input}
+        style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
         secureTextEntry
       />
       {isLoading ? (
@@ -57,8 +62,18 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <CustomButton title="Login" onPress={handleLogin} />
           <CustomButton title="Register" onPress={() => navigation.navigate("Register")} />
+          <CustomButton title="ForgetPassword"  onPress={() => {
+                  navigation.navigate("ForgetPassword");
+                }} />
         </View>
       )}
+      
+      {/* Theme toggle button */}
+      <TouchableOpacity onPress={toggleTheme} style={styles.themeToggle}>
+        <Text style={styles.themeToggleText}>
+          {isDarkmode ? "☀️ Light Theme" : "🌑 Dark Theme"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -69,6 +84,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+  },
+  darkModeContainer: {
+    backgroundColor: "#000", // Dark mode background color
   },
   input: {
     height: 40,
@@ -81,6 +99,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#fff",
   },
+  darkModeInput: {
+    backgroundColor: "#333", // Dark mode input background color
+    color: "#fff", // Dark mode text color
+  },
   welcomeImage: {
     width: "100%",
     height: 200,
@@ -89,6 +111,15 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row", // Arrange children horizontally
     justifyContent: "space-around", // Evenly distribute space between children
+    marginBottom: 20,
+  },
+  themeToggle: {
+    position: "absolute",
+    bottom: 20,
+  },
+  themeToggleText: {
+    fontSize: 16,
+    color: "#000fff", // Theme toggle button color
   },
 });
 

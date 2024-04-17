@@ -47,10 +47,8 @@ app.use("/api/orlogo", orlogoRouter);
 // Зарлага
 app.use("/api/zarlaga", zarlagaRouter);
 
-<<<<<<< HEAD
-app.listen(9090, " 10.50.1.92", () => {
-=======
-app.listen(9090, "10.150.35.148", () => {
->>>>>>> b1022cb6764759fe9c421c0cf5c4ef5f1b502fbb
+
+app.listen(9090, "192.168.1.5", () => {
+
   console.log("port is listening");
 });
