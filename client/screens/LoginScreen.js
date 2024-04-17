@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image } from "react-native";
 import API from "../config.js";
+import CustomButton from "../styles/customButton1.js";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -21,7 +15,7 @@ const LoginScreen = ({ navigation }) => {
       setIsLoading(false);
       const { username, role } = response.data.data.user;
 
-      // Хэрэглэгчийн role шаогаж Admin screen, User screen - рүү шилжүүлэх
+      // Redirect based on user role
       if (role === "admin") {
         navigation.navigate("Admin", { username: username });
       } else {
@@ -30,16 +24,20 @@ const LoginScreen = ({ navigation }) => {
     } catch (error) {
       setIsLoading(false);
       Alert.alert(
-        "Нэвтрэлт амжилтгүй!...",
-        error.response?.data.message || "Мэдээллээ шалгаж, дахин оролдоно уу!"
+        "Login Failed",
+        error.response?.data.message || "Please check your credentials and try again."
       );
     }
   };
 
+  const welcomeImage = require("../assets/urkhiintusuv.png");
+
   return (
     <View style={styles.container}>
+      <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
+      
       <TextInput
-        placeholder="И-мэйл хаяг"
+        placeholder="Email Address"
         value={email}
         onChangeText={setEmail}
         style={styles.input}
@@ -47,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
         autoCapitalize="none"
       />
       <TextInput
-        placeholder="Нууц үг"
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
         style={styles.input}
@@ -56,12 +54,9 @@ const LoginScreen = ({ navigation }) => {
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <View>
-          <Button title="Нэвтрэх" onPress={handleLogin} />
-          <Button
-            title="Шинээр бүртгүүлэх"
-            onPress={() => navigation.navigate("Register")}
-          />
+        <View style={styles.buttonContainer}>
+          <CustomButton title="Login" onPress={handleLogin} />
+          <CustomButton title="Register" onPress={() => navigation.navigate("Register")} />
         </View>
       )}
     </View>
@@ -72,13 +67,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 10,
+    alignItems: "center",
+    padding: 20,
   },
   input: {
     height: 40,
-    margin: 12,
+    width: "80%",
+    marginBottom: 20,
     borderWidth: 1,
-    padding: 10,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    backgroundColor: "#fff",
+  },
+  welcomeImage: {
+    width: "100%",
+    height: 200,
+    marginBottom: 100,
+  },
+  buttonContainer: {
+    flexDirection: "row", // Arrange children horizontally
+    justifyContent: "space-around", // Evenly distribute space between children
   },
 });
 
