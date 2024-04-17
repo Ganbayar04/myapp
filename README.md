@@ -23,6 +23,10 @@ git clone https://github.com/Ganbayar04/myapp.git
 cd server (Backend)
 cd client (Frontend)
 
+# Бүртгэлтэй хэрэглэгчдийн нууц үг
+- Admin нууц үг : admin123
+- user нууц үг : 12345678
+
 # Хамааралтай сангуудыг суулгах
 npm install
 - express
