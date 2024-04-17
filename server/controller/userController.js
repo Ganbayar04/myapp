@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 exports.createUser = async (req, res) => {
   try {
     const newUser = await User.create(req.body);
+
     console.log("Хэрэглэгчийг амжилттай бүртгэлээ");
     res.status(201).json({
       message: "Хэрэглэгч амжилттай бүртгүүллээ",
@@ -13,7 +14,6 @@ exports.createUser = async (req, res) => {
         id: newUser._id,
         username: newUser.username,
         email: newUser.email,
-        password: newUser.password,
       },
     });
   } catch (error) {
@@ -32,24 +32,34 @@ exports.loginUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email }).select("+password");
+    // Ensure the 'role' field is also selected here if it's not a default field in user schema
+    const user = await User.findOne({ email }).select("+password +role");
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res
         .status(401)
-        .json({ message: "И-мэйл эсвэл нууц үг буруу байна!..." });
+        .json({ message: "И-мэйл эсвэл нууц үг буруу байна!" });
     }
-    console.log(`Нэвтэрсэн хэрэглэгч: ${user.role}`);
+    console.log(`Нэвтэрсэн хэрэглэгч: ${user.username}, Role: ${user.role}`);
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
+    );
 
+    // Include user role in the response so the client can use it
     res.status(200).json({
       status: "success",
       token,
       data: {
-        user,
+        user: {
+          id: user._id,
+          username: user.username,
+          role: user.role, // Include the role here
+        },
       },
     });
   } catch (error) {
