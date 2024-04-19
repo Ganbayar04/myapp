@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/Homescreen";
 import AdminScreen from "./screens/AdminScreen";
 
 const Stack = createNativeStackNavigator();
@@ -13,6 +13,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
+   
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
@@ -23,6 +24,7 @@ export default function App() {
     </NavigationContainer>
   );
 }
+    
 
 const styles = StyleSheet.create({
   container: {

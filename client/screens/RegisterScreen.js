@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
 import API from "../config.js";
+import CustomButton from "../styles/customButton.js";
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -15,16 +9,12 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDarkmode, setIsDarkmode] = useState(false);
 
   const handleRegister = async () => {
     setIsLoading(true);
     try {
-      const response = await API.post("/users/create", {
-        username,
-        email,
-        password,
-        role,
-      });
+      const response = await API.post("/users/create", { username, email, password, role });
       Alert.alert("Бүртгэл амжилттай", "Та нэвтэрч орно уу!.");
       setIsLoading(false);
       navigation.navigate("Login");
@@ -32,12 +22,53 @@ const RegisterScreen = ({ navigation }) => {
       console.log(error.response?.data);
       Alert.alert(
         "Бүртгэл амжилтгүй боллоо!",
-        error.response?.data.message ||
-          "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
+        error.response?.data.message || "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
       );
       setIsLoading(false);
     }
   };
+
+  const welcomeImage = require("../assets/urkhiintusuv.png");
+
+  const toggleTheme = () => {
+    setIsDarkmode(!isDarkmode); // Toggle theme
+  };
+
+  // Define dynamic styles based on dark mode state
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      padding: 10,
+      backgroundColor: isDarkmode ? "#333" : "#fff",
+    },
+    input: {
+      height: 40,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+      backgroundColor: isDarkmode ? "#555" : "#eee",
+      color: isDarkmode ? "#fff" : "#000",
+    },
+    welcomeImage: {
+      width: "100%",
+      height: 200,
+      marginBottom: 20,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+    },
+    themeToggle: {
+      position: "absolute",
+      top: 20, // Adjust top position to move the button down from the top
+      right: 20, // Adjust right position to move the button from the right
+    },
+    themeToggleText: {
+      fontSize: 16,
+      color: "#0000ff",
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -45,6 +76,8 @@ const RegisterScreen = ({ navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
+          <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
+          
           <TextInput
             placeholder="Хэрэглэгчийн нэр"
             value={username}
@@ -71,26 +104,19 @@ const RegisterScreen = ({ navigation }) => {
             onChangeText={setRole}
             style={styles.input}
           />
-          <Button title="Бүртгүүлэх" onPress={handleRegister} />
-          <Button title="Буцах" onPress={() => navigation.navigate("Login")} />
+          <View style={styles.buttonContainer}>
+            <CustomButton title="Бүртгүүлэх" onPress={handleRegister} />
+            <CustomButton title="Буцах" onPress={() => navigation.navigate("Login")} />
+          </View>
         </>
       )}
+      <TouchableOpacity onPress={toggleTheme} style={styles.themeToggle}>
+        <Text style={styles.themeToggleText}>
+          {isDarkmode ? "☀️ Light Theme" : "🌑 Dark Theme"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 10,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-});
 
 export default RegisterScreen;
