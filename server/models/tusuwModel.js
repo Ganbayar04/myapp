@@ -17,8 +17,13 @@ const tusuwSchema = new mongoose.Schema(
     tuluw: {
       type: String,
       required: true,
-      enum: ["Pending", "Completed"],
+      enum: ["Pending", "Completed", "odoo"],
       default: "Pending",
+    },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true }

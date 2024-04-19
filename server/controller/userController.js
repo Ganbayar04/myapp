@@ -12,7 +12,6 @@ exports.createUser = async (req, res) => {
       message: "Хэрэглэгч амжилттай бүртгүүллээ",
       data: {
         id: newUser._id,
-        username: newUser.username,
         email: newUser.email,
       },
     });
@@ -40,7 +39,7 @@ exports.loginUser = async (req, res) => {
         .status(401)
         .json({ message: "И-мэйл эсвэл нууц үг буруу байна!" });
     }
-    console.log(`Нэвтэрсэн хэрэглэгч: ${user.username}, Role: ${user.role}`);
+    console.log(`Нэвтэрсэн хэрэглэгч: ${user.email}, Role: ${user.role}`);
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -57,7 +56,7 @@ exports.loginUser = async (req, res) => {
       data: {
         user: {
           id: user._id,
-          username: user.username,
+          username: user.email,
           role: user.role, // Include the role here
         },
       },
@@ -132,7 +131,7 @@ exports.deleteUser = async (req, res) => {
 
     await user.deleteOne();
     console.log(
-      `ID: ${user._id} username: (${user.username}) амжилттай устгалаа!...`
+      `ID: ${user._id} useremail: (${user.email}) амжилттай устгалаа!...`
     );
     return res
       .status(200)

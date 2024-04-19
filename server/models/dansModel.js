@@ -24,6 +24,11 @@ const dansSchema = new mongoose.Schema({
     enum: ["Active", "Inactive"],
     default: "Active",
   },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Dans", dansSchema);
