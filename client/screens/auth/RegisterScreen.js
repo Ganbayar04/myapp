@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
-import API from "../config.js";
-import CustomButton from "../styles/customButton.js";
+import API from "../../config.js";
+import CustomButton from "../../styles/customButton.js";
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -28,7 +28,7 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const welcomeImage = require("../assets/urkhiintusuv.png");
+  const welcomeImage = require("../../assets/urkhiintusuv.png");
 
   const toggleTheme = () => {
     setIsDarkmode(!isDarkmode); // Toggle theme

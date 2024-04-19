@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const HomeScreen = () => {
+const Tailan = () => {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -39,14 +39,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   themeToggle: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
+    position: "absolute",
+    top: 20, // Adjust top position to move the button down from the top
+    right: 20, // Adjust right position to move the button from the right
   },
   themeToggleText: {
     fontSize: 16,
-    color: "#000000", // Corrected color value
+    color: "#000fff", // Theme toggle button color
   },
 });
 
-export default HomeScreen;
+export default Tailan;

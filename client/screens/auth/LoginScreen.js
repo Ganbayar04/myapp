@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
-import API from "../config.js";
-import CustomButton from "../styles/customButton1.js";
+import API from "../../config.js";
+import CustomButton from "../../styles/customButton1.js";
+import DarkMode from "../../styles/darkMode"; // Corrected import path
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -31,14 +32,15 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const welcomeImage = require("../assets/urkhiintusuv.png");
+  const welcomeImage = require("../../assets/urkhiintusuv.png");
 
   const toggleTheme = () => {
     setIsDarkmode(!isDarkmode); // Toggle theme
   };
 
   return (
-    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
+    <View style={styles.container}>
+    
       <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
       
       <TextInput
@@ -62,10 +64,9 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <CustomButton title="Login" onPress={handleLogin} />
           <CustomButton title="Register" onPress={() => navigation.navigate("Register")} />
-          <CustomButton title="ForgetPassword"  onPress={() => {
-                  navigation.navigate("ForgetPassword");
-                }} />
+   
         </View>
+        
       )}
       
       {/* Theme toggle button */}
@@ -115,7 +116,8 @@ const styles = StyleSheet.create({
   },
   themeToggle: {
     position: "absolute",
-    bottom: 20,
+    top: 20, // Adjust top position to move the button down from the top
+    right: 20, // Adjust right position to move the button from the right
   },
   themeToggleText: {
     fontSize: 16,
