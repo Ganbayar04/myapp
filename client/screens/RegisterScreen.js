@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  Image,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import API from "../config.js";
 import CustomButton from "../styles/customButton.js";
 
 const RegisterScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
@@ -14,7 +22,11 @@ const RegisterScreen = ({ navigation }) => {
   const handleRegister = async () => {
     setIsLoading(true);
     try {
-      const response = await API.post("/users/create", { username, email, password, role });
+      const response = await API.post("/users", {
+        email,
+        password,
+        role,
+      });
       Alert.alert("Бүртгэл амжилттай", "Та нэвтэрч орно уу!.");
       setIsLoading(false);
       navigation.navigate("Login");
@@ -22,7 +34,8 @@ const RegisterScreen = ({ navigation }) => {
       console.log(error.response?.data);
       Alert.alert(
         "Бүртгэл амжилтгүй боллоо!",
-        error.response?.data.message || "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
+        error.response?.data.message ||
+          "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
       );
       setIsLoading(false);
     }
@@ -76,14 +89,12 @@ const RegisterScreen = ({ navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
-          <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
-          
-          <TextInput
-            placeholder="Хэрэглэгчийн нэр"
-            value={username}
-            onChangeText={setUsername}
-            style={styles.input}
+          <Image
+            source={welcomeImage}
+            resizeMode="contain"
+            style={styles.welcomeImage}
           />
+
           <TextInput
             placeholder="И-мэйл"
             value={email}
@@ -106,7 +117,10 @@ const RegisterScreen = ({ navigation }) => {
           />
           <View style={styles.buttonContainer}>
             <CustomButton title="Бүртгүүлэх" onPress={handleRegister} />
-            <CustomButton title="Буцах" onPress={() => navigation.navigate("Login")} />
+            <CustomButton
+              title="Буцах"
+              onPress={() => navigation.navigate("Login")}
+            />
           </View>
         </>
       )}

@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  Image,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import API from "../config.js";
 import CustomButton from "../styles/customButton1.js";
 
@@ -14,9 +23,9 @@ const LoginScreen = ({ navigation }) => {
     try {
       const response = await API.post("/users/login", { email, password });
       setIsLoading(false);
-      const { username, role } = response.data.data.user;
+      const { email, role } = response.data.data.user;
 
-      // Redirect based on user role
+      // Хэрэглэгчийн role шалгаж Admin screen, User screen - рүү шилжүүлэх
       if (role === "admin") {
         navigation.navigate("Admin", { username: username });
       } else {
@@ -25,8 +34,8 @@ const LoginScreen = ({ navigation }) => {
     } catch (error) {
       setIsLoading(false);
       Alert.alert(
-        "Login Failed",
-        error.response?.data.message || "Please check your credentials and try again."
+        "Нэвтрэлт амжилтгүй!...",
+        error.response?.data.message || "Мэдээллээ шалгаж, дахин оролдоно уу!"
       );
     }
   };
@@ -38,22 +47,28 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
-      <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
-      
+    <View
+      style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}
+    >
+      <Image
+        source={welcomeImage}
+        resizeMode="contain"
+        style={styles.welcomeImage}
+      />
+
       <TextInput
-        placeholder="Email Address"
+        placeholder="И-мэйл хаяг"
         value={email}
         onChangeText={setEmail}
-        style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
+        style={styles.input}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       <TextInput
-        placeholder="Password"
+        placeholder="Нууц үг"
         value={password}
         onChangeText={setPassword}
-        style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
+        style={styles.input}
         secureTextEntry
       />
       {isLoading ? (
@@ -61,13 +76,19 @@ const LoginScreen = ({ navigation }) => {
       ) : (
         <View style={styles.buttonContainer}>
           <CustomButton title="Login" onPress={handleLogin} />
-          <CustomButton title="Register" onPress={() => navigation.navigate("Register")} />
-          <CustomButton title="ForgetPassword"  onPress={() => {
-                  navigation.navigate("ForgetPassword");
-                }} />
+          <CustomButton
+            title="Register"
+            onPress={() => navigation.navigate("Register")}
+          />
+          <CustomButton
+            title="ForgetPassword"
+            onPress={() => {
+              navigation.navigate("ForgetPassword");
+            }}
+          />
         </View>
       )}
-      
+
       {/* Theme toggle button */}
       <TouchableOpacity onPress={toggleTheme} style={styles.themeToggle}>
         <Text style={styles.themeToggleText}>
