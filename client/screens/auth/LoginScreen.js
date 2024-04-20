@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton1.js";
-import DarkMode from "../../styles/darkMode"; // Corrected import path
+import DarkMode from "../../styles/darkMode"; 
 
 
 const LoginScreen = ({ navigation }) => {

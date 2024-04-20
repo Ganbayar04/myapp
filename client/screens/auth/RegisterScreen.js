@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton.js";
-import DarkMode from "../../styles/darkMode"; // Corrected import path
+import DarkMode from "../../styles/darkMode"; 
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -79,12 +79,7 @@ const RegisterScreen = ({ navigation }) => {
         <>
           <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
           
-          <TextInput
-            placeholder="Хэрэглэгчийн нэр"
-            value={username}
-            onChangeText={setUsername}
-            style={styles.input}
-          />
+    
           <TextInput
             placeholder="И-мэйл"
             value={email}

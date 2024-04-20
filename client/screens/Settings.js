@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import DarkMode from "../styles/darkMode"; 
 
-const Settings= () => {
+const Settings = () => {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -12,15 +13,11 @@ const Settings= () => {
 
   return (
     <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
-      <View style={styles.navigationContainer}>
-       
-      </View>
+      {/* Add your settings UI components here */}
+      {/* For example, buttons, switches, or any other settings elements */}
 
-      <TouchableOpacity onPress={toggleDarkMode} style={styles.darkModeToggle}>
-        <Text style={styles.darkModeToggleText}>
-          {isDarkMode ? "☀️ Light Theme" : "🌑 Dark Theme"}
-        </Text>
-      </TouchableOpacity>
+      {/* DarkMode component */}
+      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
   );
 };
@@ -39,13 +36,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   themeToggle: {
-    position: "absolute",
-    top: 20, // Adjust top position to move the button down from the top
-    right: 20, // Adjust right position to move the button from the right
+    position: 'absolute',
+    top: 20,
+    right: 20,
   },
   themeToggleText: {
     fontSize: 16,
-    color: "#000fff", // Theme toggle button color
+    color: '#000fff',
   },
 });
 
