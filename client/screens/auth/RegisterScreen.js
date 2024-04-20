@@ -9,8 +9,9 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import API from "../config.js";
-import CustomButton from "../styles/customButton.js";
+import API from "../../config.js";
+import CustomButton from "../../styles/customButton.js";
+import DarkMode from "../../styles/darkMode";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -41,7 +42,7 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const welcomeImage = require("../assets/urkhiintusuv.png");
+  const welcomeImage = require("../../assets/urkhiintusuv.png");
 
   const toggleTheme = () => {
     setIsDarkmode(!isDarkmode); // Toggle theme
@@ -124,11 +125,7 @@ const RegisterScreen = ({ navigation }) => {
           </View>
         </>
       )}
-      <TouchableOpacity onPress={toggleTheme} style={styles.themeToggle}>
-        <Text style={styles.themeToggleText}>
-          {isDarkmode ? "☀️ Light Theme" : "🌑 Dark Theme"}
-        </Text>
-      </TouchableOpacity>
+      <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );
 };

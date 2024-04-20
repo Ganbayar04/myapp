@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DarkMode from "../styles/darkMode"; 
-import Sambar from "./Sambar"
 
-const HomeScreen = () => {
+const Sambar = () => {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -74,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Sambar;
