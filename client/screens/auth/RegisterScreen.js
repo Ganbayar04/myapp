@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton.js";
+import DarkMode from "../../styles/darkMode"; // Corrected import path
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -110,11 +111,7 @@ const RegisterScreen = ({ navigation }) => {
           </View>
         </>
       )}
-      <TouchableOpacity onPress={toggleTheme} style={styles.themeToggle}>
-        <Text style={styles.themeToggleText}>
-          {isDarkmode ? "☀️ Light Theme" : "🌑 Dark Theme"}
-        </Text>
-      </TouchableOpacity>
+      <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );
 };

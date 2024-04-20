@@ -4,6 +4,7 @@ import API from "../../config.js";
 import CustomButton from "../../styles/customButton1.js";
 import DarkMode from "../../styles/darkMode"; // Corrected import path
 
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,8 +40,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-    
+    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
       <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
       
       <TextInput
@@ -70,11 +70,7 @@ const LoginScreen = ({ navigation }) => {
       )}
       
       {/* Theme toggle button */}
-      <TouchableOpacity onPress={toggleTheme} style={styles.themeToggle}>
-        <Text style={styles.themeToggleText}>
-          {isDarkmode ? "☀️ Light Theme" : "🌑 Dark Theme"}
-        </Text>
-      </TouchableOpacity>
+      <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );
 };
@@ -85,9 +81,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: "#fff",
   },
   darkModeContainer: {
-    backgroundColor: "#000", // Dark mode background color
+    backgroundColor: "#000",
   },
   input: {
     height: 40,

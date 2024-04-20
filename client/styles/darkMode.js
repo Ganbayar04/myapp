@@ -1,46 +1,31 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const DarkMode = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
+const DarkMode = ({ isDarkMode, setIsDarkMode }) => {
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
-      <Text style={styles.heading}>Dark Mode Screen</Text>
-      <TouchableOpacity onPress={toggleDarkMode} style={styles.themeToggle}>
-        <Text style={styles.themeToggleText}>
-          {isDarkMode ? "☀️ Light Theme" : "🌑 Dark Theme"}
-        </Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={toggleDarkMode} style={styles.darkModeButton}>
+      <Text style={styles.darkModeButtonText}>
+        {isDarkMode ? "☀️ Light Theme" : "🌑 Dark Theme"}
+      </Text>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  darkModeContainer: {
-    backgroundColor: "#000",
-  },
-  heading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  themeToggle: {
+  darkModeButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    top: 20,
+    right: 10,
+    backgroundColor: "#000",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
   },
-  themeToggleText: {
+  darkModeButtonText: {
     fontSize: 16,
     color: "#fff",
   },
