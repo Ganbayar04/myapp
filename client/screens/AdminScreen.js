@@ -11,12 +11,12 @@ const AdminScreen = () => {
     setIsAdmin(!isAdmin);
   };
 
- const toggleTheme = () => {
+  const toggleTheme = () => {
     setIsDarkmode(!isDarkmode); // Toggle theme
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
       <Text style={styles.title}>Admin Panel</Text>
       <Text style={styles.text}>You are currently {isAdmin ? 'an admin' : 'not an admin'}</Text>
       <Button
@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+  },
+  darkModeContainer: {
+    backgroundColor: '#000',
   },
   title: {
     fontSize: 24,

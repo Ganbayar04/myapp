@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import DarkMode from "../styles/darkMode"; 
+import DarkMode from "../../styles/darkMode"; 
 
 const Account = () => {
   const navigation = useNavigation();
@@ -14,28 +14,24 @@ const Account = () => {
   return (
     <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
       <View style={styles.dashboardContainer}>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Sambar")}>
-          <Text style={styles.dashboardItemText}>Самбар</Text>
+        <TouchableOpacity
+          style={styles.dashboardItem}
+          onPress={() => navigation.navigate("Screen1")}
+        >
+          <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Данс үүсгэх</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Account")}>
-          <Text style={styles.dashboardItemText}>Данс</Text>
+        <TouchableOpacity
+          style={styles.dashboardItem}
+          onPress={() => navigation.navigate("Screen2")}
+        >
+          <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Хаасан данс харах</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Orlogo")}>
-          <Text style={styles.dashboardItemText}>Орлого</Text>
+        <TouchableOpacity
+          style={styles.dashboardItem}
+          onPress={() => navigation.navigate("Screen3")}
+        >
+          <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Тусламж</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Zarlaga")}>
-          <Text style={styles.dashboardItemText}>Зарлага</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Tusuw")}>
-          <Text style={styles.dashboardItemText}>Төсөв</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Dugtui")}>
-          <Text style={styles.dashboardItemText}>Дугтуй</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.dashboardItem} onPress={() => navigation.navigate("Tailan")}>
-          <Text style={styles.dashboardItemText}>Тайлан</Text>
-        </TouchableOpacity>
-        {/* Add more dashboard items as needed */}
       </View>
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
@@ -52,22 +48,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   dashboardContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
     marginTop: 40,
   },
   dashboardItem: {
-    width: '40%',
-    aspectRatio: 1,
-    backgroundColor: '#000bff',
-    margin: 8,
-    justifyContent: 'center',
+    width: '80%',
+    aspectRatio: 4,
+    marginVertical: 8,
+    justifyContent: 'center', 
     alignItems: 'center',
     borderRadius: 10,
+    borderWidth: 0,
+    borderColor: 'black',
   },
   dashboardItemText: {
-    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },

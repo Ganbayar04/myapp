@@ -18,7 +18,7 @@ const DarkMode = ({ isDarkMode, setIsDarkMode }) => {
 const styles = StyleSheet.create({
   darkModeButton: {
     position: "absolute",
-    top: 20,
+    top: 0,
     right: 10,
     backgroundColor: "#000",
     paddingVertical: 10,

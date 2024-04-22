@@ -7,8 +7,8 @@ import LoginScreen from "./screens/auth/LoginScreen";
 import RegisterScreen from "./screens/auth/RegisterScreen";
 import HomeScreen from "./screens/Homescreen";
 import AdminScreen from "./screens/AdminScreen";
-//import Sambar from "./screens/Sambar";
-//import Account from "./screens/dans/Account"; 
+import Sambar from "./screens/Sambar";
+import Account from "./screens/dans/Account"; 
 //import Settings from "./screens/Settings";
 //import Dugtui from "./screens/Dugtui";
 //import Tailan from "./screens/Tailan";
@@ -27,6 +27,8 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Admin" component={AdminScreen} />
+        <Stack.Screen name="Sambar" component={Sambar} />
+        <Stack.Screen name="Account" component={Account} />
         
     
       </Stack.Navigator>
