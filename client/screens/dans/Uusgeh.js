@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DarkMode from "../../styles/darkMode";
-import CustomButton from './CustomButton'; // Import CustomButton component
+import CustomButton from '../../styles/customButton'; // Import CustomButton component
 
 const Uusgeh = () => {
   const navigation = useNavigation();

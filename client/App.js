@@ -10,12 +10,12 @@ import AdminScreen from "./screens/AdminScreen";
 import Sambar from "./screens/Sambar";
 import Account from "./screens/dans/Account";
 //import Settings from "./screens/Settings";
-//import Dugtui from "./screens/Dugtui";
+import Dugtui from "./screens/Dugtui";
 //import Tailan from "./screens/Tailan";
-//import Tusuw from "./screens/Tusuw";
-//import Orlogo from "./screens/Orlogo";
-//import Zarlaga from "./screens/Dugtui";
-//import Burtgeh from "./screens/dans/Burtgeh";
+import Tusuw from "./screens/tusuw/Tusuw";
+import Orlogo from "./screens/Orlogo";
+import Zarlaga from "./screens/Dugtui";
+import Burtgeh from "./screens/dans/Uusgeh";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +29,11 @@ export default function App() {
         <Stack.Screen name="Admin" component={AdminScreen} />
         <Stack.Screen name="Sambar" component={Sambar} />
         <Stack.Screen name="Account" component={Account} />
+        <Stack.Screen name="Dugtui" component={Dugtui} />
+       
+        <Stack.Screen name="Tusuw" component={Tusuw} />
+        <Stack.Screen name="Orlogo" component={Orlogo} />
+        <Stack.Screen name="Zarlaga" component={Zarlaga} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
@@ -46,8 +51,5 @@ const styles = StyleSheet.create({
 /*<Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Sambar" component={Sambar} />
         <Stack.Screen name="Account" component={Account} />
-        <Stack.Screen name="Dugtui" component={Dugtui} />
-        <Stack.Screen name="Tailan" component={Tailan} />
-        <Stack.Screen name="Tusuw" component={Tusuw} />
-        <Stack.Screen name="Orlogo" component={Orlogo} />
-<Stack.Screen name="Zarlaga" component={Zarlaga} />*/
+         <Stack.Screen name="Tailan" component={Tailan} />
+        */

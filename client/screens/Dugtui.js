@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import DarkMode from "../../styles/darkMode"; 
+import DarkMode from "../../client/styles/darkMode"; 
 
 const Dugtui = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);

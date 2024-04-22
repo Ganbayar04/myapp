@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import DarkMode from "../../styles/darkMode"; 
+import DarkMode from "../../client/styles/darkMode"; 
 
 const Orlogo = () => {
   const [utga, setUtga] = useState('');
