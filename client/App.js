@@ -13,8 +13,8 @@ import Account from "./screens/dans/Account";
 import Dugtui from "./screens/Dugtui";
 //import Tailan from "./screens/Tailan";
 import Tusuw from "./screens/tusuw/Tusuw";
-import Orlogo from "./screens/Orlogo";
-import Zarlaga from "./screens/Dugtui";
+import Orlogo from "./screens/orlogo/Orlogo";
+import Zarlaga from "./screens/zarlaga/Zarlaga";
 import Burtgeh from "./screens/dans/Uusgeh";
 
 const Stack = createNativeStackNavigator();

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import DarkMode from "../../client/styles/darkMode"; 
+import DarkMode from "../../styles/darkMode"; 
 
-const Orlogo = () => {
+const Zarlaga = () => {
   const [utga, setUtga] = useState('');
   const [torol, setTorol] = useState('');
   const [tosov, setTosov] = useState('');
@@ -20,13 +20,13 @@ const Orlogo = () => {
 
   return (
     <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
-      <Text style={styles.label}>Орлогын утга:</Text>
+      <Text style={styles.label}>Зарлагын утга:</Text>
       <TextInput
         style={styles.input}
         value={utga}
         onChangeText={setUtga}
       />
-      <Text style={styles.label}>Орлогын төрөл:</Text>
+      <Text style={styles.label}>Зарлагын төрөл:</Text>
       <TextInput
         style={styles.input}
         value={torol}
@@ -93,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Orlogo;
+export default Zarlaga;

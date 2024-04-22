@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import DarkMode from "../../client/styles/darkMode"; 
+import DarkMode from "../../styles/darkMode"; 
 
 const Zarlaga = () => {
     const [utga, setUtga] = useState('');
