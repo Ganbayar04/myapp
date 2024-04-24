@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DarkMode from "../styles/darkMode";
 import Swiper from "react-native-swiper";
@@ -16,20 +23,40 @@ const HomeScreen = () => {
   // Example team data
   const homeSliderData = [
     { name: "НИЙТ МӨНГӨ", img: require("../assets/niit.png"), balance: "000₮" },
-    { name: "ХАДГАЛСАН МӨНГӨ", img: require("../assets/saved.png"), balance: "000₮" },
-    { name: "ЗЭЭЛИЙН ҮЛДЭГДЭЛ", img: require("../assets/zeel.png"), balance: "000₮" },
-    { name: "ЭНЭ САРЫН ОРЛОГО", img: require("../assets/orlogo.png"), balance: "000₮" },
-    { name: "ЭНЭ САРЫН ЗАРЛАГА", img: require("../assets/zarlaga.png"), balance: "000₮" },
+    {
+      name: "ХАДГАЛСАН МӨНГӨ",
+      img: require("../assets/saved.png"),
+      balance: "000₮",
+    },
+    {
+      name: "ЗЭЭЛИЙН ҮЛДЭГДЭЛ",
+      img: require("../assets/zeel.png"),
+      balance: "000₮",
+    },
+    {
+      name: "ЭНЭ САРЫН ОРЛОГО",
+      img: require("../assets/orlogo.png"),
+      balance: "000₮",
+    },
+    {
+      name: "ЭНЭ САРЫН ЗАРЛАГА",
+      img: require("../assets/zarlaga.png"),
+      balance: "000₮",
+    },
     // Add more team members as needed
   ];
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+    <ScrollView
+      contentContainerStyle={[
+        styles.container,
+        isDarkMode ? styles.darkModeContainer : null,
+      ]}
+    >
       <View style={styles.dashboardContainer}>
         <TouchableOpacity
           style={styles.dashboardItem}
           onPress={() => navigation.navigate("Sambar")}
-
         >
           <Text style={styles.dashboardItemText}>Самбар</Text>
         </TouchableOpacity>
