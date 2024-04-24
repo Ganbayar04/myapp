@@ -13,6 +13,7 @@ import API from "../../config";
 import DarkMode from "../../styles/darkMode";
 import { useUser } from "../../src/contexts/userContext";
 import Icon from "react-native-vector-icons/FontAwesome";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const Account = () => {
   const navigation = useNavigation();
@@ -32,11 +33,7 @@ const Account = () => {
         const response = await API.get(`/dans?userId=${user.id}`);
         //console.log("Бүртгэл хүлээн авсан:", response.data);
         if (response.data && response.data.length > 0) {
-          // filter - eer idwehtei dansiig haruulah
-          const activeAccounts = response.data.filter(
-            (account) => account.accountStatus === "Active"
-          );
-          setAccounts(activeAccounts);
+          setAccounts(response.data);
         } else {
           setAccounts([]);
           Alert.alert("Данс байхгүй", "Энэ хэрэглэгчид данс олдсонгүй.");
@@ -59,6 +56,46 @@ const Account = () => {
     fetchAccounts();
   }, [user]);
 
+  const toggleAccountStatus = async (account) => {
+    console.log("Received account object:", account); // Log the entire account object to verify its structure
+
+    const newStatus =
+      account.accountStatus === "Active" ? "Inactive" : "Active";
+
+    if (!account._id) {
+      // Changed to _id as MongoDB uses _id by default
+      console.error("Account ID is missing");
+      Alert.alert("Error", "Account ID is missing");
+      return;
+    }
+
+    try {
+      console.log("Updating status for account ID:", account._id); // Changed to _id
+
+      const response = await API.put(`/dans/updateStatus/${account._id}`, {
+        accountStatus: newStatus,
+      });
+
+      if (response.status === 200) {
+        const updatedAccount = response.data;
+        setAccounts(
+          accounts.map((acc) =>
+            acc._id === account._id ? { ...acc, accountStatus: newStatus } : acc
+          )
+        );
+        Alert.alert("Success", `Account status updated to ${newStatus}`);
+      } else {
+        throw new Error("Failed to update account status");
+      }
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      Alert.alert(
+        "Error",
+        `Failed to update account status: ${error.message || error}`
+      );
+    }
+  };
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
@@ -79,10 +116,32 @@ const Account = () => {
                 name="bank"
                 size={20}
                 color={isDarkMode ? "#000" : "#000"}
+                style={{ marginRight: 10 }}
               />
               <Text style={styles.accountText}>
                 {account.name} - Үлдэгдэл: {account.uldegdel}
               </Text>
+              <MaterialIcons
+                name={
+                  account.accountStatus === "Active" ? "check-circle" : "cancel"
+                }
+                size={20}
+                color={account.accountStatus === "Active" ? "green" : "red"}
+                style={{ marginLeft: "auto", marginRight: 10 }}
+                onPress={() => toggleAccountStatus(account)}
+              />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EditAccount", { accountId: account._id })
+                }
+              >
+                <Icon
+                  name="edit"
+                  size={20}
+                  color="#007AFF"
+                  style={{ marginLeft: 10 }}
+                />
+              </TouchableOpacity>
             </View>
           ))
         ) : (
