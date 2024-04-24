@@ -1,36 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import DarkMode from "../../styles/darkMode"; 
-import Account from '../dans/Account';
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
+import DarkMode from "../../styles/darkMode";
+import { useUser } from "../../src/contexts/userContext";
+import API from "../../config";
 
 const Haasan = () => {
-  const [users, setUsers] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { user } = useUser();
 
-  // Fetch data and filter users with "haagaagui" role
   useEffect(() => {
     const fetchData = async () => {
-      // Perform data fetching (e.g., fetch from an API)
-      // Filter users with "haagaagui" role
-      // Example:
-      const response = await fetch('https://api.example.com/users');
-      const data = await response.json();
-      const haagaaguiAccount = data.filter(Account => Account.role === 'haagaagui');
-      setUsers(haagaaguiAccount);
+      if (!user || !user.id) {
+        Alert.alert("Error", "Please log in to view accounts.");
+        return;
+      }
+      try {
+        const response = await API.get(`/dans?userId=${user.id}`);
+        if (response.data && response.data.length > 0) {
+          const InactiveAccounts = response.data.filter(
+            (account) => account.accountStatus === "Inactive"
+          );
+          setAccounts(InactiveAccounts);
+        } else {
+          setAccounts([]);
+          Alert.alert("Данс байхгүй", "Энэ хэрэглэгчид данс олдсонгүй.");
+        }
+      } catch (error) {
+        console.error(
+          "API error:",
+          error.response ? error.response.data : error
+        );
+        Alert.alert(
+          "Error",
+          error.response && error.response.data && error.response.data.message
+            ? `Failed to fetch accounts: ${error.response.data.message}`
+            : "Failed to fetch accounts due to network or server error."
+        );
+      }
     };
-
     fetchData();
-  }, []);
+  }, [user]);
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+    <View
+      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
+    >
       <ScrollView>
-        <Text style={styles.title}>Users with Haagaagui Role:</Text>
-        {users.map(user => (
-          <View key={user.id} style={styles.userContainer}>
-            <Text>{user.username}</Text>
-            <Text>{user.role}</Text>
-            {/* Add other user details as needed */}
+        <Text style={styles.title}>Хаалттай данс:</Text>
+        {accounts.map((account) => (
+          <View key={account.id} style={styles.accountContainer}>
+            <Text>Дасны нэр: {account.name}</Text>
+            <Text>Дансны төлөв: {account.accountStatus}</Text>
           </View>
         ))}
       </ScrollView>
@@ -43,21 +64,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
-  userContainer: {
+  accountContainer: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     padding: 10,
     marginBottom: 10,
   },
   darkModeContainer: {
-    backgroundColor: '#000', // Dark mode background color
+    backgroundColor: "#000",
   },
 });
 
