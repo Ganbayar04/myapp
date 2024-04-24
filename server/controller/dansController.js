@@ -72,6 +72,43 @@ exports.updateDans = async (req, res) => {
   }
 };
 
+// Дансны төлөв өөрчлөх
+exports.updateAccountStatus = async (req, res) => {
+  const { id } = req.params;
+  const { accountStatus } = req.body;
+
+  // Оролтыг баталгаажуулах
+  if (!id) {
+    return res.status(400).json({ message: "Дансны дугаар шаардлагатай." });
+  }
+  if (!accountStatus || !["Active", "Inactive"].includes(accountStatus)) {
+    return res
+      .status(400)
+      .json({ message: "Дансны статус буруу эсвэл байхгүй байна." });
+  }
+  try {
+    const updatedAccount = await Dans.findByIdAndUpdate(
+      id,
+      { accountStatus },
+      { new: true }
+    );
+
+    if (!updatedAccount) {
+      return res.status(404).json({ message: "Данс олдсонгүй." });
+    }
+
+    res.status(200).json({
+      message: "Дансны статусыг амжилттай шинэчилсэн.",
+      data: updatedAccount,
+    });
+  } catch (error) {
+    console.error("Дансны статусыг шинэчлэх үед алдаа гарлаа:", error);
+    res.status(500).json({
+      message: "Дотоод алдаа гарсан тул дансны статусыг шинэчилж чадсангүй.",
+    });
+  }
+};
+
 // үүсгэсэн данс устгах
 exports.deleteDans = async (req, res) => {
   try {
