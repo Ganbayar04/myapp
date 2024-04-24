@@ -27,10 +27,10 @@ const Account = () => {
         Alert.alert("Error", "Please log in to view accounts.");
         return;
       }
-      console.log("Хэрэглэгчийн ID-д данс авах хүсэлт гаргах:", user.id);
+      //console.log("Хэрэглэгчийн ID-д данс авах хүсэлт гаргах:", user.id);
       try {
         const response = await API.get(`/dans?userId=${user.id}`);
-        console.log("Бүртгэл хүлээн авсан:", response.data);
+        //console.log("Бүртгэл хүлээн авсан:", response.data);
         if (response.data && response.data.length > 0) {
           // filter - eer idwehtei dansiig haruulah
           const activeAccounts = response.data.filter(
@@ -101,7 +101,7 @@ const Account = () => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Screen2")}
+          onPress={() => navigation.navigate("Haasan")}
         >
           <Text
             style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
