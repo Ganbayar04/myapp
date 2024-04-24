@@ -15,7 +15,8 @@ import Dugtui from "./screens/Dugtui";
 import Tusuw from "./screens/tusuw/Tusuw";
 import Orlogo from "./screens/orlogo/Orlogo";
 import Zarlaga from "./screens/zarlaga/Zarlaga";
-import Burtgeh from "./screens/dans/Uusgeh";
+import Uusgeh from "./screens/dans/Uusgeh";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,7 @@ export default function App() {
         <Stack.Screen name="Sambar" component={Sambar} />
         <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="Dugtui" component={Dugtui} />
-
+        <Stack.Screen name="Uusgeh" component={Uusgeh} />
         <Stack.Screen name="Tusuw" component={Tusuw} />
         <Stack.Screen name="Orlogo" component={Orlogo} />
         <Stack.Screen name="Zarlaga" component={Zarlaga} />
