@@ -30,7 +30,7 @@ export default function App() {
         <Stack.Screen name="Sambar" component={Sambar} />
         <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="Dugtui" component={Dugtui} />
-       
+
         <Stack.Screen name="Tusuw" component={Tusuw} />
         <Stack.Screen name="Orlogo" component={Orlogo} />
         <Stack.Screen name="Zarlaga" component={Zarlaga} />
