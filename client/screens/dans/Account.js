@@ -32,7 +32,11 @@ const Account = () => {
         const response = await API.get(`/dans?userId=${user.id}`);
         console.log("Бүртгэл хүлээн авсан:", response.data);
         if (response.data && response.data.length > 0) {
-          setAccounts(response.data);
+          // filter - eer idwehtei dansiig haruulah
+          const activeAccounts = response.data.filter(
+            (account) => account.accountStatus === "Active"
+          );
+          setAccounts(activeAccounts);
         } else {
           setAccounts([]);
           Alert.alert("Данс байхгүй", "Энэ хэрэглэгчид данс олдсонгүй.");
