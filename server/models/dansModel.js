@@ -5,11 +5,11 @@ const dansSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  turul_id: {
+  /*turul_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "DansTurul",
     required: true,
-  },
+  },*/
   uldegdel: {
     type: Number,
     required: true,
