@@ -36,7 +36,10 @@ const Account = () => {
           setAccounts(response.data);
         } else {
           setAccounts([]);
-          Alert.alert("Данс байхгүй", "Энэ хэрэглэгчид данс олдсонгүй.");
+          Alert.alert(
+            "Данс байхгүй",
+            "Танд үүсгэсэн данс байхгүй байна.Шинээр үүсгэнэ үү!"
+          );
         }
       } catch (error) {
         console.error(
@@ -131,7 +134,7 @@ const Account = () => {
               />
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("EditAccount", { accountId: account._id })
+                  navigation.navigate("Zasah", { accountId: account._id })
                 }
               >
                 <Icon
@@ -144,7 +147,9 @@ const Account = () => {
             </View>
           ))
         ) : (
-          <Text style={styles.noAccountsText}>No accounts found.</Text>
+          <Text style={styles.noAccountsText}>
+            Үүсгэсэн данс байхгүй байна.
+          </Text>
         )}
         <TouchableOpacity
           style={styles.button}
