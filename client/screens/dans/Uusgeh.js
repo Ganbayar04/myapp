@@ -12,38 +12,46 @@ import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import DarkMode from "../../styles/darkMode";
 import CustomButton from "../../styles/customButton";
-import API from "../../config"; // Ensure API setup is correct
+import API from "../../config";
+import { useUser } from "../../src/contexts/userContext";
 
 const Uusgeh = () => {
   const navigation = useNavigation();
+  const { user } = useUser();
   const [name, setName] = useState("");
   const [uldegdel, setUldegdel] = useState("");
   const [tailbar, setTailbar] = useState("");
-  const [status, setStatus] = useState("Active"); // Default to 'Active'    // Default to 'Not Closed'
+  const [status, setStatus] = useState("Active");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const currentDate = new Date().toISOString(); // Get current date in ISO format
+  const currentDate = new Date().toISOString();
 
   const handleRegister = async () => {
     setIsLoading(true);
-    const userId = "5f23eabc1234567890123456"; // Replace this with the actual user ID
+    const userId = user?.id; // context - ээс хэрэглэгчийн id авах
+    if (!userId) {
+      Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
+      navigation.navigate("Login");
+      return;
+    }
+
     try {
       const response = await API.post("/dans", {
         name,
-        uldegdel: Number(uldegdel), // Ensure conversion to Number if required
+        uldegdel: Number(uldegdel),
         tailbar,
         accountStatus: status,
         date: currentDate,
         user_id: userId,
       });
       if (response.data) {
-        Alert.alert("Бүртгэл амжилттай");
+        Alert.alert("Данс амжилттай үүсгэлээ.");
         navigation.navigate("Account");
       }
     } catch (error) {
       console.log(error.response?.data);
       Alert.alert(
-        "Бүртгэл амжилтгүй боллоо!",
+        "Амжилтгүй боллоо!",
         error.response?.data?.message ||
           "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
       );
@@ -109,7 +117,7 @@ const Uusgeh = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50, // Adjusted padding for better spacing
+    padding: 50,
     paddingHorizontal: 10,
     marginTop: 20,
   },

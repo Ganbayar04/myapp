@@ -13,31 +13,41 @@ import {
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton1.js";
 import DarkMode from "../../styles/darkMode";
+import { useUser } from "../../src/contexts/userContext.js";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkmode, setIsDarkmode] = useState(false); // State for theme
+  const { setUser } = useUser();
 
   const handleLogin = async () => {
     setIsLoading(true);
     try {
       const response = await API.post("/users/login", { email, password });
       setIsLoading(false);
-      const { username, role } = response.data.data.user;
+      const { user } = response.data.data; // Make sure response structure is correct as per your backend
 
-      // Redirect based on user role
-      if (role === "admin") {
-        navigation.navigate("Admin", { username: username });
+      if (user) {
+        setUser(user); // Set user in context
+        // Redirect based on user role
+        if (user.role === "admin") {
+          navigation.navigate("Admin", { email: user.email });
+        } else {
+          navigation.navigate("Home", { email: user.email });
+        }
       } else {
-        navigation.navigate("Home", { username: username });
+        // If user object is not found in response
+        Alert.alert("Login Failed", "No user data found in the response");
       }
     } catch (error) {
       setIsLoading(false);
+      // Log detailed error to console or other logging service
+      console.error("Login error: ", error.response || error);
       Alert.alert(
         "Login Failed",
-        error.response?.data.message ||
+        error.response?.data?.message ||
           "Please check your credentials and try again."
       );
     }

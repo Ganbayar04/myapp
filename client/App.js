@@ -16,27 +16,30 @@ import Tusuw from "./screens/tusuw/Tusuw";
 import Orlogo from "./screens/orlogo/Orlogo";
 import Zarlaga from "./screens/zarlaga/Zarlaga";
 import Uusgeh from "./screens/dans/Uusgeh";
+import { UserProvider } from "./src/contexts/userContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Admin" component={AdminScreen} />
-        <Stack.Screen name="Sambar" component={Sambar} />
-        <Stack.Screen name="Account" component={Account} />
-        <Stack.Screen name="Dugtui" component={Dugtui} />
-        <Stack.Screen name="Uusgeh" component={Uusgeh} />
-        <Stack.Screen name="Tusuw" component={Tusuw} />
-        <Stack.Screen name="Orlogo" component={Orlogo} />
-        <Stack.Screen name="Zarlaga" component={Zarlaga} />
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Admin" component={AdminScreen} />
+          <Stack.Screen name="Sambar" component={Sambar} />
+          <Stack.Screen name="Account" component={Account} />
+          <Stack.Screen name="Dugtui" component={Dugtui} />
+          <Stack.Screen name="Uusgeh" component={Uusgeh} />
+          <Stack.Screen name="Tusuw" component={Tusuw} />
+          <Stack.Screen name="Orlogo" component={Orlogo} />
+          <Stack.Screen name="Zarlaga" component={Zarlaga} />
+        </Stack.Navigator>
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </UserProvider>
   );
 }
 
