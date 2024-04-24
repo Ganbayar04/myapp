@@ -9,6 +9,7 @@ import HomeScreen from "./screens/Homescreen";
 import AdminScreen from "./screens/AdminScreen";
 import Sambar from "./screens/Sambar";
 import Account from "./screens/dans/Account";
+import Haasan from "./screens/dans/Haasan";
 //import Settings from "./screens/Settings";
 import Dugtui from "./screens/Dugtui";
 //import Tailan from "./screens/Tailan";
@@ -31,6 +32,7 @@ export default function App() {
           <Stack.Screen name="Admin" component={AdminScreen} />
           <Stack.Screen name="Sambar" component={Sambar} />
           <Stack.Screen name="Account" component={Account} />
+          <Stack.Screen name="Haasan" component={Haasan} />
           <Stack.Screen name="Dugtui" component={Dugtui} />
           <Stack.Screen name="Uusgeh" component={Uusgeh} />
           <Stack.Screen name="Tusuw" component={Tusuw} />
