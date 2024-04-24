@@ -24,9 +24,22 @@ exports.createDans = async (req, res) => {
 // Үүссэн бүх данс харах
 exports.getAllDans = async (req, res) => {
   try {
-    const dans = await Dans.find();
+    const userId = req.query.userId; // Fetching userId from query parameters
+    const query = userId ? { user_id: userId } : {}; // Corrected to use user_id, which matches your schema
+    console.log("Query used for finding accounts:", query); // Log must be after 'query' is defined
+
+    const dans = await Dans.find(query);
+    if (dans.length === 0) {
+      console.log("No accounts found for user ID:", userId); // Log for debugging
+    }
     res.status(200).json(dans);
   } catch (error) {
+    console.log(
+      "Failed to fetch accounts for user ID:",
+      userId,
+      "with error:",
+      error
+    ); // Log detailed error
     res.status(500).json({ message: error.message });
   }
 };
