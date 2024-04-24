@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import API from "../../config";
 import DarkMode from "../../styles/darkMode";
 import { useUser } from "../../src/contexts/userContext";
+import Icon from "react-native-vector-icons/FontAwesome"; // Ensure you've installed react-native-vector-icons
 
 const Account = () => {
   const navigation = useNavigation();
@@ -26,21 +27,15 @@ const Account = () => {
         Alert.alert("Error", "Please log in to view accounts.");
         return;
       }
-
-      console.log("Requesting accounts for user ID:", user.id);
-
+      console.log("Хэрэглэгчийн ID-д данс авах хүсэлт гаргах:", user.id);
       try {
         const response = await API.get(`/dans?userId=${user.id}`);
-
-        console.log("Accounts received:", response.data);
-
-        // Directly use response.data as it should be the array of accounts
+        console.log("Бүртгэл хүлээн авсан:", response.data);
         if (response.data && response.data.length > 0) {
           setAccounts(response.data);
         } else {
-          // No accounts found
-          setAccounts([]); // Clear any existing accounts
-          Alert.alert("No Accounts", "No accounts found for this user.");
+          setAccounts([]);
+          Alert.alert("Данс байхгүй", "Энэ хэрэглэгчид данс олдсонгүй.");
         }
       } catch (error) {
         console.error(
@@ -57,7 +52,6 @@ const Account = () => {
         setIsLoading(false);
       }
     };
-
     fetchAccounts();
   }, [user]);
 
@@ -76,61 +70,52 @@ const Account = () => {
       <ScrollView>
         {accounts.length > 0 ? (
           accounts.map((account, index) => (
-            <View key={index} style={styles.dashboardItem}>
-              <Text
-                style={[
-                  styles.dashboardItemText,
-                  { color: isDarkMode ? "#fff" : "#000" },
-                ]}
-              >
+            <View key={index} style={styles.accountCard}>
+              <Icon
+                name="bank"
+                size={20}
+                color={isDarkMode ? "#fff" : "#000"}
+              />
+              <Text style={styles.accountText}>
                 {account.name} - Үлдэгдэл: {account.uldegdel}
               </Text>
             </View>
           ))
         ) : (
-          <Text>No accounts found.</Text>
+          <Text style={styles.noAccountsText}>No accounts found.</Text>
         )}
-        <View style={styles.dashboardContainer}>
-          <TouchableOpacity
-            style={styles.dashboardItem}
-            onPress={() => navigation.navigate("Uusgeh")}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Uusgeh")}
+        >
+          <Text
+            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
           >
-            <Text
-              style={[
-                styles.dashboardItemText,
-                { color: isDarkMode ? "#fff" : "#000" },
-              ]}
-            >
-              Данс үүсгэх
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.dashboardItem}
-            onPress={() => navigation.navigate("Screen2")}
+            Данс үүсгэх
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Screen2")}
+        >
+          <Text
+            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
           >
-            <Text
-              style={[
-                styles.dashboardItemText,
-                { color: isDarkMode ? "#fff" : "#000" },
-              ]}
-            >
-              Хаасан данс харах
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.dashboardItem}
-            onPress={() => navigation.navigate("Screen3")}
+            Хаасан данс харах
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Screen3")}
+        >
+          <Text
+            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
           >
-            <Text
-              style={[
-                styles.dashboardItemText,
-                { color: isDarkMode ? "#fff" : "#000" },
-              ]}
-            >
-              Тусламж
-            </Text>
-          </TouchableOpacity>
-        </View>
+            Тусламж
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
@@ -140,29 +125,49 @@ const Account = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
+    padding: 20,
+    backgroundColor: "#f5f5f5",
   },
   darkModeContainer: {
-    backgroundColor: "#000",
+    backgroundColor: "#333",
   },
-  dashboardContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    marginTop: 40,
-  },
-  dashboardItem: {
-    width: "80%",
-    aspectRatio: 4,
+  accountCard: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
     marginVertical: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  accountText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  noAccountsText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: "#007AFF",
+    padding: 15,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
-    borderWidth: 0,
-    borderColor: "black",
+    marginTop: 10,
   },
-  dashboardItemText: {
+  buttonText: {
     fontSize: 18,
+    color: "#fff",
     fontWeight: "bold",
   },
 });
