@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DarkMode from "../../styles/darkMode"; 
 
@@ -13,6 +13,7 @@ const Account = () => {
 
   return (
     <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+    <ScrollView>
       <View style={styles.dashboardContainer}>
         <TouchableOpacity
           style={styles.dashboardItem}
@@ -33,6 +34,7 @@ const Account = () => {
           <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Тусламж</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DarkMode from "../../styles/darkMode";
 import CustomButton from '../../styles/customButton'; // Import CustomButton component
@@ -27,7 +27,7 @@ const Uusgeh = () => {
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <>
+        <ScrollView>
           <TextInput
             placeholder="Username"
             value={username}
@@ -63,7 +63,7 @@ const Uusgeh = () => {
             title="Болих"
             onPress={() => navigation.navigate("Account")}
           />
-        </>
+        </ScrollView>
       )}
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>

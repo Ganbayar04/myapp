@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import DarkMode from "../../styles/darkMode"; 
 import Account from '../dans/Account';
 
@@ -15,23 +15,25 @@ const Haasan = () => {
       // Example:
       const response = await fetch('https://api.example.com/users');
       const data = await response.json();
-      const haagaaguiAccount = data.filter(Account => Account.role=== 'haagaagui');
-      setUsers(haagaaguiAccount );
+      const haagaaguiAccount = data.filter(Account => Account.role === 'haagaagui');
+      setUsers(haagaaguiAccount);
     };
 
     fetchData();
   }, []);
 
   return (
-     <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
-      <Text style={styles.title}>Users with Haagaagui Role:</Text>
-      {users.map(user => (
-        <View key={user.id} style={styles.userContainer}>
-          <Text>{user.username}</Text>
-          <Text>{user.role}</Text>
-          {/* Add other user details as needed */}
-        </View>
-      ))}
+    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+      <ScrollView>
+        <Text style={styles.title}>Users with Haagaagui Role:</Text>
+        {users.map(user => (
+          <View key={user.id} style={styles.userContainer}>
+            <Text>{user.username}</Text>
+            <Text>{user.role}</Text>
+            {/* Add other user details as needed */}
+          </View>
+        ))}
+      </ScrollView>
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
   );

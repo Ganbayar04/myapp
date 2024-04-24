@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Text,
+  ScrollView
 } from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton.js";
@@ -51,7 +52,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   // Define dynamic styles based on dark mode state
-  const styles = StyleSheet.create({
+  const dynamicStyles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: "center",
@@ -87,46 +88,54 @@ const RegisterScreen = ({ navigation }) => {
   });
 
   return (
-    <View style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <>
-          <Image
-            source={welcomeImage}
-            resizeMode="contain"
-            style={styles.welcomeImage}
-          />
-
-          <TextInput
-            placeholder="И-мэйл"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-            keyboardType="email-address"
-          />
-          <TextInput
-            placeholder="Нууц үг"
-            value={password}
-            onChangeText={setPassword}
-            style={styles.input}
-            secureTextEntry
-          />
-          <TextInput
-            placeholder="Role"
-            value={role}
-            onChangeText={setRole}
-            style={styles.input}
-          />
-          <View style={styles.buttonContainer}>
-            <CustomButton title="Бүртгүүлэх" onPress={handleRegister} />
-            <CustomButton
-              title="Буцах"
-              onPress={() => navigation.navigate("Login")}
+    <View style={dynamicStyles.container}>
+      <ScrollView>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <>
+            <Image
+              source={welcomeImage}
+              resizeMode="contain"
+              style={dynamicStyles.welcomeImage}
             />
-          </View>
-        </>
-      )}
+
+            <TextInput
+              placeholder="Username"
+              value={username}
+              onChangeText={setUsername}
+              style={dynamicStyles.input}
+            />
+            <TextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              style={dynamicStyles.input}
+              keyboardType="email-address"
+            />
+            <TextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              style={dynamicStyles.input}
+              secureTextEntry
+            />
+            <TextInput
+              placeholder="Role"
+              value={role}
+              onChangeText={setRole}
+              style={dynamicStyles.input}
+            />
+            <View style={dynamicStyles.buttonContainer}>
+              <CustomButton title="Register" onPress={handleRegister} />
+              <CustomButton
+                title="Back"
+                onPress={() => navigation.navigate("Login")}
+              />
+            </View>
+          </>
+        )}
+      </ScrollView>
       <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );

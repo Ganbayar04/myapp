@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text } from "react-native";
+import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text, ScrollView } from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton1.js";
 import DarkMode from "../../styles/darkMode"; 
@@ -41,6 +41,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
+    <ScrollView>
       <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
       
       <TextInput
@@ -69,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
         
       )}
       
-      {/* Theme toggle button */}
+      </ScrollView>
       <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );
