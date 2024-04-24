@@ -25,7 +25,7 @@ const Account = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       if (!user || !user.id) {
-        Alert.alert("Error", "Please log in to view accounts.");
+        Alert.alert("Алдаа", "Дансыг харахын тулд нэвтэрнэ үү.");
         return;
       }
       //console.log("Хэрэглэгчийн ID-д данс авах хүсэлт гаргах:", user.id);
@@ -57,20 +57,19 @@ const Account = () => {
   }, [user]);
 
   const toggleAccountStatus = async (account) => {
-    console.log("Received account object:", account); // Log the entire account object to verify its structure
+    //console.log("Дансны объект хүлээн авсан:", account);
 
     const newStatus =
       account.accountStatus === "Active" ? "Inactive" : "Active";
 
     if (!account._id) {
-      // Changed to _id as MongoDB uses _id by default
-      console.error("Account ID is missing");
-      Alert.alert("Error", "Account ID is missing");
+      console.error("Дансны дугаар байхгүй байна");
+      Alert.alert("Алдаа", "Дансны дугаар байхгүй байна");
       return;
     }
 
     try {
-      console.log("Updating status for account ID:", account._id); // Changed to _id
+      //console.log("Дансны дугаарын статусыг шинэчлэх:", account._id);
 
       const response = await API.put(`/dans/updateStatus/${account._id}`, {
         accountStatus: newStatus,
@@ -83,15 +82,15 @@ const Account = () => {
             acc._id === account._id ? { ...acc, accountStatus: newStatus } : acc
           )
         );
-        Alert.alert("Success", `Account status updated to ${newStatus}`);
+        Alert.alert("Амжилттай", `Дансны статус шинэчлэгдсэн ${newStatus}`);
       } else {
-        throw new Error("Failed to update account status");
+        throw new Error("Дансны статусыг шинэчилж чадсангүй");
       }
     } catch (error) {
-      console.error("Failed to update status:", error);
+      console.error("Статусаа шинэчилж чадсангүй:", error);
       Alert.alert(
-        "Error",
-        `Failed to update account status: ${error.message || error}`
+        "Алдаа",
+        `Дансны статусыг шинэчилж чадсангүй: ${error.message || error}`
       );
     }
   };
