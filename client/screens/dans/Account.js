@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import API from "../../config";
 import DarkMode from "../../styles/darkMode";
 import { useUser } from "../../src/contexts/userContext";
-import Icon from "react-native-vector-icons/FontAwesome"; // Ensure you've installed react-native-vector-icons
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const Account = () => {
   const navigation = useNavigation();
@@ -74,7 +74,7 @@ const Account = () => {
               <Icon
                 name="bank"
                 size={20}
-                color={isDarkMode ? "#fff" : "#000"}
+                color={isDarkMode ? "#000" : "#000"}
               />
               <Text style={styles.accountText}>
                 {account.name} - Үлдэгдэл: {account.uldegdel}
