@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton.js";
@@ -26,7 +26,6 @@ const RegisterScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const response = await API.post("/users", {
-        username,
         email,
         password,
         role,
@@ -100,12 +99,6 @@ const RegisterScreen = ({ navigation }) => {
               style={dynamicStyles.welcomeImage}
             />
 
-            <TextInput
-              placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
-              style={dynamicStyles.input}
-            />
             <TextInput
               placeholder="Email"
               value={email}

@@ -13,10 +13,11 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#1EE34F", // Green color
     borderRadius: 16, // Rounded corners
-    padding: 20, // Padding
+    padding: 20,
+    paddingHorizontal: 10, // Padding
     alignItems: "center", // Center-align the content horizontally
     width: "50%", // Set button width to 80% of its parent container width
-    alignSelf: "center"
+    alignSelf: "center",
   },
   buttonText: {
     color: "white", // Text color

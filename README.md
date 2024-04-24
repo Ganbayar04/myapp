@@ -35,6 +35,8 @@ cd client (Frontend)
 # Axios - ийг татах
 - npm i axios
 
+- test
+
 # congif.js дээр хэрэглэж буй IP хаягаа тохируулах
 - Жишээ : "baseURL: "http:/Ашиглаж буй IP хаяг/:9090/api","
 

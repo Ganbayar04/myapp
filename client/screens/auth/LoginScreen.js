@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, Text, ScrollView } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  Image,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from "react-native";
 import API from "../../config.js";
 import CustomButton from "../../styles/customButton1.js";
-import DarkMode from "../../styles/darkMode"; 
-
+import DarkMode from "../../styles/darkMode";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -28,7 +37,8 @@ const LoginScreen = ({ navigation }) => {
       setIsLoading(false);
       Alert.alert(
         "Login Failed",
-        error.response?.data.message || "Please check your credentials and try again."
+        error.response?.data.message ||
+          "Please check your credentials and try again."
       );
     }
   };
@@ -40,36 +50,42 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
-    <ScrollView>
-      <Image source={welcomeImage} resizeMode="contain" style={styles.welcomeImage} />
-      
-      <TextInput
-        placeholder="Email Address"
-        value={email}
-        onChangeText={setEmail}
-        style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
-        secureTextEntry
-      />
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <View style={styles.buttonContainer}>
-          <CustomButton title="Login" onPress={handleLogin} />
-          <CustomButton title="Register" onPress={() => navigation.navigate("Register")} />
-   
-        </View>
-        
-      )}
-      
+    <View
+      style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}
+    >
+      <ScrollView>
+        <Image
+          source={welcomeImage}
+          resizeMode="contain"
+          style={styles.welcomeImage}
+        />
+
+        <TextInput
+          placeholder="Email Address"
+          value={email}
+          onChangeText={setEmail}
+          style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
+          secureTextEntry
+        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <View style={styles.buttonContainer}>
+            <CustomButton title="Login" onPress={handleLogin} />
+            <CustomButton
+              title="Register"
+              onPress={() => navigation.navigate("Register")}
+            />
+          </View>
+        )}
       </ScrollView>
       <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
