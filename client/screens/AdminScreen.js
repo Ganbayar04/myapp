@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import DarkMode from "../styles/darkMode"; 
 
 const AdminScreen = () => {
@@ -17,12 +17,16 @@ const AdminScreen = () => {
 
   return (
     <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
+    <ScrollView>
+
+    
       <Text style={styles.title}>Admin Panel</Text>
       <Text style={styles.text}>You are currently {isAdmin ? 'an admin' : 'not an admin'}</Text>
       <Button
         title={isAdmin ? 'Revoke Admin Privileges' : 'Grant Admin Privileges'}
         onPress={toggleAdminStatus}
       />
+      </ScrollView>
       <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );

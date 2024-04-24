@@ -10,7 +10,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import DarkMode from "../styles/darkMode";
 import Swiper from "react-native-swiper";
-import Sambar from "./Sambar";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
