@@ -90,14 +90,14 @@ const Uusgeh = () => {
             onChangeText={setTailbar}
             style={styles.input}
           />
-          <Text style={styles.label}>Төлөв:</Text>
+          <Text style={styles.label}>Дансны төлөв:</Text>
           <Picker
             selectedValue={status}
             style={styles.picker}
             onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}
           >
-            <Picker.Item label="Active" value="Active" />
-            <Picker.Item label="Inactive" value="Inactive" />
+            <Picker.Item label="Идвэхтэй" value="Active" />
+            <Picker.Item label="Идвэхгүй" value="Inactive" />
           </Picker>
 
           <View>
