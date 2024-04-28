@@ -7,15 +7,13 @@ import {
   StyleSheet,
   Alert,
   Text,
-  Modal,
-  Button,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import DarkMode from "../../styles/darkMode";
-import CustomButton from "../../styles/customButton";
 import API from "../../config";
 import { useUser } from "../../src/contexts/userContext";
+import RNPickerSelect from "react-native-picker-select";
+import CustomButton from "../../styles/customButton"
 
 const Uusgeh = () => {
   const navigation = useNavigation();
@@ -26,27 +24,26 @@ const Uusgeh = () => {
   const [status, setStatus] = useState("Active");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [selectedTurul, setSelectedTurul] = useState("");
   const [turulList, setTurulList] = useState([]);
 
   useEffect(() => {
+    const fetchTurulList = async () => {
+      try {
+        const response = await API.get("/dansTurul");
+        if (response.status === 200) {
+          setTurulList(response.data);
+        } else {
+          throw new Error(`Unexpected HTTP status ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Failed to fetch Turul list:", error);
+        Alert.alert("Error", "Failed to fetch Turul list.");
+      }
+    };
+
     fetchTurulList();
   }, []);
-
-  const fetchTurulList = async () => {
-    try {
-      const response = await API.get("/dansTurul");
-      if (response.status === 200) {
-        setTurulList(response.data);
-      } else {
-        throw new Error(`Unexpected HTTP status ${response.status}`);
-      }
-    } catch (error) {
-      console.error("Failed to fetch Turul list:", error);
-      Alert.alert("Error", "Failed to fetch Turul list.");
-    }
-  };
 
   const handleRegister = async () => {
     setIsLoading(true);
@@ -107,46 +104,30 @@ const Uusgeh = () => {
             onChangeText={setTailbar}
             style={styles.input}
           />
+
           <Text style={styles.label}>Дансны төлөв:</Text>
-          <Picker
-            selectedValue={status}
-            style={styles.picker}
-            onValueChange={(itemValue) => setStatus(itemValue)}
-          >
-            <Picker.Item label="Идвэхтэй" value="Active" />
-            <Picker.Item label="Идвэхгүй" value="Inactive" />
-          </Picker>
+          <RNPickerSelect
+            onValueChange={(value) => setStatus(value)}
+            items={[
+              { label: "Идвэхтэй", value: "Active" },
+              { label: "Идвэхгүй", value: "Inactive" },
+            ]}
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
+            placeholder={{ label: "Select status...", value: null }}
+          />
+
           <Text style={styles.label}>Дансны төрөл:</Text>
-          <Button title="Select Turul" onPress={() => setModalVisible(true)} />
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Picker
-                  selectedValue={selectedTurul}
-                  style={{ height: 50, width: 250 }}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setSelectedTurul(itemValue);
-                    setModalVisible(false);
-                  }}
-                >
-                  {turulList.map((turul) => (
-                    <Picker.Item
-                      key={turul._id}
-                      label={turul.name}
-                      value={turul._id}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            </View>
-          </Modal>
+          <RNPickerSelect
+            onValueChange={(value) => setSelectedTurul(value)}
+            items={turulList.map((turul) => ({
+              label: turul.name,
+              value: turul._id,
+            }))}
+            style={pickerSelectStyles}
+            placeholder={{ label: "Select a turul...", value: null }}
+            useNativeAndroidPickerStyle={false}
+          />
           <CustomButton title="Хадгалах" onPress={handleRegister} />
           <CustomButton title="Буцах" onPress={() => navigation.goBack()} />
         </ScrollView>
@@ -159,9 +140,7 @@ const Uusgeh = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 80,
-    paddingHorizontal: 10,
-   
+    padding: 20,
     backgroundColor: "#f5f5f5",
   },
   darkModeContainer: {
@@ -175,39 +154,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
-    padding:50,
     fontSize: 16,
-    marginBottom: 5,
-    marginTop: 10,
     color: "#333",
+    marginVertical: 10,
   },
-  picker: {
-    height: 50,
-    marginBottom: 20,
-    width: "100%",
-    borderColor: "gray",
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: "white", // Ensures the input field is visible
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 50,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 8,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: "white", // Ensures the input field is visible
   },
 });
 

@@ -91,7 +91,8 @@ const Account = () => {
             <View key={index} style={styles.accountCard}>
               <Icon name="bank" size={20} color={isDarkMode ? "#000" : "#000"} style={{ marginRight: 10 }} />
               <Text style={styles.accountText}>
-                {account.name} - Үлдэгдэл: {account.uldegdel} - Төрөл: {account.turul?.name || 'Тодорхойгүй'}
+                {account.name} - Үлдэгдэл: {account.uldegdel} 
+                - Төрөл: {account.turul?.name }
               </Text>
               <MaterialIcons
                 name={account.accountStatus === "Active" ? "check-circle" : "cancel"}
@@ -138,7 +139,7 @@ const Account = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 40,
+    padding: 30,
     backgroundColor: "#f5f5f5",
   },
   darkModeContainer: {
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 10,
     borderRadius: 10,
-    marginVertical: 8,
+    marginVertical: 10,
     flexDirection: "row",
     alignItems: "center",
     shadowColor: "#000",
