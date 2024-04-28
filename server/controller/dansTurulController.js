@@ -1,37 +1,34 @@
-const DansTurul = require("../models/dansTurulModel.js"); // Adjust the import path as needed
+const DansTurul = require("../models/dansTurulModel");
 
+// Create a new DansTurul
 exports.createDansTurul = async (req, res) => {
   try {
     const newDansTurul = await DansTurul.create(req.body);
-    console.log("Төрөл амжилттай үүсгэлээ.");
     res.status(201).json({
-      message: "Төрөл амжилттай үүсгэлээ.",
-      data: {
-        id: newDansTurul._id,
-        name: newDansTurul.name,
-      },
+      message: "DansTurul created successfully.",
+      data: newDansTurul,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+// Get all DansTurul records
 exports.getAllDansTurul = async (req, res) => {
   try {
-    const dansTurul = await DansTurul.find();
-    res.status(200).json(dansTurul);
+    const allDansTurul = await DansTurul.find();
+    res.status(200).json(allDansTurul);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+// Get a single DansTurul by ID
 exports.getDansTurul = async (req, res) => {
   try {
     const dansTurul = await DansTurul.findById(req.params.id);
     if (!dansTurul) {
-      return res
-        .status(404)
-        .json({ message: "Уучлаарай! Хайсан төрөл олдсонгүй!... " });
+      return res.status(404).json({ message: "DansTurul not found." });
     }
     res.status(200).json(dansTurul);
   } catch (error) {
@@ -39,41 +36,15 @@ exports.getDansTurul = async (req, res) => {
   }
 };
 
-exports.updateDansTurul = async (req, res) => {
-  try {
-    const updatedDansTurul = await DansTurul.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!updatedDansTurul) {
-      return res
-        .status(404)
-        .json({ message: "Уучлаарай! Төрөл олдсонгүй!..." });
-    }
-    res.status(200).json({
-      message: "Мэдээлэл амжилттай солигдлоо",
-      data: {
-        id: updatedDansTurul._id,
-        name: updatedDansTurul.name,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
+// DELETE controller for DansTurul
 exports.deleteDansTurul = async (req, res) => {
   try {
-    const deletedDansTurul = await DansTurul.findByIdAndDelete(req.params.id);
-    console.log("Төрөл амжилттай устгалаа!...");
-    if (!deletedDansTurul) {
-      return res.status(404).json({
-        message: "Тухайн төрөл олдсонгүй!. Та устгасан байж болзошгүй...",
-      });
+    const result = await DansTurul.findByIdAndDelete(req.params.id);
+    if (!result) {
+      return res.status(404).json({ message: "DansTurul not found" });
     }
-    res.status(200).json({ message: "Төрөл амжилттай устгалаа!..." });
+    res.status(200).json({ message: "DansTurul deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };

@@ -5,19 +5,20 @@ import { StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/auth/LoginScreen";
 import RegisterScreen from "./screens/auth/RegisterScreen";
-import HomeScreen from "./screens/Homescreen";
-import AdminScreen from "./screens/AdminScreen";
-import Sambar from "./screens/Sambar";
+import HomeScreen from "./screens/auth/Homescreen.js";
+import AdminScreen from "./screens/auth/AdminScreen";
+//import Sambar from "./screens/Sambar";
 import Account from "./screens/dans/Account";
 import Haasan from "./screens/dans/Haasan";
 import Zasah from "./screens/dans/dansEdit.js";
-//import Settings from "./screens/Settings";
+import Users from "./screens/auth/Users.js";
 import Dugtui from "./screens/Dugtui";
-//import Tailan from "./screens/Tailan";
+import Turul from "./screens/dans/turul.js";
 import Tusuw from "./screens/tusuw/Tusuw";
 import Orlogo from "./screens/orlogo/Orlogo";
 import Zarlaga from "./screens/zarlaga/Zarlaga";
 import Uusgeh from "./screens/dans/Uusgeh";
+import Info from "./screens/auth/Info.js"
 import { UserProvider } from "./src/contexts/userContext";
 
 const Stack = createNativeStackNavigator();
@@ -31,7 +32,7 @@ export default function App() {
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Admin" component={AdminScreen} />
-          <Stack.Screen name="Sambar" component={Sambar} />
+        
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Haasan" component={Haasan} />
           <Stack.Screen name="Zasah" component={Zasah} />
@@ -40,6 +41,9 @@ export default function App() {
           <Stack.Screen name="Tusuw" component={Tusuw} />
           <Stack.Screen name="Orlogo" component={Orlogo} />
           <Stack.Screen name="Zarlaga" component={Zarlaga} />
+          <Stack.Screen name="Users" component={Users} />
+          <Stack.Screen name="Turul" component={Turul} />
+          <Stack.Screen name="Info" component={Info} />
         </Stack.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>

@@ -27,23 +27,25 @@ const LoginScreen = ({ navigation }) => {
     try {
       const response = await API.post("/users/login", { email, password });
       setIsLoading(false);
-      const { user } = response.data.data; // Make sure response structure is correct as per your backend
+      const { user } = response.data.data;
 
       if (user) {
-        setUser(user); // Set user in context
-        // Redirect based on user role
+        setUser(user); // Хэрэглэгчийг контекстээр тохируулах
+        // Хэрэглэгчийн үүрэг дээр үндэслэн дахин чиглүүлэх
         if (user.role === "admin") {
           navigation.navigate("Admin", { email: user.email });
         } else {
           navigation.navigate("Home", { email: user.email });
         }
       } else {
-        // If user object is not found in response
-        Alert.alert("Login Failed", "No user data found in the response");
+        // Хэрэв хэрэглэгчийн объект хариуд нь олдсонгүй бол
+        Alert.alert(
+          "Нэвтрэлт амжилтгүй боллоо",
+          "Хэрэглэгчийн мэдээлэл олдсонгүй!"
+        );
       }
     } catch (error) {
       setIsLoading(false);
-      // Log detailed error to console or other logging service
       console.error("Login error: ", error.response || error);
       Alert.alert(
         "Login Failed",

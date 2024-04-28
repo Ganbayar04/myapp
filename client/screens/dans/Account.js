@@ -23,83 +23,31 @@ const Account = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    const fetchAccounts = async () => {
-      if (!user || !user.id) {
-        Alert.alert("Алдаа", "Дансыг харахын тулд нэвтэрнэ үү.");
-        return;
-      }
-      //console.log("Хэрэглэгчийн ID-д данс авах хүсэлт гаргах:", user.id);
-      try {
-        const response = await API.get(`/dans?userId=${user.id}`);
-        //console.log("Бүртгэл хүлээн авсан:", response.data);
-        if (response.data && response.data.length > 0) {
-          setAccounts(response.data);
-        } else {
-          setAccounts([]);
-          Alert.alert(
-            "Данс байхгүй",
-            "Танд үүсгэсэн данс байхгүй байна.Шинээр үүсгэнэ үү!"
-          );
-        }
-      } catch (error) {
-        console.error(
-          "API error:",
-          error.response ? error.response.data : error
-        );
-        Alert.alert(
-          "Error",
-          error.response && error.response.data && error.response.data.message
-            ? `Failed to fetch accounts: ${error.response.data.message}`
-            : "Failed to fetch accounts due to network or server error."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchAccounts();
   }, [user]);
 
-  const toggleAccountStatus = async (account) => {
-    //console.log("Дансны объект хүлээн авсан:", account);
-
-    const newStatus =
-      account.accountStatus === "Active" ? "Inactive" : "Active";
-
-    if (!account._id) {
-      console.error("Дансны дугаар байхгүй байна");
-      Alert.alert("Алдаа", "Дансны дугаар байхгүй байна");
+  const fetchAccounts = async () => {
+    setIsLoading(true);
+    if (!user || !user.id) {
+      Alert.alert("Алдаа", "Дансыг харахын тулд нэвтэрнэ үү.");
+      setIsLoading(false);
       return;
     }
 
     try {
-      //console.log("Дансны дугаарын статусыг шинэчлэх:", account._id);
-
-      const response = await API.put(`/dans/updateStatus/${account._id}`, {
-        accountStatus: newStatus,
-      });
-
-      if (response.status === 200) {
-        const updatedAccount = response.data;
-        setAccounts(
-          accounts.map((acc) =>
-            acc._id === account._id ? { ...acc, accountStatus: newStatus } : acc
-          )
-        );
-        Alert.alert("Амжилттай", `Дансны статус шинэчлэгдсэн ${newStatus}`);
+      const response = await API.get(`/dans?userId=${user.id}`);
+      if (response.data && response.data.length > 0) {
+        setAccounts(response.data);
       } else {
-        throw new Error("Дансны статусыг шинэчилж чадсангүй");
+        setAccounts([]);
+        Alert.alert("Данс байхгүй", "Танд үүсгэсэн данс байхгүй байна. Шинээр үүсгэнэ үү!");
       }
     } catch (error) {
-      console.error("Статусаа шинэчилж чадсангүй:", error);
-      Alert.alert(
-        "Алдаа",
-        `Дансны статусыг шинэчилж чадсангүй: ${error.message || error}`
-      );
+      console.error("API error:", error.response ? error.response.data : error);
+      Alert.alert("Error", "Failed to fetch accounts due to network or server error.");
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
   };
 
   if (isLoading) {
@@ -107,42 +55,30 @@ const Account = () => {
   }
 
   return (
-    <View
-      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
-    >
+    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+      <TouchableOpacity style={styles.refreshButton} onPress={fetchAccounts}>
+        <MaterialIcons name="refresh" size={24} color={isDarkMode ? "#fff" : "#000"} />
+      </TouchableOpacity>
+
       <ScrollView>
         {accounts.length > 0 ? (
           accounts.map((account, index) => (
             <View key={index} style={styles.accountCard}>
-              <Icon
-                name="bank"
-                size={20}
-                color={isDarkMode ? "#000" : "#000"}
-                style={{ marginRight: 10 }}
-              />
+              <Icon name="bank" size={20} color={isDarkMode ? "#000" : "#000"} style={{ marginRight: 10 }} />
               <Text style={styles.accountText}>
-                {account.name} - Үлдэгдэл: {account.uldegdel}
+                {account.name} - Үлдэгдэл: {account.uldegdel} - Төрөл: {account.turul?.name || 'Тодорхойгүй'}
               </Text>
               <MaterialIcons
-                name={
-                  account.accountStatus === "Active" ? "check-circle" : "cancel"
-                }
+                name={account.accountStatus === "Active" ? "check-circle" : "cancel"}
                 size={20}
                 color={account.accountStatus === "Active" ? "green" : "red"}
                 style={{ marginLeft: "auto", marginRight: 10 }}
                 onPress={() => toggleAccountStatus(account)}
               />
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Zasah", { accountId: account._id })
-                }
+                onPress={() => navigation.navigate("Zasah", { accountId: account._id })}
               >
-                <Icon
-                  name="edit"
-                  size={20}
-                  color="#007AFF"
-                  style={{ marginLeft: 10 }}
-                />
+                <Icon name="edit" size={20} color="#007AFF" style={{ marginLeft: 10 }} />
               </TouchableOpacity>
             </View>
           ))
@@ -155,9 +91,7 @@ const Account = () => {
           style={styles.button}
           onPress={() => navigation.navigate("Uusgeh")}
         >
-          <Text
-            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
-          >
+          <Text style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}>
             Данс үүсгэх
           </Text>
         </TouchableOpacity>
@@ -166,21 +100,8 @@ const Account = () => {
           style={styles.button}
           onPress={() => navigation.navigate("Haasan")}
         >
-          <Text
-            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
-          >
+          <Text style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}>
             Хаасан данс харах
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Screen3")}
-        >
-          <Text
-            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
-          >
-            Тусламж
           </Text>
         </TouchableOpacity>
       </ScrollView>
@@ -192,7 +113,7 @@ const Account = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 40,
     backgroundColor: "#f5f5f5",
   },
   darkModeContainer: {
@@ -207,12 +128,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
   },
   accountText: {
     marginLeft: 10,
@@ -236,6 +157,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#fff",
     fontWeight: "bold",
+  },
+  refreshButton: {
+    backgroundColor: "#007AFF",
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    left: 20,
+    zIndex: 1000,
   },
 });
 

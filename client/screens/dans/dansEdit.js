@@ -1,82 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
+  Text,
   TextInput,
-  ScrollView,
-  ActivityIndicator,
+  Button,
   StyleSheet,
   Alert,
-  Text,
+  ActivityIndicator,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { useNavigation } from "@react-navigation/native";
-import DarkMode from "../../styles/darkMode";
-import CustomButton from "../../styles/customButton";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import API from "../../config";
-import { useUser } from "../../src/contexts/userContext";
+import DarkMode from "../../styles/darkMode";
 
-const Zasah = () => {
-    const navigation = useNavigation();
-    const { user } = useUser();
-    const [name, setName] = useState("");
-    const [uldegdel, setUldegdel] = useState("");
-    const [tailbar, setTailbar] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const currentDate = new Date().toISOString();
+const DansEdit = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const [account, setAccount] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [name, setName] = useState("");
+  const [uldegdel, setUldegdel] = useState("");
+ 
 
-    const handleRegister = async () => {}
+  useEffect(() => {
+    const fetchAccount = async () => {
+      setIsLoading(true);
+      try {
+        const response = await API.get(`/dans/${route.params.accountId}`);
+        if (response.data) {
+          setAccount(response.data);
+          setName(response.data.name);
+          setUldegdel(response.data.uldegdel.toString());
+          setStatus(response.data.status);
+        } else {
+          Alert.alert("Error", "No account data found.");
+          navigation.goBack();
+        }
+      } catch (error) {
+        console.error("Failed to fetch account details", error);
+        // Providing more details in the alert
+        Alert.alert(
+          "Error",
+          `Failed to fetch account details: ${
+            error.response ? error.response.data.message : error.message
+          }`
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-     const toggleTheme = () => {
-       setIsDarkMode(!isDarkMode);
-     };
+    fetchAccount();
+  }, [route.params.accountId]);
 
-    return (
-    <View
-      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
-    >
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <ScrollView>
-          <TextInput
-            placeholder="Дансны нэр"
-            value={name}
-            onChangeText={setName}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Үлдэгдэл"
-            value={uldegdel}
-            onChangeText={setUldegdel}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Тайлбар"
-            value={tailbar}
-            onChangeText={setTailbar}
-            style={styles.input}
-          />
-          {/* <Text style={styles.label}>Дансны төлөв:</Text>
-          <Picker
-            selectedValue={status}
-            style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}
-          >
-            <Picker.Item label="Идвэхтэй" value="Active" />
-            <Picker.Item label="Идвэхгүй" value="Inactive" />
-          </Picker> */}
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const response = await API.put(`/dans/update/${route.params.accountId}`, {
+        name,
+        uldegdel: parseFloat(uldegdel),
+        status,
+      });
+      if (response.data) {
+        Alert.alert("Success", "Account updated successfully.");
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Failed to update account", error);
+      Alert.alert("Error", "Failed to update account.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-          <View>
-            <CustomButton title="Хадгалах" onPress={handleRegister} />
-            <CustomButton
-              title="Буцах"
-              onPress={() => navigation.navigate("Account")}
-            />
-          </View>
-        </ScrollView>
-      )}
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  return (
+    <View style={styles.container}>
+      <DarkMode />
+      <Text style={styles.label}>Дансны нэр:</Text>
+      <TextInput style={styles.input} value={name} onChangeText={setName} />
+      <Text style={styles.label}>Үлдэгдэл:</Text>
+      <TextInput
+        style={styles.input}
+        value={uldegdel}
+        onChangeText={setUldegdel}
+        keyboardType="numeric"
+      />
+    
+      <Button title="Save Changes" onPress={handleSave} />
     </View>
   );
 };
@@ -84,32 +97,21 @@ const Zasah = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
-    paddingHorizontal: 10,
-    marginTop: 20,
-  },
-  darkModeContainer: {
-    backgroundColor: "#000",
+    padding: 20,
+    backgroundColor: "#f5f5f5",
   },
   input: {
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 20,
     paddingHorizontal: 10,
   },
   label: {
     fontSize: 16,
-    marginBottom: 5,
-    marginTop: 10,
-    color: "#333",
-  },
-  picker: {
-    height: 50,
-    marginBottom: 200,
-    borderColor: "gray", // Optional: You can remove this line if border is not needed
-    borderWidth: 0, // Set borderWidth to 0 to remove the border
+    color: "#000",
+    marginBottom: 10,
   },
 });
 
-export default Zasah;
+export default DansEdit;

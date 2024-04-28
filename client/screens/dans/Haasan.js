@@ -24,7 +24,10 @@ const Haasan = () => {
           setAccounts(InactiveAccounts);
         } else {
           setAccounts([]);
-          Alert.alert("Данс байхгүй", "Энэ хэрэглэгчид данс олдсонгүй.");
+          Alert.alert(
+            "Данс байхгүй",
+            "Танд үүсгэсэн данс байхгүй байна.Шинээр үүсгэнэ үү!"
+          );
         }
       } catch (error) {
         console.error(

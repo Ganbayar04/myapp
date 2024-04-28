@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const DarkMode = ({ isDarkMode, setIsDarkMode }) => {
@@ -6,11 +6,15 @@ const DarkMode = ({ isDarkMode, setIsDarkMode }) => {
     setIsDarkMode(!isDarkMode);
   };
 
+  // Inline style to apply conditionally based on `isDarkMode`
+  const buttonTextStyle = {
+    fontSize: 16,
+    color: isDarkMode ? "#fff" : "#000", // Conditional color based on `isDarkMode`
+  };
+
   return (
     <TouchableOpacity onPress={toggleDarkMode} style={styles.darkModeButton}>
-      <Text style={styles.darkModeButtonText}>
-        {isDarkMode ? "☀️ Light Theme" : "🌑 Dark Theme"}
-      </Text>
+      <Text style={buttonTextStyle}>{isDarkMode ? "☀️" : "🌑"}</Text>
     </TouchableOpacity>
   );
 };
@@ -24,10 +28,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-  },
-  darkModeButtonText: {
-    fontSize: 16,
-    color: "#fff",
   },
 });
 

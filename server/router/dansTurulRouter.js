@@ -5,7 +5,7 @@ const dansTurulController = require("../controller/dansTurulController.js"); // 
 router.post("/", dansTurulController.createDansTurul);
 router.get("/", dansTurulController.getAllDansTurul);
 router.get("/:id", dansTurulController.getDansTurul);
-router.put("/:id", dansTurulController.updateDansTurul);
+//router.put("/:id", dansTurulController.updateDansTurul);
 router.delete("/:id", dansTurulController.deleteDansTurul);
 
 module.exports = router;

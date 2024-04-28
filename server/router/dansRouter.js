@@ -1,14 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const dansController = require("../controller/dansController.js");
+const {
+  createDans,
+  getAllDans,
+  getDansById, // This should match the export
+  updateDans,
+  deleteDans,
+} = require("../controller/dansController"); // Make sure the path is correct
 
-router.post("/", dansController.createDans);
-router.get("/", dansController.getAllDans);
-router.get("/:id", dansController.getDans);
-router.put("/:id", dansController.updateDans);
-// Дансны төлөв өөрчлөх
-router.put('/updateStatus/:id', dansController.updateAccountStatus);
-
-router.delete("/:id", dansController.deleteDans);
+router.post("/", createDans);
+router.get("/", getAllDans);
+router.get("/:id", getDansById); // Use getDansById
+router.put("/:id", updateDans);
+// Make sure updateAccountStatus is defined or remove the following line if not used
+// router.put("/updateStatus/:id", updateAccountStatus);
+router.delete("/:id", deleteDans);
 
 module.exports = router;

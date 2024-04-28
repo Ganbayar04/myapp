@@ -26,12 +26,30 @@ const Uusgeh = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const currentDate = new Date().toISOString();
 
+  const turulTypes = {
+    "Банкны карт": "ObjectIdHere1",
+    "Бэлэн мөнгө": "ObjectIdHere2",
+    Хадгаламж: "ObjectIdHere3",
+    Зээл: "ObjectIdHere4",
+    Цалин: "ObjectIdHere5",
+  };
+
+  const [selectedTurul, setSelectedTurul] = useState("");
+
   const handleRegister = async () => {
     setIsLoading(true);
-    const userId = user?.id; // context - ээс хэрэглэгчийн id авах
+    const userId = user?.id;
+
     if (!userId) {
       Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
       navigation.navigate("Login");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!selectedTurul) {
+      Alert.alert("Алдаа", "Та дансны төрлийг сонгоно уу.");
+      setIsLoading(false);
       return;
     }
 
@@ -43,25 +61,22 @@ const Uusgeh = () => {
         accountStatus: status,
         date: currentDate,
         user_id: userId,
+        turul_id: turulTypes[selectedTurul], // Correct field for the turul ID
       });
+
       if (response.data) {
         Alert.alert("Данс амжилттай үүсгэлээ.");
         navigation.navigate("Account");
       }
     } catch (error) {
       console.log(error.response?.data);
-      Alert.alert(
-        "Амжилтгүй боллоо!",
+      const errorMessage =
         error.response?.data?.message ||
-          "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
-      );
+        "Талбаруудыг зөв бөглөж, дахин оролдоно уу!";
+      Alert.alert("Амжилтгүй боллоо!", errorMessage);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
   };
 
   return (
@@ -94,12 +109,21 @@ const Uusgeh = () => {
           <Picker
             selectedValue={status}
             style={styles.picker}
-            onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}
+            onValueChange={(itemValue) => setStatus(itemValue)}
           >
             <Picker.Item label="Идвэхтэй" value="Active" />
             <Picker.Item label="Идвэхгүй" value="Inactive" />
           </Picker>
-
+          <Text style={styles.label}>Дансны төрөл:</Text>
+          <Picker
+            selectedValue={selectedTurul}
+            style={styles.picker}
+            onValueChange={(itemValue) => setSelectedTurul(itemValue)}
+          >
+            {Object.entries(turulTypes).map(([label, value]) => (
+              <Picker.Item key={value} label={label} value={value} />
+            ))}
+          </Picker>
           <View>
             <CustomButton title="Хадгалах" onPress={handleRegister} />
             <CustomButton
@@ -139,9 +163,9 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    marginBottom: 200,
-    borderColor: "gray", // Optional: You can remove this line if border is not needed
-    borderWidth: 0, // Set borderWidth to 0 to remove the border
+    marginBottom: 20,
+    borderColor: "gray",
+    borderWidth: 0,
   },
 });
 
