@@ -43,34 +43,47 @@ const AdminScreen = () => {
     }
   };
 
-const deleteDansTurul = async (id) => {
-  try {
-    const response = await API.delete(`/dansTurul/${id}`);
-    if (response.status === 200) {
-      Alert.alert("Success", "Turul deleted successfully.");
-      fetchAllDansTurul(); // Refresh the list after deleting
-    } else {
-      throw new Error(
-        `Failed to delete the turul with status: ${response.status}`
-      );
-    }
-  } catch (error) {
-    console.error("Delete error:", error);
-    Alert.alert("Error", `Failed to delete turul: ${error.toString()}`);
-  }
-};
+ const deleteDansTurul = async (id) => {
+   try {
+     const response = await API.delete(`/dansTurul/${id}`);
+     if (response.status === 200) {
+       Alert.alert("Success", "Turul deleted successfully.");
+       fetchAllDansTurul(); // Refresh the list after a successful delete
+     } else {
+       // If the server responds, but not with a success status
+       Alert.alert(
+         "Error",
+         `Failed to delete the turul with status: ${response.status}`
+       );
+     }
+   } catch (error) {
+     // This will catch network errors or cases where the server response couldn't be processed
+     console.error("Delete error:", error);
+     Alert.alert("Error", `Failed to delete turul: ${error.toString()}`);
+   }
+ };
+
+  
 
 
- const renderItem = ({ item }) => (
-   <View style={styles.itemContainer}>
-     <Text style={styles.itemText}>{`${item._id} - ${item.name}`}</Text>
-     <TouchableOpacity onPress={() => deleteDansTurul(item._id)}>
-       <MaterialIcons name="delete" size={24} color="red" />
-     </TouchableOpacity>
-   </View>
- );
+  const ListHeader = () => (
+    <View style={styles.headerContainer}>
+      <Text style={styles.headerText}> </Text>
+      <Text style={styles.headerText}>Төрөл </Text>
+      <Text style={styles.headerText}>Устгах</Text>
+    </View>
+  );
 
 
+  const renderItem = ({ item, index }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemText}>{`${index + 1}    ${  item.name}`}</Text>
+      <TouchableOpacity onPress={() => deleteDansTurul(item._id)}>
+        <MaterialIcons name="delete" size={24} color="red" />
+      </TouchableOpacity>
+    </View>
+  );
+ 
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -87,27 +100,26 @@ const deleteDansTurul = async (id) => {
       </TouchableOpacity>
 
       <ScrollView>
-        <View style={styles.dashboardContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Users")}
-          >
-            <Text style={styles.buttonText}>Хэрэглэгч</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Turul")}
-          >
-            <Text style={styles.buttonText}>Төрөл үүсгэх</Text>
-          </TouchableOpacity>
-        </View>
-
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Users")}
+        >
+          <Text style={styles.buttonText}>Хэрэглэгч</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Turul")}
+        >
+          <Text style={styles.buttonText}>Төрөл үүсгэх</Text>
+        </TouchableOpacity>
         <FlatList
           data={turuls}
           renderItem={renderItem}
           keyExtractor={(item) => item._id.toString()}
+          ListHeaderComponent={ListHeader} // Add the header component here
           contentContainerStyle={styles.list}
         />
+        
       </ScrollView>
 
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
@@ -137,6 +149,17 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
+    flex: 1, // Ensure the text takes up the available space
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    backgroundColor: "#eee", // Light grey background for the header
+  },
+  headerText: {
+    fontWeight: "bold",
+    fontSize: 16,
   },
   refreshButton: {
     position: "absolute",
@@ -148,5 +171,6 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
 });
+
 
 export default AdminScreen;

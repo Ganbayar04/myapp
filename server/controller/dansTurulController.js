@@ -36,15 +36,18 @@ exports.getDansTurul = async (req, res) => {
   }
 };
 
-// DELETE controller for DansTurul
 exports.deleteDansTurul = async (req, res) => {
+  console.log("Attempting to delete ID:", req.params.id);
   try {
     const result = await DansTurul.findByIdAndDelete(req.params.id);
+    console.log("Delete result:", result);
     if (!result) {
-      return res.status(404).json({ message: "DansTurul not found" });
+      return res.status(404).send({ message: "Turul not found" });
     }
-    res.status(200).json({ message: "DansTurul deleted successfully" });
+    res.status(200).send({ message: "Turul deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Delete error:", error);
+    res.status(500).send({ message: "Server error" });
   }
 };
+
