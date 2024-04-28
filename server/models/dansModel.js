@@ -15,11 +15,7 @@ const dansSchema = new mongoose.Schema({
     required: true,
   },
   account_id: { type: mongoose.Schema.Types.ObjectId },
-  turul_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Turul",
-    required: true,
-  },
+   turul_id: { type: mongoose.Schema.Types.ObjectId, ref: 'DansTurul' }
 });
 
 

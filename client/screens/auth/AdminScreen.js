@@ -89,41 +89,34 @@ const AdminScreen = () => {
   }
 
   return (
-    <View
-      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
-    >
-      <TouchableOpacity
-        style={styles.refreshButton}
-        onPress={fetchAllDansTurul}
-      >
-        <MaterialIcons name="refresh" size={24} color="#fff" />
+    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+  <TouchableOpacity style={styles.refreshButton} onPress={fetchAllDansTurul}>
+    <MaterialIcons name="refresh" size={24} color="#fff" />
+  </TouchableOpacity>
+
+  <ScrollView>
+    <View style={styles.dashboardContainer}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Users")}>
+        <Text style={styles.buttonText}>Хэрэглэгч</Text>
       </TouchableOpacity>
-
-      <ScrollView>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Users")}
-        >
-          <Text style={styles.buttonText}>Хэрэглэгч</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Turul")}
-        >
-          <Text style={styles.buttonText}>Төрөл үүсгэх</Text>
-        </TouchableOpacity>
-        <FlatList
-          data={turuls}
-          renderItem={renderItem}
-          keyExtractor={(item) => item._id.toString()}
-          ListHeaderComponent={ListHeader} // Add the header component here
-          contentContainerStyle={styles.list}
-        />
-        
-      </ScrollView>
-
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Turul")}>
+        <Text style={styles.buttonText}>Төрөл үүсгэх</Text>
+      </TouchableOpacity>
     </View>
+
+    <FlatList
+      data={turuls}
+      renderItem={renderItem}
+      keyExtractor={(item) => item._id.toString()}
+      ListHeaderComponent={ListHeader}
+      contentContainerStyle={styles.list}
+    />
+  </ScrollView>
+
+  <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+</View>
+
+     
   );
 };
 
@@ -169,6 +162,20 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     zIndex: 1000,
+  },
+  dashboardContainer: {
+    flexDirection: "row", // Keep it in a row or change to column if you want vertical alignment
+    justifyContent: "center", // Center the buttons horizontally
+    alignItems: "center", // Center the buttons vertically
+    marginTop: 50, // Adjust this value to move the buttons further down as needed
+    flexWrap: "wrap", // Allows buttons to wrap in smaller screens or orientations
+  },
+  button: {
+    backgroundColor: "#fff",
+    padding: 15, // Increase padding for bigger touch area
+    borderRadius: 5,
+    marginHorizontal: 10, // Add horizontal margin for spacing between buttons
+    marginTop: 10, // Optional: add if you want more space between row items when wrapped
   },
 });
 

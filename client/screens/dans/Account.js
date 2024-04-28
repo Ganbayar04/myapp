@@ -50,6 +50,31 @@ const Account = () => {
     }
   };
 
+  const toggleAccountStatus = async (account) => {
+    const newStatus =
+      account.accountStatus === "Active" ? "Inactive" : "Active";
+
+    try {
+      const response = await API.put(`/dans/${account._id}`, {
+        accountStatus: newStatus,
+      });
+
+      if (response.status === 200) {
+        Alert.alert("Удирдлага", "Дансны төлөв амжилттай шинэчлэгдлээ.");
+        fetchAccounts(); // Refresh the account list after status update
+      } else {
+        throw new Error("Failed to update account status");
+      }
+    } catch (error) {
+      console.error("API error:", error.response ? error.response.data : error);
+      Alert.alert(
+        "Error",
+        "Failed to update account status due to network or server error."
+      );
+    }
+  };
+
+
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Alert,
   Text,
+  Modal,
+  Button,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
@@ -24,31 +26,33 @@ const Uusgeh = () => {
   const [status, setStatus] = useState("Active");
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const currentDate = new Date().toISOString();
-
-  const turulTypes = {
-    "Банкны карт": "ObjectIdHere1",
-    "Бэлэн мөнгө": "ObjectIdHere2",
-    Хадгаламж: "ObjectIdHere3",
-    Зээл: "ObjectIdHere4",
-    Цалин: "ObjectIdHere5",
-  };
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedTurul, setSelectedTurul] = useState("");
+  const [turulList, setTurulList] = useState([]);
+
+  useEffect(() => {
+    fetchTurulList();
+  }, []);
+
+  const fetchTurulList = async () => {
+    try {
+      const response = await API.get("/dansTurul");
+      if (response.status === 200) {
+        setTurulList(response.data);
+      } else {
+        throw new Error(`Unexpected HTTP status ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Failed to fetch Turul list:", error);
+      Alert.alert("Error", "Failed to fetch Turul list.");
+    }
+  };
 
   const handleRegister = async () => {
     setIsLoading(true);
-    const userId = user?.id;
-
-    if (!userId) {
+    if (!user?.id) {
       Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
       navigation.navigate("Login");
-      setIsLoading(false);
-      return;
-    }
-
-    if (!selectedTurul) {
-      Alert.alert("Алдаа", "Та дансны төрлийг сонгоно уу.");
       setIsLoading(false);
       return;
     }
@@ -59,21 +63,19 @@ const Uusgeh = () => {
         uldegdel: Number(uldegdel),
         tailbar,
         accountStatus: status,
-        date: currentDate,
-        user_id: userId,
-        turul_id: turulTypes[selectedTurul], // Correct field for the turul ID
+        user_id: user.id,
+        turul_id: selectedTurul,
       });
-
       if (response.data) {
         Alert.alert("Данс амжилттай үүсгэлээ.");
         navigation.navigate("Account");
       }
     } catch (error) {
-      console.log(error.response?.data);
-      const errorMessage =
-        error.response?.data?.message ||
-        "Талбаруудыг зөв бөглөж, дахин оролдоно уу!";
-      Alert.alert("Амжилтгүй боллоо!", errorMessage);
+      console.error("Error creating account:", error);
+      Alert.alert(
+        "Амжилтгүй боллоо!",
+        error.message || "Error creating account."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -115,22 +117,38 @@ const Uusgeh = () => {
             <Picker.Item label="Идвэхгүй" value="Inactive" />
           </Picker>
           <Text style={styles.label}>Дансны төрөл:</Text>
-          <Picker
-            selectedValue={selectedTurul}
-            style={styles.picker}
-            onValueChange={(itemValue) => setSelectedTurul(itemValue)}
+          <Button title="Select Turul" onPress={() => setModalVisible(true)} />
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
           >
-            {Object.entries(turulTypes).map(([label, value]) => (
-              <Picker.Item key={value} label={label} value={value} />
-            ))}
-          </Picker>
-          <View>
-            <CustomButton title="Хадгалах" onPress={handleRegister} />
-            <CustomButton
-              title="Буцах"
-              onPress={() => navigation.navigate("Account")}
-            />
-          </View>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Picker
+                  selectedValue={selectedTurul}
+                  style={{ height: 50, width: 250 }}
+                  onValueChange={(itemValue, itemIndex) => {
+                    setSelectedTurul(itemValue);
+                    setModalVisible(false);
+                  }}
+                >
+                  {turulList.map((turul) => (
+                    <Picker.Item
+                      key={turul._id}
+                      label={turul.name}
+                      value={turul._id}
+                    />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+          </Modal>
+          <CustomButton title="Хадгалах" onPress={handleRegister} />
+          <CustomButton title="Буцах" onPress={() => navigation.goBack()} />
         </ScrollView>
       )}
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
@@ -141,9 +159,10 @@ const Uusgeh = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
+    padding: 80,
     paddingHorizontal: 10,
-    marginTop: 20,
+   
+    backgroundColor: "#f5f5f5",
   },
   darkModeContainer: {
     backgroundColor: "#000",
@@ -156,6 +175,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label: {
+    padding:50,
     fontSize: 16,
     marginBottom: 5,
     marginTop: 10,
@@ -164,8 +184,30 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     marginBottom: 20,
+    width: "100%",
     borderColor: "gray",
-    borderWidth: 0,
+    borderWidth: 1,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 50,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
 
