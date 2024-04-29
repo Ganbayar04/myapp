@@ -105,17 +105,7 @@ const Uusgeh = () => {
             style={styles.input}
           />
 
-          <Text style={styles.label}>Дансны төлөв:</Text>
-          <RNPickerSelect
-            onValueChange={(value) => setStatus(value)}
-            items={[
-              { label: "Идвэхтэй", value: "Active" },
-              { label: "Идвэхгүй", value: "Inactive" },
-            ]}
-            style={pickerSelectStyles}
-            useNativeAndroidPickerStyle={false}
-            placeholder={{ label: "Select status...", value: null }}
-          />
+          
 
           <Text style={styles.label}>Дансны төрөл:</Text>
           <RNPickerSelect

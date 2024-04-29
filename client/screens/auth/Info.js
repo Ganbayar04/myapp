@@ -12,7 +12,7 @@ import API from "../../config"; // Ensure this points to your API configuration
 const Info = ({ route }) => {
   const { userId } = route.params;
   const [userDetails, setUserDetails] = useState(null);
-  const [accounts, setAccounts] = useState([]); // To store accounts
+  const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,27 +30,28 @@ const Info = ({ route }) => {
     }
   };
 
-  const fetchAccounts = async () => {
-    if (!userId) {
-      Alert.alert("Error", "User ID is missing.");
-      return;
+const fetchAccounts = async () => {
+  setIsLoading(true);
+  try {
+    const response = await API.get(`/dans/accounts/${userId}`);
+    if (response.data && response.data.length > 0) {
+      setAccounts(response.data);
+    } else {
+      setAccounts([]);
+      Alert.alert("No Accounts", "No accounts found for this user.");
     }
-    try {
-      const response = await API.get(`/dans?userId=${userId}`);
-      console.log("Account data:", response.data); // This will log the data structure
-      if (response.data && response.data.length > 0) {
-        setAccounts(response.data);
-      } else {
-        setAccounts([]);
-        Alert.alert("No Accounts", "No accounts found for this user.");
-      }
-    } catch (error) {
-      console.error("API error:", error);
-      Alert.alert("Error", "Failed to fetch accounts.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error("API error:", error);
+    Alert.alert(
+      "Error",
+      "Failed to fetch accounts. Please check your internet connection and try again."
+    );
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
 
   if (isLoading) {
@@ -61,25 +62,40 @@ const Info = ({ route }) => {
     <ScrollView style={styles.container}>
       {userDetails ? (
         <View>
-          <Text style={styles.detailItem}>ID: {userDetails._id}</Text>
           <Text style={styles.detailItem}>Email: {userDetails.email}</Text>
           <Text style={styles.detailItem}>Role: {userDetails.role}</Text>
           <Text style={styles.detailItem}>Accounts:</Text>
-          {accounts.map((account, index) => (
-            <Text key={index} style={styles.accountItem}>
-            Дансны нэр:
-              {account.name} - Үлдэгдэл:{" "}
-              {account.uldegdel !== undefined
-                ? account.uldegdel
-                : "Unavailable"}
+          {accounts.length > 0 ? (
+            <View style={styles.table}>
+              <View style={styles.tableHeader}>
+                <Text style={styles.headerCell}>Дансны нэр</Text>
+                <Text style={styles.headerCell}>Үлдэгдэл</Text>
+                <Text style={styles.headerCell}>Төрөл</Text>
+              </View>
+              {accounts.map((account, index) => (
+                <View key={index} style={styles.tableRow}>
+                  <Text style={styles.cell}>{account.name}</Text>
+                  <Text style={styles.cell}>
+                    {account.uldegdel !== undefined
+                      ? account.uldegdel
+                      : "Unavailable"}
+                  </Text>
+                  <Text style={styles.cell}>{account.turul}</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.accountItem}>
+              No accounts found for this user.
             </Text>
-          ))}
+          )}
         </View>
       ) : (
-        <Text>Бүртгэлтэй данс байхгүй байна.</Text>
+        <Text>No user details found.</Text>
       )}
     </ScrollView>
   );
+
 };
 
 const styles = StyleSheet.create({
@@ -89,19 +105,46 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   detailItem: {
-    padding: 10,
+    paddingVertical: 10,
     fontSize: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
+  table: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  tableHeader: {
+    flexDirection: "row",
+    backgroundColor: "#f2f2f2",
+  },
+  headerCell: {
+    flex: 1,
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderRightColor: "#ccc",
+  },
+  tableRow: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+  },
+  cell: {
+    flex: 1,
+    padding: 10,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderRightColor: "#ccc",
+  },
   accountItem: {
-    paddingLeft: 20,
-    fontSize: 18, // Increased from 14 to 18
-    fontWeight: "bold", // Make text bold
-    color: "#007AFF", // Example color; adjust as needed
-    marginVertical: 5, // Add vertical margin
+    paddingVertical: 10,
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
 });
-
 
 export default Info;

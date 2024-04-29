@@ -40,11 +40,17 @@ const Account = () => {
         setAccounts(response.data);
       } else {
         setAccounts([]);
-        Alert.alert("Данс байхгүй", "Танд үүсгэсэн данс байхгүй байна. Шинээр үүсгэнэ үү!");
+        Alert.alert(
+          "Данс байхгүй",
+          "Танд үүсгэсэн данс байхгүй байна. Шинээр үүсгэнэ үү!"
+        );
       }
     } catch (error) {
       console.error("API error:", error.response ? error.response.data : error);
-      Alert.alert("Error", "Failed to fetch accounts due to network or server error.");
+      Alert.alert(
+        "Error",
+        "Failed to fetch accounts due to network or server error."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -74,37 +80,56 @@ const Account = () => {
     }
   };
 
-
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+    <View
+      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
+    >
       <TouchableOpacity style={styles.refreshButton} onPress={fetchAccounts}>
-        <MaterialIcons name="refresh" size={24} color={isDarkMode ? "#fff" : "#000"} />
+        <MaterialIcons
+          name="refresh"
+          size={24}
+          color={isDarkMode ? "#fff" : "#000"}
+        />
       </TouchableOpacity>
 
       <ScrollView>
         {accounts.length > 0 ? (
           accounts.map((account, index) => (
             <View key={index} style={styles.accountCard}>
-              <Icon name="bank" size={20} color={isDarkMode ? "#000" : "#000"} style={{ marginRight: 10 }} />
+              <Icon
+                name="bank"
+                size={20}
+                color={isDarkMode ? "#000" : "#000"}
+                style={{ marginRight: 10 }}
+              />
               <Text style={styles.accountText}>
-                {account.name} - Үлдэгдэл: {account.uldegdel} 
-                - Төрөл: {account.turul?.name }
+                {account.name} - Үлдэгдэл: {account.uldegdel}- Төрөл:{" "}
+                {account.turul?.name}
               </Text>
               <MaterialIcons
-                name={account.accountStatus === "Active" ? "check-circle" : "cancel"}
+                name={
+                  account.accountStatus === "Active" ? "check-circle" : "cancel"
+                }
                 size={20}
                 color={account.accountStatus === "Active" ? "green" : "red"}
                 style={{ marginLeft: "auto", marginRight: 10 }}
                 onPress={() => toggleAccountStatus(account)}
               />
               <TouchableOpacity
-                onPress={() => navigation.navigate("Zasah", { accountId: account._id })}
+                onPress={() =>
+                  navigation.navigate("Zasah", { accountId: account._id })
+                }
               >
-                <Icon name="edit" size={20} color="#007AFF" style={{ marginLeft: 10 }} />
+                <Icon
+                  name="edit"
+                  size={20}
+                  color="#007AFF"
+                  style={{ marginLeft: 10 }}
+                />
               </TouchableOpacity>
             </View>
           ))
@@ -117,7 +142,9 @@ const Account = () => {
           style={styles.button}
           onPress={() => navigation.navigate("Uusgeh")}
         >
-          <Text style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}>
+          <Text
+            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
+          >
             Данс үүсгэх
           </Text>
         </TouchableOpacity>
@@ -126,7 +153,9 @@ const Account = () => {
           style={styles.button}
           onPress={() => navigation.navigate("Haasan")}
         >
-          <Text style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}>
+          <Text
+            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
+          >
             Хаасан данс харах
           </Text>
         </TouchableOpacity>
@@ -154,12 +183,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-    width: 0,
-    height: 2,
-  },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  elevation: 5,
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   accountText: {
     marginLeft: 10,
