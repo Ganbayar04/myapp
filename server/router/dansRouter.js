@@ -6,6 +6,7 @@ const {
   getDansById, // This should match the export
   updateDans,
   deleteDans,
+  getAllDansByUserId,
 } = require("../controller/dansController"); // Make sure the path is correct
 
 router.post("/", createDans);
@@ -15,5 +16,7 @@ router.put("/:id", updateDans);
 // Make sure updateAccountStatus is defined or remove the following line if not used
 // router.put("/updateStatus/:id", updateAccountStatus);
 router.delete("/:id", deleteDans);
+router.get("/accounts/:userId", getAllDansByUserId);
 
 module.exports = router;
+

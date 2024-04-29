@@ -48,6 +48,24 @@ exports.getDansById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Example of a controller method to get all accounts associated with a user ID
+exports.getAllDansByUserId = async (req, res) => {
+  const userId = req.params.userId; // Extract the user ID from the request parameters
+
+  try {
+    // Fetch all accounts that belong to the specified user ID
+    const dans = await Dans.find({ user_id: userId });
+
+    // Check if any accounts were found
+    if (dans.length > 0) {
+      res.status(200).json(dans); // Return the accounts if found
+    } else {
+      res.status(404).json({ message: 'No  found for this user ID' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle server errors
+  }
+};
 
 // Update a Dans
 exports.updateDans = async (req, res) => {
