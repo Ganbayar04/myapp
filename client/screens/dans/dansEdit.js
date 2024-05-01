@@ -19,7 +19,7 @@ const DansEdit = () => {
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
-   const [tailbar, setTailbar] = useState("");
+  const [tailbar, setTailbar] = useState("");
   const [selectedTurul, setSelectedTurul] = useState("");
   const [turulList, setTurulList] = useState([]);
 
@@ -73,13 +73,10 @@ const DansEdit = () => {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      const response = await API.put(
-        `/dans/${route.params.accountId}`,
-        {
-          name,
-          turul: selectedTurul,
-        }
-      );
+      const response = await API.put(`/dans/${route.params.accountId}`, {
+        name,
+        turul: selectedTurul,
+      });
       if (response.status === 200) {
         Alert.alert("Success", "Account updated successfully.");
         navigation.goBack();
