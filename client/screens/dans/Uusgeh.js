@@ -7,13 +7,12 @@ import {
   StyleSheet,
   Alert,
   Text,
+  Button, // Importing Button here
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import DarkMode from "../../styles/darkMode";
 import API from "../../config";
 import { useUser } from "../../src/contexts/userContext";
 import RNPickerSelect from "react-native-picker-select";
-import CustomButton from "../../styles/customButton"
 
 const Uusgeh = () => {
   const navigation = useNavigation();
@@ -23,7 +22,6 @@ const Uusgeh = () => {
   const [tailbar, setTailbar] = useState("");
   const [status, setStatus] = useState("Active");
   const [isLoading, setIsLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedTurul, setSelectedTurul] = useState("");
   const [turulList, setTurulList] = useState([]);
 
@@ -79,9 +77,7 @@ const Uusgeh = () => {
   };
 
   return (
-    <View
-      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
-    >
+    <View style={styles.container}>
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -105,8 +101,6 @@ const Uusgeh = () => {
             style={styles.input}
           />
 
-          
-
           <Text style={styles.label}>Дансны төрөл:</Text>
           <RNPickerSelect
             onValueChange={(value) => setSelectedTurul(value)}
@@ -118,11 +112,10 @@ const Uusgeh = () => {
             placeholder={{ label: "Select a turul...", value: null }}
             useNativeAndroidPickerStyle={false}
           />
-          <CustomButton title="Хадгалах" onPress={handleRegister} />
-          <CustomButton title="Буцах" onPress={() => navigation.goBack()} />
+          <Button title="Хадгалах" onPress={handleRegister} />
+          <Button title="Буцах" onPress={() => navigation.goBack()} />
         </ScrollView>
       )}
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
   );
 };
@@ -132,9 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#f5f5f5",
-  },
-  darkModeContainer: {
-    backgroundColor: "#000",
   },
   input: {
     height: 40,

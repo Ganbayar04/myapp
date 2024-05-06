@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import API from "../../config";
@@ -15,64 +16,82 @@ import { useUser } from "../../src/contexts/userContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const Account = () => {
+const Account = ({ route }) => {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
+  const userId = route.params?.userId || user?.id;
+  const [turulList, setTurulList] = useState({});
 
   useEffect(() => {
-    fetchAccounts();
-  }, [user]);
+    if (userId) {
+      fetchAccounts();
+      fetchTurulList();
+    }
+  }, [userId]);
 
   const fetchAccounts = async () => {
-    setIsLoading(true);
-    if (!user || !user.id) {
-      Alert.alert("Алдаа", "Дансыг харахын тулд нэвтэрнэ үү.");
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const response = await API.get(`/dans?userId=${user.id}`);
+      const response = await API.get(`/dans/accounts/${userId}`);
+      console.log("Accounts fetched:", response.data);
       if (response.data && response.data.length > 0) {
         setAccounts(response.data);
       } else {
         setAccounts([]);
-        Alert.alert(
-          "Данс байхгүй",
-          "Танд үүсгэсэн данс байхгүй байна. Шинээр үүсгэнэ үү!"
-        );
       }
     } catch (error) {
-      console.error("API error:", error.response ? error.response.data : error);
-      Alert.alert(
-        "Error",
-        "Failed to fetch accounts due to network or server error."
-      );
+      console.error("API error:", error);
+      Alert.alert("Error", "Failed to fetch accounts.");
     } finally {
       setIsLoading(false);
     }
   };
 
+const fetchTurulList = async () => {
+  try {
+    const response = await API.get("/dansTurul");
+    if (response.status === 200) {
+      const turulMapping = response.data.reduce((acc, turul) => {
+        acc[turul._id] = turul.name;
+        return acc;
+      }, {});
+      setTurulList(turulMapping);
+      // Log to confirm structure
+      console.log("Turul mapping:", turulMapping);
+    } else {
+      throw new Error(`Unexpected HTTP status ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Failed to fetch Turul list:", error);
+    Alert.alert("Error", "Failed to fetch Turul list.");
+  }
+};
+
+
+
+
+
   const toggleAccountStatus = async (account) => {
     const newStatus =
       account.accountStatus === "Active" ? "Inactive" : "Active";
-
     try {
       const response = await API.put(`/dans/${account._id}`, {
         accountStatus: newStatus,
       });
-
       if (response.status === 200) {
         Alert.alert("Удирдлага", "Дансны төлөв амжилттай шинэчлэгдлээ.");
-        fetchAccounts(); // Refresh the account list after status update
+        setAccounts((prevAccounts) =>
+          prevAccounts.map((acc) =>
+            acc._id === account._id ? { ...acc, accountStatus: newStatus } : acc
+          )
+        );
       } else {
         throw new Error("Failed to update account status");
       }
     } catch (error) {
-      console.error("API error:", error.response ? error.response.data : error);
+      console.error("API error:", error);
       Alert.alert(
         "Error",
         "Failed to update account status due to network or server error."
@@ -84,85 +103,78 @@ const Account = () => {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
-  return (
-    <View
-      style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
-    >
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchAccounts}>
-        <MaterialIcons
-          name="refresh"
-          size={24}
-          color={isDarkMode ? "#fff" : "#000"}
-        />
+return (
+  <View
+    style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
+  >
+    <TouchableOpacity style={styles.refreshButton} onPress={fetchAccounts}>
+      <MaterialIcons
+        name="refresh"
+        size={24}
+        color={isDarkMode ? "#fff" : "#000"}
+      />
+    </TouchableOpacity>
+
+    <FlatList
+      data={accounts}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item, index }) => (
+        <View style={styles.accountCard}>
+          <View style={styles.iconsContainer}>
+            {/* <Icon
+              name="bank"
+              size={20}
+              color={isDarkMode ? "#fff" : "#000"}
+              style={{ marginRight: 10 }}
+            />*/}
+            <MaterialIcons
+              name={item.accountStatus === "Active" ? "check-circle" : "cancel"}
+              size={24}
+              color={item.accountStatus === "Active" ? "green" : "red"}
+              onPress={() => toggleAccountStatus(item)}
+            />
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Zasah", { accountId: item._id })
+              }
+            >
+              <Icon name="edit" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.accountRow}>
+            <Text style={styles.accountText}>{item.name}</Text>
+
+            <Text style={styles.accountText}>{item.uldegdel}</Text>
+
+            <Text style={styles.accountText}>
+              {turulList[item.turul_id] || "Unknown"}
+            </Text>
+          </View>
+        </View>
+      )}
+      numColumns={2} // Set the number of columns for the grid
+      columnWrapperStyle={styles.row} // Style to apply on every row
+      contentContainerStyle={{ marginTop: 40 }}
+    />
+
+    <View style={styles.footerButtons}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Uusgeh")}
+      >
+        <Text style={styles.buttonText}>Данс үүсгэх</Text>
       </TouchableOpacity>
 
-      <ScrollView>
-        {accounts.length > 0 ? (
-          accounts.map((account, index) => (
-            <View key={index} style={styles.accountCard}>
-              <Icon
-                name="bank"
-                size={20}
-                color={isDarkMode ? "#000" : "#000"}
-                style={{ marginRight: 10 }}
-              />
-              <Text style={styles.accountText}>
-                {account.name} - Үлдэгдэл: {account.uldegdel}- Төрөл:{" "}
-                {account.turul?.name}
-              </Text>
-              <MaterialIcons
-                name={
-                  account.accountStatus === "Active" ? "check-circle" : "cancel"
-                }
-                size={20}
-                color={account.accountStatus === "Active" ? "green" : "red"}
-                style={{ marginLeft: "auto", marginRight: 10 }}
-                onPress={() => toggleAccountStatus(account)}
-              />
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Zasah", { accountId: account._id })
-                }
-              >
-                <Icon
-                  name="edit"
-                  size={20}
-                  color="#007AFF"
-                  style={{ marginLeft: 10 }}
-                />
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noAccountsText}>
-            Үүсгэсэн данс байхгүй байна.
-          </Text>
-        )}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Uusgeh")}
-        >
-          <Text
-            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
-          >
-            Данс үүсгэх
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Haasan")}
-        >
-          <Text
-            style={[styles.buttonText, { color: isDarkMode ? "#fff" : "#000" }]}
-          >
-            Хаасан данс харах
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Haasan")}
+      >
+        <Text style={styles.buttonText}>Хаасан данс харах</Text>
+      </TouchableOpacity>
     </View>
-  );
+  </View>
+);
 };
 
 const styles = StyleSheet.create({
@@ -176,11 +188,12 @@ const styles = StyleSheet.create({
   },
   accountCard: {
     backgroundColor: "#fff",
-    padding: 10,
+    padding: 15,
     borderRadius: 10,
-    marginVertical: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    margin: 5,
+    flex: 1,
+    flexDirection: "column", // Stacks children vertically
+    alignItems: "flex-start", // Aligns children to the left
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -190,18 +203,18 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  accountText: {
-    marginLeft: 10,
-    fontSize: 16,
-    fontWeight: "bold",
+  iconsContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end", // Aligns icons to the left
+    width: "100%", // Uses the full width to avoid unintentional squeezing
   },
-  noAccountsText: {
+   accountText: {
     fontSize: 16,
-    textAlign: "center",
-    marginTop: 20,
+    color: "#333",
+    marginBottom: 4,
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#fFF",
     padding: 15,
     borderRadius: 10,
     justifyContent: "center",
@@ -210,11 +223,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: "#fff",
+    color: "#000",
     fontWeight: "bold",
   },
   refreshButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#fff",
     padding: 10,
     borderRadius: 10,
     justifyContent: "center",
@@ -224,5 +237,6 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
 });
+
 
 export default Account;

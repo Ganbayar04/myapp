@@ -10,51 +10,46 @@ const Haasan = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user || !user.id) {
-        Alert.alert("Error", "Please log in to view accounts.");
-        return;
-      }
-      try {
-        const response = await API.get(`/dans?userId=${user.id}`);
-        if (response.data && response.data.length > 0) {
-          const InactiveAccounts = response.data.filter(
-            (account) => account.accountStatus === "Inactive"
-          );
-          setAccounts(InactiveAccounts);
-        } else {
-          setAccounts([]);
-          Alert.alert(
-            "Данс байхгүй",
-            "Танд үүсгэсэн данс байхгүй байна.Шинээр үүсгэнэ үү!"
-          );
-        }
-      } catch (error) {
-        console.error(
-          "API error:",
-          error.response ? error.response.data : error
-        );
-        Alert.alert(
-          "Error",
-          error.response && error.response.data && error.response.data.message
-            ? `Failed to fetch accounts: ${error.response.data.message}`
-            : "Failed to fetch accounts due to network or server error."
-        );
-      }
-    };
-    fetchData();
+    if (user && user.id) {
+      fetchInactiveAccounts(user.id);
+    } else {
+      Alert.alert("Error", "Please log in to view accounts.");
+    }
   }, [user]);
 
+  const fetchInactiveAccounts = async (userId) => {
+    try {
+      const response = await API.get(`/dans/accounts/${userId}`);
+      console.log("Accounts fetched for user ID:", userId, response.data);
+      const inactiveAccounts = response.data.filter(
+        (account) => account.accountStatus === "Inactive"
+      );
+      if (inactiveAccounts.length > 0) {
+        setAccounts(inactiveAccounts);
+      } else {
+        setAccounts([]);
+        Alert.alert("No Accounts", "You do not have any inactive accounts.");
+      }
+    } catch (error) {
+      console.error("API error:", error);
+      Alert.alert(
+        "Error",
+        "Failed to fetch accounts due to network or server error."
+      );
+    }
+  };
+
+  // Render the UI
   return (
     <View
       style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}
     >
       <ScrollView>
-        <Text style={styles.title}>Хаалттай данс:</Text>
+        <Text style={styles.title}>Inactive Accounts:</Text>
         {accounts.map((account) => (
           <View key={account.id} style={styles.accountContainer}>
-            <Text>Дасны нэр: {account.name}</Text>
-            <Text>Дансны төлөв: {account.accountStatus}</Text>
+            <Text>Account Name: {account.name}</Text>
+            <Text>Account Status: {account.accountStatus}</Text>
           </View>
         ))}
       </ScrollView>
@@ -63,11 +58,15 @@ const Haasan = () => {
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+  },
+  darkModeContainer: {
+    backgroundColor: "#000",
   },
   title: {
     fontSize: 20,
@@ -79,9 +78,6 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     padding: 10,
     marginBottom: 10,
-  },
-  darkModeContainer: {
-    backgroundColor: "#000",
   },
 });
 

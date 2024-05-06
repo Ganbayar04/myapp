@@ -14,21 +14,46 @@ const Info = ({ route }) => {
   const [userDetails, setUserDetails] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+const [turulList, setTurulList] = useState({});
 
-  useEffect(() => {
-    fetchUserDetails();
-    fetchAccounts();
-  }, [userId]);
+useEffect(() => {
+  fetchAllData();
+}, [userId]);
 
-  const fetchUserDetails = async () => {
-    try {
-      const response = await API.get(`/users/${userId}`);
-      setUserDetails(response.data);
-    } catch (error) {
-      console.error("Failed to fetch user details:", error);
-      Alert.alert("Error", "Failed to load user details.");
+const fetchAllData = async () => {
+  await fetchUserDetails();
+  await fetchAccounts();
+  await fetchTurulList();
+};
+
+const fetchTurulList = async () => {
+  try {
+    const response = await API.get("/dansTurul");
+    if (response.status === 200) {
+      setTurulList(
+        response.data.reduce((acc, turul) => {
+          acc[turul._id] = turul.name;
+          return acc;
+        }, {})
+      );
+    } else {
+      Alert.alert("Error", `Unexpected HTTP status ${response.status}`);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch Turul list:", error);
+    Alert.alert("Error", "Failed to fetch Turul list.");
+  }
+};
+
+const fetchUserDetails = async () => {
+  try {
+    const response = await API.get(`/users/${userId}`);
+    setUserDetails(response.data);
+  } catch (error) {
+    console.error("Failed to fetch user details:", error);
+    Alert.alert("Error", "Failed to load user details.");
+  }
+};
 
 const fetchAccounts = async () => {
   setIsLoading(true);
@@ -38,20 +63,13 @@ const fetchAccounts = async () => {
       setAccounts(response.data);
     } else {
       setAccounts([]);
-      Alert.alert("No Accounts", "No accounts found for this user.");
     }
   } catch (error) {
     console.error("API error:", error);
-    Alert.alert(
-      "Error",
-      "Failed to fetch accounts. Please check your internet connection and try again."
-    );
   } finally {
     setIsLoading(false);
   }
 };
-
-
 
 
   if (isLoading) {
@@ -71,16 +89,24 @@ const fetchAccounts = async () => {
                 <Text style={styles.headerCell}>Дансны нэр</Text>
                 <Text style={styles.headerCell}>Үлдэгдэл</Text>
                 <Text style={styles.headerCell}>Төрөл</Text>
+                <Text style={styles.headerCell}>Төлөв</Text>
+                <Text style={styles.headerCell}>Тайлбар</Text>
               </View>
               {accounts.map((account, index) => (
                 <View key={index} style={styles.tableRow}>
                   <Text style={styles.cell}>{account.name}</Text>
                   <Text style={styles.cell}>
-                    {account.uldegdel !== undefined
-                      ? account.uldegdel
-                      : "Unavailable"}
+                    {account.uldegdel?.toLocaleString() || "Unavailable"}
                   </Text>
-                  <Text style={styles.cell}>{account.turul}</Text>
+                  <Text style={styles.cell}>
+                    {turulList[account.turul_id] || "Тодорхойгүй"}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {account.accountStatus || "Тодорхойгүй"}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {account.tailbar || "Тодорхойгүй"}
+                  </Text>
                 </View>
               ))}
             </View>

@@ -19,32 +19,7 @@ const HomeScreen = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // Example team data
-  const homeSliderData = [
-    { name: "НИЙТ МӨНГӨ", img: require("../../assets/niit.png"), balance: "000₮" },
-    {
-      name: "ХАДГАЛСАН МӨНГӨ",
-      img: require("../../assets/saved.png"),
-      balance: "000₮",
-    },
-    {
-      name: "ЗЭЭЛИЙН ҮЛДЭГДЭЛ",
-      img: require("../../assets/zeel.png"),
-      balance: "000₮",
-    },
-    {
-      name: "ЭНЭ САРЫН ОРЛОГО",
-      img: require("../../assets/orlogo.png"),
-      balance: "000₮",
-    },
-    {
-      name: "ЭНЭ САРЫН ЗАРЛАГА",
-      img: require("../../assets/zarlaga.png"),
-      balance: "000₮",
-    },
-    // Add more team members as needed
-  ];
-
+  
   return (
     <ScrollView
       contentContainerStyle={[
@@ -52,17 +27,7 @@ const HomeScreen = () => {
         isDarkMode ? styles.darkModeContainer : null,
       ]}
     >
-      <View style={styles.teamContainer}>
-        <Swiper style={styles.wrapper} showsButtons={true}>
-          {homeSliderData.map((member, index) => (
-            <View key={index} style={styles.slide}>
-              <Image source={member.img} style={styles.memberImage} />
-              <Text style={styles.memberName}>{member.name}</Text>
-              <Text style={styles.memberBalance}>{member.balance}</Text>
-            </View>
-          ))}
-        </Swiper>
-      </View>
+      
       <View style={styles.dashboardContainer}>
       
         <TouchableOpacity
