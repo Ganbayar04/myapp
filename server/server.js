@@ -21,8 +21,14 @@ const orlogoRouter = require("../server/router/orlogoRouter.js");
 // Зарлага
 const zarlagaRouter = require("../server/router/zarlagaRouter.js");
 
+// In a controller file, for example
+const sendEmail = require("../server/config/utils/email"); // Adjust the path as necessary
+
+// Then use sendEmail in your controller's actions
+
 require("dotenv").config({ path: "../server/config/.env" });
 require("../server/config/db.js");
+//require("../server/config/utils/email.js")
 
 app.use(express.json());
 
@@ -47,6 +53,6 @@ app.use("/api/orlogo", orlogoRouter);
 // Зарлага
 app.use("/api/zarlaga", zarlagaRouter);
 
-app.listen(9090, "192.168.1.229", () => {
+app.listen(9090, "192.168.100.68", () => {
   console.log("port is listening");
 });

@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Table, Row } from "react-native-table-component";
 import DarkMode from "../../styles/darkMode";
 
 const Orlogo = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigation = useNavigation(); // Correctly using the hook to extract the navigation object.
 
   // Implement edit functionality
   const handleEdit = () => {
@@ -51,16 +53,16 @@ const Orlogo = () => {
     >
       <ScrollView>
         {/* Table Header */}
-        <Table className="Orlogo">
+        <Table>
           <Row
-            data={OrlogoData.tableHead} // Provide tableHead directly to the Row component
-            style={[styles.columnHeader, { backgroundColor: "#1EE34F" }]} // Apply header styles here
+            data={OrlogoData.tableHead}
+            style={[styles.columnHeader, { backgroundColor: "#1EE34F" }]}
             textStyle={styles.columnText}
           />
         </Table>
 
         {/* Table Body */}
-        <Table className="Orlogo">
+        <Table>
           {OrlogoData.tableData.map((rowData, index) => (
             <Row
               key={index}
@@ -76,11 +78,25 @@ const Orlogo = () => {
           ))}
         </Table>
       </ScrollView>
+      <View style={styles.footerButtons}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Nemeh")}
+        >
+          <Text style={styles.buttonText}>Орлого үүсгэх</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Haasan")}
+        >
+          <Text style={styles.buttonText}>Шилжүүлэг хийх</Text>
+        </TouchableOpacity>
+      </View>
       <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -103,6 +119,29 @@ const styles = StyleSheet.create({
   },
   darkModeContainer: {
     backgroundColor: "#000",
+  },
+  button: {
+    backgroundColor: "#fFF",
+    padding: 15,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#000",
+    fontWeight: "bold",
+  },
+  refreshButton: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    left: 20,
+    zIndex: 1000,
   },
 });
 

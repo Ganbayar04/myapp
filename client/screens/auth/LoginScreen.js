@@ -1,102 +1,100 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   TextInput,
   StyleSheet,
   Alert,
+  ScrollView,
   ActivityIndicator,
-  Image,
   TouchableOpacity,
   Text,
-  ScrollView,
-} from "react-native";
-import API from "../../config.js";
-import CustomButton from "../../styles/customButton1.js";
-import DarkMode from "../../styles/darkMode";
-import { useUser } from "../../src/contexts/userContext.js";
+  Image,
+} from 'react-native';
+import CustomButton from '../../styles/customButton.js';
+import DarkMode from '../../styles/darkMode';
+import { useUser } from '../../src/contexts/userContext.js';
+import API from '../../config.js';
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isDarkmode, setIsDarkmode] = useState(false); // State for theme
+  const [isDarkmode, setIsDarkmode] = useState(false);
   const { setUser } = useUser();
 
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      const response = await API.post("/users/login", { email, password });
+      const response = await API.post('/users/login', { email, password });
       setIsLoading(false);
       const { user } = response.data.data;
 
       if (user) {
-        setUser(user); // Хэрэглэгчийг контекстээр тохируулах
-        // Хэрэглэгчийн үүрэг дээр үндэслэн дахин чиглүүлэх
-        if (user.role === "admin") {
-          navigation.navigate("Admin", { email: user.email });
-        } else {
-          navigation.navigate("Home", { email: user.email });
-        }
+        setUser(user);
+        navigation.navigate(user.role === 'admin' ? 'Admin' : 'Home', { email: user.email });
       } else {
-        // Хэрэв хэрэглэгчийн объект хариуд нь олдсонгүй бол
-        Alert.alert(
-          "Нэвтрэлт амжилтгүй боллоо",
-          "Хэрэглэгчийн мэдээлэл олдсонгүй!"
-        );
+        Alert.alert("Login Failed", "No such user found!");
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Login error: ", error.response || error);
-      Alert.alert(
-        "Login Failed",
-        error.response?.data?.message ||
-          "Please check your credentials and try again."
-      );
+      Alert.alert("Login Failed", error.response?.data?.message || "Please check your credentials and try again.");
     }
   };
 
-  const welcomeImage = require("../../assets/urkhiintusuv.png");
+  const handleForgotPassword = () => {
+    // Navigate to ForgotPassword Screen or simply ask for email to send reset link
+    Alert.prompt(
+      "Forgot Password",
+      "Enter your registered email address:",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Submit",
+          onPress: email => forgotPassword(email),
+        }
+      ],
+      "plain-text",
+      "" // Default input text value
+    );
+  };
 
-  const toggleTheme = () => {
-    setIsDarkmode(!isDarkmode); // Toggle theme
+  const forgotPassword = async (userEmail) => {
+    if (!userEmail) {
+      Alert.alert("Input Error", "Please provide a valid email address.");
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const response = await API.post('/users/forgot-password', { email: userEmail });
+      setIsLoading(false);
+      Alert.alert("Check Your Email", "A password reset link has been sent to your email address.");
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert("Failed", error.response?.data?.message || "Failed to send password reset email.");
+    }
   };
 
   return (
-    <View
-      style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}
-    >
+    <View style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}>
       <ScrollView>
-        <Image
-          source={welcomeImage}
-          resizeMode="contain"
-          style={styles.welcomeImage}
-        />
-
-        <TextInput
-          placeholder="Email Address"
-          value={email}
-          onChangeText={setEmail}
-          style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
-          secureTextEntry
-        />
+        <Image source={require("../../assets/urkhiintusuv.png")} resizeMode="contain" style={styles.welcomeImage} />
+        <TextInput placeholder="Email Address" value={email} onChangeText={setEmail} style={[styles.input, isDarkmode ? styles.darkModeInput : null]} keyboardType="email-address" autoCapitalize="none" />
+        <TextInput placeholder="Password" value={password} onChangeText={setPassword} style={[styles.input, isDarkmode ? styles.darkModeInput : null]} secureTextEntry />
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
-          <View style={styles.buttonContainer}>
-            <CustomButton title="Login" onPress={handleLogin} />
-            <CustomButton
-              title="Register"
-              onPress={() => navigation.navigate("Register")}
-            />
-          </View>
+          <>
+            <View style={styles.buttonContainer}>
+              <CustomButton title="Login" onPress={handleLogin} />
+              <CustomButton title="Register" onPress={() => navigation.navigate("Register")} />
+            </View>
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </>
         )}
       </ScrollView>
       <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
@@ -105,6 +103,14 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  // previous styles remain the same
+  forgotPasswordText: {
+    textAlign: 'center',
+    color: '#0000ff',
+    marginTop: 15,
+  },
+
+
   container: {
     flex: 1,
     justifyContent: "center",

@@ -1,6 +1,51 @@
 const User = require("../models/usersModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const sendEmail = require('../config/utils/email.js'); // Ensure this path is correct
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: "Please enter your email address" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    // Hash the token and set to resetPasswordToken field for security
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    // Set token expiry time (1 hour)
+    user.resetPasswordExpire = Date.now() + 3600000;
+
+    await user.save();
+
+    // Send the token to user's email
+    const resetUrl = `http://yourfrontendaddress.com/password-reset/${resetToken}`;
+    const message = `You are receiving this email because you have requested the reset of a password. Please use the following link to reset your password:\n\n${resetUrl}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset Request',
+      text: message,
+    });
+
+    res.status(200).json({
+      message: "A password reset token has been sent to your email address."
+    });
+  } catch (error) {
+    console.error("Forgot Password Error:", error);
+    res.status(500).json({ message: "Error sending the password reset email" });
+  }
+};
 
 // Бүртгүүлэх
 exports.createUser = async (req, res) => {
@@ -143,3 +188,4 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: "Хэрэглэгчийг устгахад алдаа гарлаа!..." });
   }
 };
+
