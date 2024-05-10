@@ -84,18 +84,21 @@ const Uusgeh = () => {
         <ScrollView>
           <TextInput
             placeholder="Дансны нэр"
+            placeholderTextColor="#000"
             value={name}
             onChangeText={setName}
             style={styles.input}
           />
           <TextInput
             placeholder="Үлдэгдэл"
+            placeholderTextColor="#000"
             value={uldegdel}
             onChangeText={setUldegdel}
             style={styles.input}
           />
           <TextInput
             placeholder="Тайлбар"
+            placeholderTextColor="#000"
             value={tailbar}
             onChangeText={setTailbar}
             style={styles.input}

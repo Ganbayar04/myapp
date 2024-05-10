@@ -4,22 +4,21 @@ import {
   TextInput,
   StyleSheet,
   Alert,
+  ScrollView,
   ActivityIndicator,
-  Image,
   TouchableOpacity,
   Text,
-  ScrollView,
+  Button,
+  Image,
 } from "react-native";
-import API from "../../config.js";
-import CustomButton from "../../styles/customButton1.js";
-import DarkMode from "../../styles/darkMode";
+
 import { useUser } from "../../src/contexts/userContext.js";
+import API from "../../config.js";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isDarkmode, setIsDarkmode] = useState(false); // State for theme
   const { setUser } = useUser();
 
   const handleLogin = async () => {
@@ -30,23 +29,15 @@ const LoginScreen = ({ navigation }) => {
       const { user } = response.data.data;
 
       if (user) {
-        setUser(user); // Хэрэглэгчийг контекстээр тохируулах
-        // Хэрэглэгчийн үүрэг дээр үндэслэн дахин чиглүүлэх
-        if (user.role === "admin") {
-          navigation.navigate("Admin", { email: user.email });
-        } else {
-          navigation.navigate("Home", { email: user.email });
-        }
+        setUser(user);
+        navigation.navigate(user.role === "admin" ? "Admin" : "Home", {
+          email: user.email,
+        });
       } else {
-        // Хэрэв хэрэглэгчийн объект хариуд нь олдсонгүй бол
-        Alert.alert(
-          "Нэвтрэлт амжилтгүй боллоо",
-          "Хэрэглэгчийн мэдээлэл олдсонгүй!"
-        );
+        Alert.alert("Login Failed", "No such user found!");
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Login error: ", error.response || error);
       Alert.alert(
         "Login Failed",
         error.response?.data?.message ||
@@ -55,51 +46,101 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const welcomeImage = require("../../assets/urkhiintusuv.png");
+  const handleForgotPassword = () => {
+    // Navigate to ForgotPassword Screen or simply ask for email to send reset link
+    Alert.prompt(
+      "Forgot Password",
+      "Enter your registered email address:",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Submit",
+          onPress: (email) => forgotPassword(email),
+        },
+      ],
+      "plain-text",
+      "" // Default input text value
+    );
+  };
 
-  const toggleTheme = () => {
-    setIsDarkmode(!isDarkmode); // Toggle theme
+  const forgotPassword = async (userEmail) => {
+    if (!userEmail) {
+      Alert.alert("Input Error", "Please provide a valid email address.");
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const response = await API.post("/users/forgot-password", {
+        email: userEmail,
+      });
+      setIsLoading(false);
+      if (response.status === 200) {
+        Alert.alert(
+          "Check Your Email",
+          "A password reset link has been sent to your email address."
+        );
+      } else {
+        Alert.alert(
+          "Failed",
+          "Failed to send password reset email. Please try again later."
+        );
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Forgot password error: ", error.response || error);
+      Alert.alert(
+        "Failed",
+        error.response?.data?.message || "Failed to send password reset email."
+      );
+    }
   };
 
   return (
-    <View
-      style={[styles.container, isDarkmode ? styles.darkModeContainer : null]}
-    >
+    <View style={styles.container}>
       <ScrollView>
         <Image
-          source={welcomeImage}
+          source={require("../../assets/urkhiintusuv.png")}
           resizeMode="contain"
           style={styles.welcomeImage}
         />
-
         <TextInput
           placeholder="Email Address"
+          placeholderTextColor="#000"
           value={email}
           onChangeText={setEmail}
-          style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
+          style={styles.input}
           keyboardType="email-address"
           autoCapitalize="none"
         />
         <TextInput
           placeholder="Password"
+          placeholderTextColor="#000"
           value={password}
           onChangeText={setPassword}
-          style={[styles.input, isDarkmode ? styles.darkModeInput : null]}
+          style={styles.input}
           secureTextEntry
         />
+
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
-          <View style={styles.buttonContainer}>
-            <CustomButton title="Login" onPress={handleLogin} />
-            <CustomButton
-              title="Register"
-              onPress={() => navigation.navigate("Register")}
-            />
-          </View>
+          <>
+            <View style={styles.buttonContainer}>
+              <Button title="Login" onPress={handleLogin} />
+              <Button
+                title="Register"
+                onPress={() => navigation.navigate("Register")}
+              />
+            </View>
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </>
         )}
       </ScrollView>
-      <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );
 };
@@ -112,43 +153,37 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
   },
-  darkModeContainer: {
-    backgroundColor: "#000",
-  },
   input: {
-    height: 40,
-    width: "80%",
+    height: 50, // Increased height for larger text input
+    width: "200%",
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 5,
     paddingHorizontal: 10,
-    fontSize: 16,
+    fontSize: 18, // Increased font size for larger text
     backgroundColor: "#fff",
-  },
-  darkModeInput: {
-    backgroundColor: "#333", // Dark mode input background color
-    color: "#fff", // Dark mode text color
+    elevation: 2,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   welcomeImage: {
     width: "100%",
     height: 200,
-    marginBottom: 100,
+    marginBottom: 40,
   },
   buttonContainer: {
-    flexDirection: "row", // Arrange children horizontally
-    justifyContent: "space-around", // Evenly distribute space between children
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginBottom: 20,
+    alignItems: 'center', // Center buttons horizontally
   },
-  themeToggle: {
-    position: "absolute",
-    top: 20, // Adjust top position to move the button down from the top
-    right: 20, // Adjust right position to move the button from the right
+  forgotPasswordText: {
+    textAlign: "center",
+    color: "#0000ff",
   },
-  themeToggleText: {
-    fontSize: 16,
-    color: "#000fff", // Theme toggle button color
-  },
+
 });
+
 
 export default LoginScreen;

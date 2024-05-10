@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import API from "../../config";
-import DarkMode from "../../styles/darkMode";
 import RNPickerSelect from "react-native-picker-select";
 
 const DansEdit = () => {
@@ -100,7 +99,6 @@ const DansEdit = () => {
 
   return (
     <View style={styles.container}>
-      <DarkMode />
       <Text style={styles.label}>Дансны нэр:</Text>
       <TextInput style={styles.input} value={name} onChangeText={setName} />
       <Text style={styles.label}>Дансны тайлбар:</Text>
@@ -167,6 +165,8 @@ const pickerSelectStyles = StyleSheet.create({
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
   },
+
 });
 
 export default DansEdit;
+ 

@@ -21,8 +21,11 @@ const orlogoRouter = require("../server/router/orlogoRouter.js");
 // Зарлага
 const zarlagaRouter = require("../server/router/zarlagaRouter.js");
 
+
+
 require("dotenv").config({ path: "../server/config/.env" });
 require("../server/config/db.js");
+//require("../server/config/utils/email.js")
 
 app.use(express.json());
 

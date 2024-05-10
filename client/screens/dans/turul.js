@@ -77,6 +77,7 @@ const handleRegister = async () => {
         <ScrollView>
           <TextInput
             placeholder="Дансны төрлийн нэр"
+            placeholderTextColor="#000"
             value={name}
             onChangeText={setName}
             style={styles.input}

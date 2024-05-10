@@ -1,6 +1,7 @@
-const User = require("../models/usersModel.js");
+const User = require("../models/usersModel.js"); // Assuming user model path
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 // Бүртгүүлэх
 exports.createUser = async (req, res) => {

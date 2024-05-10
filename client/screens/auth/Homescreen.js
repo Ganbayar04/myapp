@@ -8,23 +8,18 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import DarkMode from "../../styles/darkMode";
+
 import Swiper from "react-native-swiper";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
 
   
   return (
     <ScrollView
       contentContainerStyle={[
-        styles.container,
-        isDarkMode ? styles.darkModeContainer : null,
+        styles.container
       ]}
     >
       
@@ -66,10 +61,10 @@ const HomeScreen = () => {
         >
           <Text style={styles.dashboardItemText}>Тайлан</Text>
         </TouchableOpacity>
-        {/* Add more dashboard items as needed */}
+      
       </View>
 
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+    
     </ScrollView>
   );
 };
@@ -80,9 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingVertical: 20,
   },
-  darkModeContainer: {
-    backgroundColor: "#000",
-  },
+ 
   teamContainer: {
     marginTop: 20,
     paddingHorizontal: 20,

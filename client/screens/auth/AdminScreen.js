@@ -11,13 +11,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import API from "../../config";
-import DarkMode from "../../styles/darkMode";
 import { useUser } from "../../src/contexts/userContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const AdminScreen = () => {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [turuls, setTuruls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
@@ -89,7 +87,7 @@ const AdminScreen = () => {
   }
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
+    <View style>
   <TouchableOpacity style={styles.refreshButton} onPress={fetchAllDansTurul}>
     <MaterialIcons name="refresh" size={24} color="#fff" />
   </TouchableOpacity>
@@ -112,8 +110,6 @@ const AdminScreen = () => {
       contentContainerStyle={styles.list}
     />
   </ScrollView>
-
-  <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
 </View>
 
      
@@ -125,9 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 40,
     backgroundColor: "#f5f5f5",
-  },
-  darkModeContainer: {
-    backgroundColor: "#333",
   },
   list: {
     marginTop: 20,

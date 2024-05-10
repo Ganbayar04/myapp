@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusBar } from "expo-status-bar";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -19,6 +19,8 @@ import Orlogo from "./screens/orlogo/Orlogo";
 import Zarlaga from "./screens/zarlaga/Zarlaga";
 import Uusgeh from "./screens/dans/Uusgeh";
 import Info from "./screens/auth/Info.js"
+import Nemeh from "./screens/orlogo/Nemeh.js";
+
 import { UserProvider } from "./src/contexts/userContext";
 
 const Stack = createNativeStackNavigator();
@@ -32,7 +34,6 @@ export default function App() {
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Admin" component={AdminScreen} />
-        
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Haasan" component={Haasan} />
           <Stack.Screen name="Zasah" component={Zasah} />
@@ -44,8 +45,9 @@ export default function App() {
           <Stack.Screen name="Users" component={Users} />
           <Stack.Screen name="Turul" component={Turul} />
           <Stack.Screen name="Info" component={Info} />
+          <Stack.Screen name="Nemeh" component={Nemeh} />
         </Stack.Navigator>
-        <StatusBar style="auto" />
+       
       </NavigationContainer>
     </UserProvider>
   );

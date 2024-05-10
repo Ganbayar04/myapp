@@ -9,13 +9,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import API from "../../config"; // Ensure this points to your API configuration
-import DarkMode from "../../styles/darkMode"; // Ensure path correctness
+import API from "../../config"; // Ensure this points to your API configuration                                                                  
 import Info from "./Info";
 
 const Users = () => {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,9 +39,9 @@ const Users = () => {
 
   return (
     <ScrollView
-      style={[styles.container, isDarkMode ? styles.darkModeContainer : {}]}
+      style
     >
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+  
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -80,10 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
-  darkModeContainer: {
-    backgroundColor: "#333",
-    color: "#fff",
-  },
+
   table: {
     marginTop: 60,
   },
