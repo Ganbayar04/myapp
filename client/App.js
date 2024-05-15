@@ -15,11 +15,9 @@ import Users from "./screens/auth/Users.js";
 import Dugtui from "./screens/Dugtui";
 import Turul from "./screens/auth/turul.js";
 import Tusuw from "./screens/tusuw/Tusuw";
-import Orlogo from "./screens/orlogo/Orlogo";
-import Zarlaga from "./screens/zarlaga/Zarlaga";
-import Uusgeh from "./screens/dans/Uusgeh";
+import Orlogo from "./screens/dans/Orlogo.js";
+import Zarlaga from "./screens/dans/Zarlaga";
 import Info from "./screens/auth/Info.js"
-import Nemeh from "./screens/orlogo/Nemeh.js";
 import zTurul from "./screens/auth/zTurul.js";
 import oTurul from "./screens/auth/oTurul.js";
 
@@ -40,14 +38,12 @@ export default function App() {
           <Stack.Screen name="Haasan" component={Haasan} />
           <Stack.Screen name="Zasah" component={Zasah} />
           <Stack.Screen name="Dugtui" component={Dugtui} />
-          <Stack.Screen name="Uusgeh" component={Uusgeh} />
           <Stack.Screen name="Tusuw" component={Tusuw} />
           <Stack.Screen name="Orlogo" component={Orlogo} />
           <Stack.Screen name="Zarlaga" component={Zarlaga} />
           <Stack.Screen name="Users" component={Users} />
           <Stack.Screen name="Turul" component={Turul} />
           <Stack.Screen name="Info" component={Info} />
-          <Stack.Screen name="Nemeh" component={Nemeh} />
           <Stack.Screen name="oTurul" component={oTurul} />
           <Stack.Screen name="zTurul" component={zTurul} />
         </Stack.Navigator>
