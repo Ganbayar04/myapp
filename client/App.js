@@ -13,13 +13,15 @@ import Haasan from "./screens/dans/Haasan";
 import Zasah from "./screens/dans/dansEdit.js";
 import Users from "./screens/auth/Users.js";
 import Dugtui from "./screens/Dugtui";
-import Turul from "./screens/dans/turul.js";
+import Turul from "./screens/auth/turul.js";
 import Tusuw from "./screens/tusuw/Tusuw";
 import Orlogo from "./screens/orlogo/Orlogo";
 import Zarlaga from "./screens/zarlaga/Zarlaga";
 import Uusgeh from "./screens/dans/Uusgeh";
 import Info from "./screens/auth/Info.js"
 import Nemeh from "./screens/orlogo/Nemeh.js";
+import zTurul from "./screens/auth/zTurul.js";
+import oTurul from "./screens/auth/oTurul.js";
 
 import { UserProvider } from "./src/contexts/userContext";
 
@@ -46,6 +48,8 @@ export default function App() {
           <Stack.Screen name="Turul" component={Turul} />
           <Stack.Screen name="Info" component={Info} />
           <Stack.Screen name="Nemeh" component={Nemeh} />
+          <Stack.Screen name="oTurul" component={oTurul} />
+          <Stack.Screen name="zTurul" component={zTurul} />
         </Stack.Navigator>
        
       </NavigationContainer>

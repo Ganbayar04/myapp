@@ -14,17 +14,9 @@ import Swiper from "react-native-swiper";
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-
-  
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container
-      ]}
-    >
-      
+    <ScrollView contentContainerStyle={[styles.container]}>
       <View style={styles.dashboardContainer}>
-      
         <TouchableOpacity
           style={styles.dashboardItem}
           onPress={() => navigation.navigate("Account")}
@@ -61,10 +53,7 @@ const HomeScreen = () => {
         >
           <Text style={styles.dashboardItemText}>Тайлан</Text>
         </TouchableOpacity>
-      
       </View>
-
-    
     </ScrollView>
   );
 };
@@ -75,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingVertical: 20,
   },
- 
+
   teamContainer: {
     marginTop: 20,
     paddingHorizontal: 20,
