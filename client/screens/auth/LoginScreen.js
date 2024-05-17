@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
 
       if (user) {
         setUser(user);
-        navigation.navigate(user.role === "admin" ? "Admin" : "Home", {
+        navigation.navigate(user.role === "admin" ? "Admin" : "Account", {
           email: user.email,
         });
       } else {

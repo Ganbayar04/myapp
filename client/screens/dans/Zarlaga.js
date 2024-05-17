@@ -10,7 +10,7 @@ import {
   Alert,
   Modal,
 } from "react-native";
-import { useNavigation, useRoute }  from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import API from "../../config";
 import { useUser } from "../../src/contexts/userContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -26,7 +26,7 @@ const Zarlaga = () => {
     name: "",
     dans_id: "",
     Zarlaga_turul_id: "",
-   // t_Zarlaga_id: "",
+    // t_Zarlaga_id: "",
     dun: "",
     tailbar: "",
     ognoo: new Date(),
@@ -47,7 +47,8 @@ const Zarlaga = () => {
   const fetchAllZarlagas = async () => {
     setIsLoading(true);
     try {
-      const response = await API.get("/Zarlaga");
+      // Use the userId in the API request
+      const response = await API.get(`/zarlaga?userId=${userId}`);
       if (response.status === 200) {
         setZarlagas(response.data);
       } else {
@@ -63,7 +64,7 @@ const Zarlaga = () => {
 
   const deleteZarlaga = async (id) => {
     try {
-      const response = await API.delete(`/Zarlaga/${id}`);
+      const response = await API.delete(`/zarlaga/${id}`);
       if (response.status === 200) {
         Alert.alert("Success", "Зарлага амжилттай устгалаа.");
         fetchAllZarlagas(); // Refresh the list after a successful delete
@@ -77,19 +78,37 @@ const Zarlaga = () => {
   };
 
   const createZarlaga = async () => {
+    setIsLoading(true);
+
+    // Ensure the user object is available and contains the id
+    if (!user?.id) {
+      Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
+      navigation.navigate("Login");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await API.post("/Zarlaga", {
-        ...newZarlaga,
+      const requestData = {
+        name: newZarlaga.name,
         dans_id: selectedDans,
         Zarlaga_turul_id: selectedTurul,
-      });
+        dun: Number(newZarlaga.dun), // Ensure dun is a number
+        tailbar: newZarlaga.tailbar,
+        ognoo: newZarlaga.ognoo,
+        userId: user.id // Automatically include userId
+      };
+
+      console.log("Request data:", requestData); // Log the request data for debugging
+
+      const response = await API.post("/zarlaga", requestData);
+
       if (response.status === 201) {
         Alert.alert("Success", "Зарлага амжилттай үүсгэлээ.");
         setNewZarlaga({
           name: "",
           dans_id: "",
           Zarlaga_turul_id: "",
-          //t_Zarlaga_id: "",
           dun: "",
           tailbar: "",
           ognoo: new Date(),
@@ -100,8 +119,17 @@ const Zarlaga = () => {
         throw new Error(`Failed to create Zarlaga with status: ${response.status}`);
       }
     } catch (error) {
-      console.error("Create error:", error);
-      Alert.alert("Error", `Failed to create Zarlaga: ${error.toString()}`);
+      if (error.response) {
+        // Backend responded with an error
+        console.error("Backend error:", error.response.data);
+        Alert.alert("Error", `Failed to create Zarlaga: ${error.response.data.message || error.response.data}`);
+      } else {
+        // Network error or other issues
+        console.error("Create error:", error);
+        Alert.alert("Error", `Failed to create Zarlaga: ${error.toString()}`);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,7 +148,6 @@ const Zarlaga = () => {
       setIsLoading(false);
     }
   };
-  
 
   const fetchAllZarlagaTurul = async () => {
     setIsLoading(true);
@@ -139,19 +166,22 @@ const Zarlaga = () => {
     }
   };
 
-  const ListHeader = () => (
-    <View>
-      <View style={styles.dashboardContainer}>
+  const ListHeader = () => {
+    if (Zarlagas.length === 0) {
+      return null;
+    }
+    return (
+      <View>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Нэр</Text>
+          <Text style={styles.headerText}>Дүн</Text>
+          <Text style={styles.headerText}>Тайлбар</Text>
+          <Text style={styles.headerText}>Огноо</Text>
+          <Text style={styles.headerText}>Устгах</Text>
+        </View>
       </View>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Нэр</Text>
-        <Text style={styles.headerText}>Дүн</Text>
-        <Text style={styles.headerText}>Тайлбар</Text>
-        <Text style={styles.headerText}>Огноо</Text>
-        <Text style={styles.headerText}>Устгах</Text>
-      </View>
-    </View>
-  );
+    );
+  };
 
   const renderItem = ({ item, index }) => (
     <View style={styles.itemContainer}>
@@ -165,21 +195,27 @@ const Zarlaga = () => {
     </View>
   );
 
+  const ListEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>Танд зарлага байхгүй байна</Text>
+    </View>
+  );
+
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchAllZarlagas}>
-        <MaterialIcons name="refresh" size={24} color="#000" />
+       <TouchableOpacity style={styles.footerButton} onPress={() => setShowModal(true)}>
+        <Text style={[styles.footerButtonText, { fontWeight: "bold" }]}>Зарлага үүсгэх</Text>
       </TouchableOpacity>
-
       <FlatList
         data={Zarlagas}
         renderItem={renderItem}
         keyExtractor={(item) => item._id.toString()}
         ListHeaderComponent={ListHeader}
+        ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.list}
       />
 
@@ -191,6 +227,7 @@ const Zarlaga = () => {
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Зарлага үүсгэх</Text>
+
             <TextInput
               style={styles.input}
               placeholder="Нэр"
@@ -209,7 +246,7 @@ const Zarlaga = () => {
               placeholder={{ label: "Select a dans...", value: null }}
               useNativeAndroidPickerStyle={false}
             />
-            <Text style={styles.label}>Орлогын төрөл:</Text>
+            <Text style={styles.label}>Зарлагын төрөл:</Text>
             <RNPickerSelect
               onValueChange={(value) => setSelectedTurul(value)}
               items={turulList.map((turul) => ({
@@ -250,9 +287,7 @@ const Zarlaga = () => {
           </View>
         </View>
       </Modal>
-      <TouchableOpacity style={styles.footerButton} onPress={() => setShowModal(true)}>
-      <Text style={[styles.footerButtonText, { fontWeight: "bold" }]}>Зарлага үүсгэх</Text>
-    </TouchableOpacity>
+     
     </View>
   );
 };
@@ -313,15 +348,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  refreshButton: {
-    position: "absolute",
-    left: 20,
-    top: 20,
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    zIndex: 1000,
-  },
   dashboardContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -332,8 +358,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#fff",
     padding: 15,
-    borderRadius: 5,
-    marginHorizontal: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
@@ -402,6 +429,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: "#000",
+  },
+  footerButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
   },
 });
 

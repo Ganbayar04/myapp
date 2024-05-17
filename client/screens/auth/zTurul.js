@@ -15,7 +15,7 @@ import API from "../../config";
 import { useUser } from "../../src/contexts/userContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const zTurul = () => {
+const Turulz = () => {
   const navigation = useNavigation();
   const [turuls, setTuruls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -253,4 +253,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default zTurul;
+export default Turulz;

@@ -15,7 +15,7 @@ import API from "../../config";
 import { useUser } from "../../src/contexts/userContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const oTurul = () => {
+const Turulo = () => {
   const navigation = useNavigation();
   const [orlogoTuruls, setOrlogoTuruls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -252,4 +252,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default oTurul;
+export default Turulo;

@@ -53,7 +53,7 @@ const Account = ({ route }) => {
         setAccounts([]);
       }
     } catch (error) {
-      console.error("API error:", error);
+      //console.error("API error:", error);
       Alert.alert("Error", "Failed to fetch accounts.");
     } finally {
       setIsLoading(false);
@@ -146,13 +146,13 @@ const Account = ({ route }) => {
 
   return (
     <View style={[styles.container]}>
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchAccounts}>
-        <MaterialIcons
-          name="refresh"
-          size={24}
-          color={isDarkMode ? "#fff" : "#000"}
-        />
-      </TouchableOpacity>
+      <TouchableOpacity
+    style={styles.button}
+    onPress={() => setIsModalVisible(true)}
+  >
+    <Text style={styles.buttonText}>Данс үүсгэх</Text>
+  </TouchableOpacity>
+     
 
       <FlatList
         data={accounts}
@@ -188,191 +188,201 @@ const Account = ({ route }) => {
         columnWrapperStyle={styles.row} // Style to apply on every row
         contentContainerStyle={{ marginTop: 40 }}
       />
+<View style={styles.footerButtons}>
+  <RNPickerSelect
+    onValueChange={(value) => {
+      if (value === "Haasan") {
+        navigation.navigate("Haasan");
+      } else if (value === "Zarlaga") {
+        navigation.navigate("Zarlaga");
+      } else if (value === "Orlogo") {
+        navigation.navigate("Orlogo");
+      } else if (value === "Tusuw") {
+        navigation.navigate("Tusuw");
+      }
+    }}
+    items={[
+      { label: "Хаасан данс харах", value: "Haasan" },
+      { label: "Зарлага", value: "Zarlaga" },
+      { label: "Орлого", value: "Orlogo" },
+      { label: "Төсөв", value: "Tusuw" },
+    ]}
+    style={pickerSelectStyles}
+    placeholder={{ label: "Данс харах", value: null }}
+    useNativeAndroidPickerStyle={false}
+  />
+  
+</View>
 
-      <View style={styles.footerButtons}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setIsModalVisible(true)}
+        <Modal
+          visible={isModalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setIsModalVisible(false)}
         >
-          <Text style={styles.buttonText}>Данс үүсгэх</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Haasan")}
-        >
-          <Text style={styles.buttonText}>Хаасан данс харах</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Modal
-        visible={isModalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setIsModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {isLoading ? (
-              <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-              <ScrollView>
-                <TextInput
-                  placeholder="Дансны нэр"
-                  placeholderTextColor="#000"
-                  value={name}
-                  onChangeText={setName}
-                  style={styles.input}
-                />
-                <TextInput
-                  placeholder="Үлдэгдэл"
-                  placeholderTextColor="#000"
-                  value={uldegdel}
-                  onChangeText={setUldegdel}
-                  style={styles.input}
-                />
-                <TextInput
-                  placeholder="Тайлбар"
-                  placeholderTextColor="#000"
-                  value={tailbar}
-                  onChangeText={setTailbar}
-                  style={styles.input}
-                />
-                <Text style={styles.label}>Дансны төрөл:</Text>
-                <RNPickerSelect
-                  onValueChange={(value) => setSelectedTurul(value)}
-                  items={Object.keys(turulList).map((key) => ({
-                    label: turulList[key],
-                    value: key,
-                  }))}
-                  style={pickerSelectStyles}
-                  placeholder={{ label: "Select a turul...", value: null }}
-                  useNativeAndroidPickerStyle={false}
-                />
-                <Button title="Хадгалах" onPress={handleRegister} />
-                <Button title="Буцах" onPress={() => setIsModalVisible(false)} />
-              </ScrollView>
-            )}
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              {isLoading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : (
+                <ScrollView>
+                  <TextInput
+                    placeholder="Дансны нэр"
+                    placeholderTextColor="#000"
+                    value={name}
+                    onChangeText={setName}
+                    style={styles.input}
+                  />
+                  <TextInput
+                    placeholder="Үлдэгдэл"
+                    placeholderTextColor="#000"
+                    value={uldegdel}
+                    onChangeText={setUldegdel}
+                    style={styles.input}
+                  />
+                  <TextInput
+                    placeholder="Тайлбар"
+                    placeholderTextColor="#000"
+                    value={tailbar}
+                    onChangeText={setTailbar}
+                    style={styles.input}
+                  />
+                  <Text style={styles.label}>Дансны төрөл:</Text>
+                  <RNPickerSelect
+                    onValueChange={(value) => setSelectedTurul(value)}
+                    items={Object.keys(turulList).map((key) => ({
+                      label: turulList[key],
+                      value: key,
+                    }))}
+                    style={pickerSelectStyles}
+                    placeholder={{ label: "Select a turul...", value: null }}
+                    useNativeAndroidPickerStyle={false}
+                  />
+                  <Button title="Хадгалах" onPress={handleRegister} />
+                  <Button title="Буцах" onPress={() => setIsModalVisible(false)} />
+                </ScrollView>
+              )}
+            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 30,
-    backgroundColor: "#f5f5f5",
-  },
-  darkModeContainer: {
-    backgroundColor: "#333",
-  },
-  accountCard: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    margin: 5,
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "flex-start",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
+        </Modal>
+      </View>
+    );
+  };
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 30,
+      backgroundColor: "#f5f5f5",
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  iconsContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    width: "100%",
-  },
-  accountText: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 4,
-  },
-  button: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#000",
-    fontWeight: "bold",
-  },
-  refreshButton: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    left: 20,
-    zIndex: 1000,
-  },
-  footerButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalContent: {
-    width: "90%",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  label: {
-    fontSize: 16,
-    color: "#333",
-    marginVertical: 10,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 4,
-    color: "black",
-    paddingRight: 30,
-    backgroundColor: "white",
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 8,
-    color: "black",
-    paddingRight: 30,
-    backgroundColor: "white",
-  },
-});
-
-export default Account;
+    darkModeContainer: {
+      backgroundColor: "#333",
+    },
+    accountCard: {
+      backgroundColor: "#fff",
+      padding: 15,
+      borderRadius: 10,
+      margin: 5,
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "flex-start",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    iconsContainer: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      width: "100%",
+    },
+    accountText: {
+      fontSize: 16,
+      color: "#333",
+      marginBottom: 4,
+    },
+    button: {
+      backgroundColor: "#fff",
+      padding: 15,
+      borderRadius: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 10,
+    },
+    buttonText: {
+      fontSize: 18,
+      color: "#000",
+      fontWeight: "bold",
+    },
+    refreshButton: {
+      backgroundColor: "#fff",
+      padding: 10,
+      borderRadius: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      left: 20,
+      zIndex: 1000,
+    },
+    footerButtons: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 20,
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+      width: "90%",
+      padding: 20,
+      backgroundColor: "#fff",
+      borderRadius: 10,
+    },
+    input: {
+      height: 40,
+      borderColor: "gray",
+      borderWidth: 1,
+      marginBottom: 10,
+      paddingHorizontal: 10,
+    },
+    label: {
+      fontSize: 16,
+      color: "#333",
+      marginVertical: 10,
+    },
+  });
+  
+  const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderColor: "gray",
+      borderRadius: 4,
+      color: "black",
+      paddingRight: 30,
+      backgroundColor: "white",
+    },
+    inputAndroid: {
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 1,
+      borderColor: "gray",
+      borderRadius: 8,
+      color: "black",
+      paddingRight: 30,
+      backgroundColor: "white",
+    },
+  });
+  
+  export default Account;
+  

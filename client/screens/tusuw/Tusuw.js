@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import DarkMode from "../../styles/darkMode"; 
 
 const Tusuw= () => {
   const navigation = useNavigation();
@@ -12,28 +11,8 @@ const Tusuw= () => {
   };
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.darkModeContainer : null]}>
-      <View style={styles.dashboardContainer}>
-        <TouchableOpacity
-          style={styles.dashboardItem}
-          onPress={() => navigation.navigate("Screen1")}
-        >
-          <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Төсөв үүсгэх</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.dashboardItem}
-          onPress={() => navigation.navigate("Screen2")}
-        >
-          <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Хаасан төсөв харах</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.dashboardItem}
-          onPress={() => navigation.navigate("Screen3")}
-        >
-          <Text style={[styles.dashboardItemText, { color: isDarkMode ? "#fff" : "#000" }]}>Тусламж</Text>
-        </TouchableOpacity>
-      </View>
-      <DarkMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+    <View style>
+      
     </View>
   );
 };
@@ -44,9 +23,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  darkModeContainer: {
-    backgroundColor: '#000',
-  },
+  
   dashboardContainer: {
     flexDirection: 'column',
     alignItems: 'center',

@@ -5,7 +5,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/auth/LoginScreen";
 import RegisterScreen from "./screens/auth/RegisterScreen";
-import HomeScreen from "./screens/auth/Homescreen.js";
 import AdminScreen from "./screens/auth/AdminScreen";
 //import Sambar from "./screens/Sambar";
 import Account from "./screens/dans/Account";
@@ -18,8 +17,8 @@ import Tusuw from "./screens/tusuw/Tusuw";
 import Orlogo from "./screens/dans/Orlogo.js";
 import Zarlaga from "./screens/dans/Zarlaga";
 import Info from "./screens/auth/Info.js"
-import zTurul from "./screens/auth/zTurul.js";
-import oTurul from "./screens/auth/oTurul.js";
+import Turulz from "./screens/auth/zTurul.js";
+import Turulo from "./screens/auth/oTurul.js";
 
 import { UserProvider } from "./src/contexts/userContext";
 
@@ -32,7 +31,6 @@ export default function App() {
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Admin" component={AdminScreen} />
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Haasan" component={Haasan} />
@@ -44,8 +42,8 @@ export default function App() {
           <Stack.Screen name="Users" component={Users} />
           <Stack.Screen name="Turul" component={Turul} />
           <Stack.Screen name="Info" component={Info} />
-          <Stack.Screen name="oTurul" component={oTurul} />
-          <Stack.Screen name="zTurul" component={zTurul} />
+          <Stack.Screen name="oTurul" component={Turulz} />
+          <Stack.Screen name="zTurul" component={Turulo} />
         </Stack.Navigator>
        
       </NavigationContainer>

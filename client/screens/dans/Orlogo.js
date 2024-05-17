@@ -10,7 +10,7 @@ import {
   Alert,
   Modal,
 } from "react-native";
-import { useNavigation, useRoute }  from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import API from "../../config";
 import { useUser } from "../../src/contexts/userContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -26,7 +26,6 @@ const Orlogo = () => {
     name: "",
     dans_id: "",
     orlogo_turul_id: "",
-   // t_orlogo_id: "",
     dun: "",
     tailbar: "",
     ognoo: new Date(),
@@ -47,7 +46,8 @@ const Orlogo = () => {
   const fetchAllOrlogos = async () => {
     setIsLoading(true);
     try {
-      const response = await API.get("/orlogo");
+      // Use the userId in the API request
+      const response = await API.get(`/orlogo?userId=${userId}`);
       if (response.status === 200) {
         setOrlogos(response.data);
       } else {
@@ -60,6 +60,7 @@ const Orlogo = () => {
       setIsLoading(false);
     }
   };
+  
 
   const deleteOrlogo = async (id) => {
     try {
@@ -75,35 +76,64 @@ const Orlogo = () => {
       Alert.alert("Error", `Failed to delete orlogo: ${error.toString()}`);
     }
   };
-
+  
   const createOrlogo = async () => {
-    try {
-      const response = await API.post("/orlogo", {
-        ...newOrlogo,
-        dans_id: selectedDans,
-        orlogo_turul_id: selectedTurul,
-      });
-      if (response.status === 201) {
-        Alert.alert("Success", "Орлого амжилттай үүсгэлээ.");
-        setNewOrlogo({
-          name: "",
-          dans_id: "",
-          orlogo_turul_id: "",
-          //t_orlogo_id: "",
-          dun: "",
-          tailbar: "",
-          ognoo: new Date(),
-        });
-        setShowModal(false);
-        fetchAllOrlogos(); // Refresh the list after a successful create
-      } else {
-        throw new Error(`Failed to create orlogo with status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error("Create error:", error);
-      Alert.alert("Error", `Failed to create orlogo: ${error.toString()}`);
+    setIsLoading(true);
+
+    // Ensure the user object is available and contains the id
+    if (!user?.id) {
+        Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
+        navigation.navigate("Login");
+        setIsLoading(false);
+        return;
     }
-  };
+
+    try {
+        const requestData = {
+            name: newOrlogo.name,
+            dans_id: selectedDans,
+            orlogo_turul_id: selectedTurul,
+            dun: Number(newOrlogo.dun), // Ensure dun is a number
+            tailbar: newOrlogo.tailbar,
+            ognoo: newOrlogo.ognoo,
+            userId: user.id // Automatically include userId
+        };
+
+        console.log("Request data:", requestData); // Log the request data for debugging
+
+        const response = await API.post("/orlogo", requestData);
+
+        if (response.status === 201) {
+            Alert.alert("Success", "Орлого амжилттай үүсгэлээ.");
+            setNewOrlogo({
+                name: "",
+                dans_id: "",
+                orlogo_turul_id: "",
+                dun: "",
+                tailbar: "",
+                ognoo: new Date(),
+            });
+            setShowModal(false);
+            fetchAllOrlogos(); // Refresh the list after a successful create
+        } else {
+            throw new Error(`Failed to create orlogo with status: ${response.status}`);
+        }
+    } catch (error) {
+        if (error.response) {
+            // Backend responded with an error
+            console.error("Backend error:", error.response.data);
+            Alert.alert("Error", `Failed to create orlogo: ${error.response.data.message || error.response.data}`);
+        } else {
+            // Network error or other issues
+            console.error("Create error:", error);
+            Alert.alert("Error", `Failed to create orlogo: ${error.toString()}`);
+        }
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+  
 
   const fetchAccounts = async () => {
     setIsLoading(true);
@@ -139,17 +169,22 @@ const Orlogo = () => {
     }
   };
 
-  const ListHeader = () => (
-    <View>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Нэр</Text>
-        <Text style={styles.headerText}>Дүн</Text>
-        <Text style={styles.headerText}>Тайлбар</Text>
-        <Text style={styles.headerText}>Огноо</Text>
-        <Text style={styles.headerText}>Устгах</Text>
+  const ListHeader = () => {
+    if (orlogos.length === 0) {
+      return null;
+    }
+    return (
+      <View>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Нэр</Text>
+          <Text style={styles.headerText}>Дүн</Text>
+          <Text style={styles.headerText}>Тайлбар</Text>
+          <Text style={styles.headerText}>Огноо</Text>
+          <Text style={styles.headerText}>Устгах</Text>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const renderItem = ({ item, index }) => (
     <View style={styles.itemContainer}>
@@ -157,9 +192,16 @@ const Orlogo = () => {
       <Text style={styles.itemText}>{item.dun}</Text>
       <Text style={styles.itemText}>{item.tailbar}</Text>
       <Text style={styles.itemText}>{new Date(item.ognoo).toLocaleDateString()}</Text>
+     
       <TouchableOpacity onPress={() => deleteOrlogo(item._id)}>
         <MaterialIcons name="delete" size={24} color="red" />
       </TouchableOpacity>
+    </View>
+  );
+
+  const ListEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>Танд орлого байхгүй байна</Text>
     </View>
   );
 
@@ -169,15 +211,15 @@ const Orlogo = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchAllOrlogos}>
-        <MaterialIcons name="refresh" size={24} color="#000" />
-      </TouchableOpacity>
-
+     <TouchableOpacity style={styles.footerButton} onPress={() => setShowModal(true)}>
+      <Text style={[styles.footerButtonText, { fontWeight: "bold" }]}>Орлого үүсгэх</Text>
+    </TouchableOpacity>
       <FlatList
         data={orlogos}
         renderItem={renderItem}
         keyExtractor={(item) => item._id.toString()}
         ListHeaderComponent={ListHeader}
+        ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.list}
       />
 
@@ -249,12 +291,11 @@ const Orlogo = () => {
           </View>
         </View>
       </Modal>
-      <TouchableOpacity style={styles.footerButton} onPress={() => setShowModal(true)}>
-      <Text style={[styles.footerButtonText, { fontWeight: "bold" }]}>Орлого үүсгэх</Text>
-    </TouchableOpacity>
+      
     </View>
   );
 };
+
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -312,15 +353,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  refreshButton: {
-    position: "absolute",
-    left: 20,
-    top: 20,
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    zIndex: 1000,
-  },
+ 
   dashboardContainer: {
     flexDirection: "row",
     justifyContent: "center",
