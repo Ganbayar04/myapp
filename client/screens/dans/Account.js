@@ -21,7 +21,6 @@ import RNPickerSelect from "react-native-picker-select";
 
 const Account = ({ route }) => {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);

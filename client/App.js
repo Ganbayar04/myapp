@@ -19,6 +19,7 @@ import Zarlaga from "./screens/dans/Zarlaga";
 import Info from "./screens/auth/Info.js"
 import Turulz from "./screens/auth/zTurul.js";
 import Turulo from "./screens/auth/oTurul.js";
+import Completed from "./screens/tusuw/completed.js";
 
 import { UserProvider } from "./src/contexts/userContext";
 
@@ -44,6 +45,7 @@ export default function App() {
           <Stack.Screen name="Info" component={Info} />
           <Stack.Screen name="oTurul" component={Turulz} />
           <Stack.Screen name="zTurul" component={Turulo} />
+          <Stack.Screen name="Completed" component={Completed} />
         </Stack.Navigator>
        
       </NavigationContainer>
