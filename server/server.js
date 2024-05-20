@@ -52,7 +52,15 @@ app.use("/api/zTurul", zarlagaTurulRouter);
 app.use("/api/orlogo", orlogoRouter);
 // Зарлага
 app.use("/api/zarlaga", zarlagaRouter);
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
 
-app.listen(9090, "192.168.100.68", () => {
-  console.log("port is listening");
+// Server Start-Up
+const PORT = process.env.PORT || 9090; // Default port or environment variable
+const HOST = process.env.HOST || "localhost"; // Default host or environment variable
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server is listening on ${HOST}:${PORT}`);
 });
