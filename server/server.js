@@ -21,11 +21,6 @@ const orlogoRouter = require("../server/router/orlogoRouter.js");
 // Зарлага
 const zarlagaRouter = require("../server/router/zarlagaRouter.js");
 
-// In a controller file, for example
-const sendEmail = require("../server/config/utils/email"); // Adjust the path as necessary
-
-// Then use sendEmail in your controller's actions
-
 require("dotenv").config({ path: "../server/config/.env" });
 require("../server/config/db.js");
 //require("../server/config/utils/email.js")
@@ -61,6 +56,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 9090; // Default port or environment variable
 const HOST = process.env.HOST || "localhost"; // Default host or environment variable
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server is listening on ${HOST}:${PORT}`);
+app.listen(9090, "10.150.32.55", () => {
+  console.log("port is listening");
 });

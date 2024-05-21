@@ -23,13 +23,20 @@ exports.createZarlaga = async (req, res) => {
 };
 
 exports.getAllZarlaga = async (req, res) => {
+
   try {
-    const zarlaga = await Zarlaga.find();
+    const { userId } = req.query;
+
+    // If userId is provided, filter the orlogos by userId
+    const filter = userId ? { userId } : {};
+
+    const zarlaga = await Zarlaga.find(filter);
     res.status(200).json(zarlaga);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.getZarlaga = async (req, res) => {
   try {

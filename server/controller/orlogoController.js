@@ -11,11 +11,11 @@ exports.createOrlogo = async (req, res) => {
         name: newOrlogo.name,
         dans_id: newOrlogo.dans_id,
         orlogo_turul_id: newOrlogo.orlogo_turul_id,
-        t_orlogo_id: newOrlogo.t_orlogo_id,
+       
         dun: newOrlogo.dun,
         tailbar: newOrlogo.tailbar,
         ognoo: newOrlogo.ognoo,
-      },
+      }, // t_orlogo_id: newOrlogo.t_orlogo_id,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -24,7 +24,12 @@ exports.createOrlogo = async (req, res) => {
 
 exports.getAllOrlogo = async (req, res) => {
   try {
-    const orlogo = await Orlogo.find();
+    const { userId } = req.query;
+
+    // If userId is provided, filter the orlogos by userId
+    const filter = userId ? { userId } : {};
+
+    const orlogo = await Orlogo.find(filter);
     res.status(200).json(orlogo);
   } catch (error) {
     res.status(500).json({ message: error.message });

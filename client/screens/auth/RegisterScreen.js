@@ -10,17 +10,19 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import API from "../../config.js";
-import CustomButton from "../../styles/customButton.js";
-import DarkMode from "../../styles/darkMode";
+import API from "../../config.js"; // Assuming this imports your API configuration
+import { useBackHandler } from '@react-native-community/hooks';
 
 const RegisterScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isDarkmode, setIsDarkmode] = useState(false);
+
+  useBackHandler(() => {
+    navigation.navigate("Login");
+    return true;
+  });
 
   const handleRegister = async () => {
     setIsLoading(true);
@@ -30,108 +32,126 @@ const RegisterScreen = ({ navigation }) => {
         password,
         role,
       });
-      Alert.alert("Бүртгэл амжилттай", "Та нэвтэрч орно уу!.");
+      Alert.alert("Registration Successful", "Please login.");
       setIsLoading(false);
       navigation.navigate("Login");
     } catch (error) {
       console.log(error.response?.data);
       Alert.alert(
-        "Бүртгэл амжилтгүй боллоо!",
+        "Registration Failed",
         error.response?.data.message ||
-          "Талбаруудыг зөв бөглөж, дахин оролдоно уу!"
+          "Please check your input fields and try again."
       );
       setIsLoading(false);
     }
   };
 
-  const welcomeImage = require("../../assets/urkhiintusuv.png");
-
-  const toggleTheme = () => {
-    setIsDarkmode(!isDarkmode); // Toggle theme
-  };
-
-  // Define dynamic styles based on dark mode state
-  const dynamicStyles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      padding: 10,
-      backgroundColor: isDarkmode ? "#333" : "#fff",
-    },
-    input: {
-      height: 40,
-      margin: 12,
-      borderWidth: 1,
-      padding: 10,
-      backgroundColor: isDarkmode ? "#555" : "#eee",
-      color: isDarkmode ? "#fff" : "#000",
-    },
-    welcomeImage: {
-      width: "100%",
-      height: 200,
-      marginBottom: 20,
-    },
-    buttonContainer: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-    },
-    themeToggle: {
-      position: "absolute",
-      top: 20, // Adjust top position to move the button down from the top
-      right: 20, // Adjust right position to move the button from the right
-    },
-    themeToggleText: {
-      fontSize: 16,
-      color: "#0000ff",
-    },
-  });
-
   return (
-    <View style={dynamicStyles.container}>
+    <View style={styles.container}>
       <ScrollView>
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <>
             <Image
-              source={welcomeImage}
+              source={require("../../assets/urkhiintusuv.png")}
               resizeMode="contain"
-              style={dynamicStyles.welcomeImage}
+              style={styles.welcomeImage}
             />
-
             <TextInput
               placeholder="Email"
+              placeholderTextColor="#000"
               value={email}
               onChangeText={setEmail}
-              style={dynamicStyles.input}
+              style={[styles.input, styles.inputPlaceholder]} // Apply both styles
               keyboardType="email-address"
             />
             <TextInput
               placeholder="Password"
+              placeholderTextColor="#000"
               value={password}
               onChangeText={setPassword}
-              style={dynamicStyles.input}
+              style={[styles.input, styles.inputPlaceholder]}
               secureTextEntry
             />
             <TextInput
               placeholder="Role"
               value={role}
               onChangeText={setRole}
-              style={dynamicStyles.input}
+              placeholderTextColor="#000"
+              style={[styles.input, styles.inputPlaceholder]}
             />
-            <View style={dynamicStyles.buttonContainer}>
-              <CustomButton title="Register" onPress={handleRegister} />
-              <CustomButton
-                title="Back"
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={handleRegister}
+              >
+                <Text style={styles.buttonText}>Register</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.backButton}
                 onPress={() => navigation.navigate("Login")}
-              />
+              >
+                <Text style={styles.buttonText}>Back</Text>
+              </TouchableOpacity>
             </View>
           </>
         )}
       </ScrollView>
-      <DarkMode isDarkMode={isDarkmode} setIsDarkMode={setIsDarkmode} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+  input: {
+    height: 50, // Increased height for larger text input
+    width: "200%",
+    marginBottom: 20,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    fontSize: 18, // Increased font size for larger text
+    backgroundColor: "#fff",
+    elevation: 2,
+    shadowColor: "#ccc",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  welcomeImage: {
+    width: "100%",
+    height: 200,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around", // Evenly distribute space between buttons
+    marginBottom: 20,
+    alignItems: 'center', // Center buttons horizontally
+  },
+  
+  registerButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 10, // Adjust border radius as desired
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    
+  },
+  
+  backButton: {
+    backgroundColor: "#ccc", // Lighter gray background
+    color: "#000", // Black text color
+    paddingHorizontal: 20, // Horizontal padding
+    paddingVertical: 10, // Vertical padding
+    borderRadius: 5, // Rounded corners
+  },
+});
 
 export default RegisterScreen;

@@ -32,6 +32,12 @@ const ZarlagaSchema = new mongoose.Schema(
     ognoo: {
       type: Date,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    
   },
   { timestamps: true }
 );
