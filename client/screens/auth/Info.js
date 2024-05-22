@@ -14,63 +14,62 @@ const Info = ({ route }) => {
   const [userDetails, setUserDetails] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-const [turulList, setTurulList] = useState({});
+  const [turulList, setTurulList] = useState({});
 
-useEffect(() => {
-  fetchAllData();
-}, [userId]);
+  useEffect(() => {
+    fetchAllData();
+  }, [userId]);
 
-const fetchAllData = async () => {
-  await fetchUserDetails();
-  await fetchAccounts();
-  await fetchTurulList();
-};
+  const fetchAllData = async () => {
+    await fetchUserDetails();
+    await fetchAccounts();
+    await fetchTurulList();
+  };
 
-const fetchTurulList = async () => {
-  try {
-    const response = await API.get("/dansTurul");
-    if (response.status === 200) {
-      setTurulList(
-        response.data.reduce((acc, turul) => {
-          acc[turul._id] = turul.name;
-          return acc;
-        }, {})
-      );
-    } else {
-      Alert.alert("Error", `Unexpected HTTP status ${response.status}`);
+  const fetchTurulList = async () => {
+    try {
+      const response = await API.get("/dansTurul");
+      if (response.status === 200) {
+        setTurulList(
+          response.data.reduce((acc, turul) => {
+            acc[turul._id] = turul.name;
+            return acc;
+          }, {})
+        );
+      } else {
+        Alert.alert("Error", `Unexpected HTTP status ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Failed to fetch Turul list:", error);
+      Alert.alert("Error", "Failed to fetch Turul list.");
     }
-  } catch (error) {
-    console.error("Failed to fetch Turul list:", error);
-    Alert.alert("Error", "Failed to fetch Turul list.");
-  }
-};
+  };
 
-const fetchUserDetails = async () => {
-  try {
-    const response = await API.get(`/users/${userId}`);
-    setUserDetails(response.data);
-  } catch (error) {
-    console.error("Failed to fetch user details:", error);
-    Alert.alert("Error", "Failed to load user details.");
-  }
-};
-
-const fetchAccounts = async () => {
-  setIsLoading(true);
-  try {
-    const response = await API.get(`/dans/accounts/${userId}`);
-    if (response.data && response.data.length > 0) {
-      setAccounts(response.data);
-    } else {
-      setAccounts([]);
+  const fetchUserDetails = async () => {
+    try {
+      const response = await API.get(`/users/${userId}`);
+      setUserDetails(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+      Alert.alert("Error", "Failed to load user details.");
     }
-  } catch (error) {
-    console.error("API error:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
+  const fetchAccounts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await API.get(`/dans/accounts/${userId}`);
+      if (response.data && response.data.length > 0) {
+        setAccounts(response.data);
+      } else {
+        setAccounts([]);
+      }
+    } catch (error) {
+      console.error("API error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -80,9 +79,9 @@ const fetchAccounts = async () => {
     <ScrollView style={styles.container}>
       {userDetails ? (
         <View>
-          <Text style={styles.detailItem}>Email: {userDetails.email}</Text>
+          <Text style={styles.detailItem}>И-мейл: {userDetails.email}</Text>
           <Text style={styles.detailItem}>Role: {userDetails.role}</Text>
-          <Text style={styles.detailItem}>Accounts:</Text>
+          <Text style={styles.detailItem}>Данс:</Text>
           {accounts.length > 0 ? (
             <View style={styles.table}>
               <View style={styles.tableHeader}>
@@ -121,7 +120,6 @@ const fetchAccounts = async () => {
       )}
     </ScrollView>
   );
-
 };
 
 const styles = StyleSheet.create({

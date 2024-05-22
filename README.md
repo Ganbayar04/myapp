@@ -59,5 +59,6 @@ npm install
 npm start
 # Front асаах
 npx expo start
+npm start
 
 ```

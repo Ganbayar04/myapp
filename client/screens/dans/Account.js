@@ -69,7 +69,7 @@ const Account = ({ route }) => {
         }, {});
         setTurulList(turulMapping);
         // Log to confirm structure
-        console.log("Turul mapping:", turulMapping);
+        //console.log("Turul mapping:", turulMapping);
       } else {
         throw new Error(`Unexpected HTTP status ${response.status}`);
       }

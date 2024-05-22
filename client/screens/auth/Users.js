@@ -47,8 +47,8 @@ const Users = () => {
       ) : (
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={styles.headerCell}>Index</Text>
-            <Text style={styles.headerCell}>Email</Text>
+            <Text style={styles.headerCell}>№</Text>
+            <Text style={styles.headerCell}>И-мейл</Text>
             <Text style={styles.headerCell}>Role</Text>
             <Text style={styles.headerCell}>Actions</Text>
           </View>

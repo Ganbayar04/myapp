@@ -34,14 +34,13 @@ const LoginScreen = ({ navigation }) => {
           email: user.email,
         });
       } else {
-        Alert.alert("Login Failed", "No such user found!");
+        Alert.alert("Нэвтрэлт амжилтгүй боллоо! ", " Хэрэглэгч олдсонгүй!");
       }
     } catch (error) {
       setIsLoading(false);
       Alert.alert(
-        "Login Failed",
-        error.response?.data?.message ||
-          "Please check your credentials and try again."
+        "Нэвтрэлт амжилтгүй!",
+        error.response?.data?.message || "Дахин оролдоно уу!."
       );
     }
   };
@@ -107,7 +106,7 @@ const LoginScreen = ({ navigation }) => {
           style={styles.welcomeImage}
         />
         <TextInput
-          placeholder="Email Address"
+          placeholder="И-мейл хаяг"
           placeholderTextColor="#000"
           value={email}
           onChangeText={setEmail}
@@ -116,7 +115,7 @@ const LoginScreen = ({ navigation }) => {
           autoCapitalize="none"
         />
         <TextInput
-          placeholder="Password"
+          placeholder="Нууц үг"
           placeholderTextColor="#000"
           value={password}
           onChangeText={setPassword}
@@ -129,14 +128,14 @@ const LoginScreen = ({ navigation }) => {
         ) : (
           <>
             <View style={styles.buttonContainer}>
-              <Button title="Login" onPress={handleLogin} />
+              <Button title="Нэвтрэх" onPress={handleLogin} />
               <Button
-                title="Register"
+                title="Бүртгүүлэх"
                 onPress={() => navigation.navigate("Register")}
               />
             </View>
             <TouchableOpacity onPress={handleForgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              <Text style={styles.forgotPasswordText}>Нууц үг мартсан?</Text>
             </TouchableOpacity>
           </>
         )}
@@ -151,39 +150,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#f5f5f5",
   },
   input: {
-    height: 50, // Increased height for larger text input
-    width: "200%",
+    height: 50,
+    width: "100%",
     marginBottom: 20,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    fontSize: 18, // Increased font size for larger text
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
     backgroundColor: "#fff",
-    elevation: 2,
-    shadowColor: "#ccc",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
   welcomeImage: {
     width: "100%",
-    height: 200,
-    marginBottom: 40,
+    height: 150,
+    marginBottom: 30,
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 20,
-    alignItems: 'center', // Center buttons horizontally
+    justifyContent: "space-between",
+    marginBottom: 25,
+    width: "100%",
   },
   forgotPasswordText: {
     textAlign: "center",
-    color: "#0000ff",
+    color: "#ff6347",
+    fontSize: 16,
   },
-
 });
-
 
 export default LoginScreen;
