@@ -179,9 +179,10 @@ const Account = ({ route }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.accountRow}>
-              <Text style={styles.accountText}>{item.name}</Text>
-              <Text style={styles.accountText}>{item.uldegdel}</Text>
+              <Text style={styles.accountText}>Нэр: {item.name}</Text>
+              <Text style={styles.accountText}>Үлдэгдэл: {item.uldegdel}</Text>
               <Text style={styles.accountText}>
+                Төрөл:
                 {turulList[item.turul_id] || "Unknown"}
               </Text>
             </View>
