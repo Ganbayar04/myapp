@@ -45,7 +45,7 @@ const Account = ({ route }) => {
   const fetchAccounts = async () => {
     try {
       const response = await API.get(`/dans/accounts/${userId}`);
-      console.log("Accounts fetched:", response.data);
+      //console.log("Accounts fetched:", response.data);
       if (response.data && response.data.length > 0) {
         setAccounts(response.data);
       } else {
@@ -202,16 +202,17 @@ const Account = ({ route }) => {
               navigation.navigate("Orlogo");
             } else if (value === "Tusuw") {
               navigation.navigate("Tusuw");
-            }
+            } else if (value === "Account") navigation.navigate("Account");
           }}
           items={[
             { label: "Хаасан данс харах", value: "Haasan" },
             { label: "Зарлага", value: "Zarlaga" },
             { label: "Орлого", value: "Orlogo" },
             { label: "Төсөв", value: "Tusuw" },
+            // { label: "Данс", value: "Account" },
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: "Данс харах", value: null }}
+          placeholder={{ label: "Данс харах", value: "Account" }}
           useNativeAndroidPickerStyle={false}
         />
       </View>
@@ -316,7 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    
   },
   buttonText: {
     fontSize: 18,
