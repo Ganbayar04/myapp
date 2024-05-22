@@ -18,7 +18,7 @@ const Haasan = () => {
   const fetchInactiveAccounts = async (userId) => {
     try {
       const response = await API.get(`/dans/accounts/${userId}`);
-      console.log("Accounts fetched for user ID:", userId, response.data);
+      //console.log("Accounts fetched for user ID:", userId, response.data);
       const inactiveAccounts = response.data.filter(
         (account) => account.accountStatus === "Inactive"
       );
@@ -29,7 +29,7 @@ const Haasan = () => {
         Alert.alert("No Accounts", "You do not have any inactive accounts.");
       }
     } catch (error) {
-      console.error("API error:", error);
+      //console.error("API error:", error);
       Alert.alert(
         "Error",
         "Failed to fetch accounts due to network or server error."
@@ -39,15 +39,13 @@ const Haasan = () => {
 
   // Render the UI
   return (
-    <View
-      style
-    >
+    <View style>
       <ScrollView>
-        <Text style={styles.title}>Inactive Accounts:</Text>
+        <Text style={styles.title}>Хаасан данс:</Text>
         {accounts.map((account) => (
           <View key={account.id} style={styles.accountContainer}>
-            <Text>Account Name: {account.name}</Text>
-            <Text>Account Status: {account.accountStatus}</Text>
+            <Text>Дансны нэр: {account.name}</Text>
+            <Text>Дансны төлөв: {account.accountStatus}</Text>
           </View>
         ))}
       </ScrollView>
