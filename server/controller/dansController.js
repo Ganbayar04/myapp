@@ -48,6 +48,7 @@ exports.getDansById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // Example of a controller method to get all accounts associated with a user ID
 exports.getAllDansByUserId = async (req, res) => {
   const userId = req.params.userId; // Extract the user ID from the request parameters

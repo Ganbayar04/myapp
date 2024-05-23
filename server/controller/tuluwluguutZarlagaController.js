@@ -21,6 +21,19 @@ exports.createTuluwluguutZarlaga = async (req, res) => {
   }
 };
 
+exports.getZarlagaBytusuwid = async (req, res) => {
+  try {
+    const zarlaga = await TuluwluguutZarlaga.find({ tusuw_id: req.params.tusuw_id }).populate("tusuw_id");
+    if (zarlaga.length === 0) {
+      return res.status(404).json({ message: "Уучлаарай! төлөвлөгөөт орлого олдсонгүй." });
+    }
+    res.status(200).json(zarlaga);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getAllTuluwluguutZarlaga = async (req, res) => {
   try {
     const allZarlaga = await TuluwluguutZarlaga.find().populate("tusuw_id");

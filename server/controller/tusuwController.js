@@ -22,11 +22,25 @@ exports.createTusuw = async (req, res) => {
 };
 
 // Төсвүүд харах
-exports.getAllTusuws = async (req, res) => {
+exports.getAllTusuw = async (req, res) => {
   try {
     const tusuws = await Tusuw.find();
     res.status(200).json(tusuws);
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ID-аар төсөв авах
+exports.getTusuwByUserId = async (req, res) => {
+  try {
+    const tusuws = await Tusuw.find({ user_id: req.params.user_id });
+    if (!tusuws.length) {
+      return res.status(404).json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
+    }
+    res.status(200).json(tusuws);
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -36,9 +50,7 @@ exports.getTusuw = async (req, res) => {
   try {
     const tusuw = await Tusuw.findById(req.params.id);
     if (!tusuw) {
-      return res
-        .status(404)
-        .json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
+      return res.status(404).json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
     }
     res.status(200).json(tusuw);
   } catch (error) {
@@ -50,15 +62,9 @@ exports.getTusuw = async (req, res) => {
 // Төсвийн мэдээлэл солих
 exports.updateTusuw = async (req, res) => {
   try {
-    const updatedTusuw = await Tusuw.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const updatedTusuw = await Tusuw.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedTusuw) {
-      return res
-        .status(404)
-        .json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
+      return res.status(404).json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
     }
     res.status(200).json({
       message: "Төсвийн мэдээлэл амжилттай солигдлоо.",
@@ -71,7 +77,7 @@ exports.updateTusuw = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(err);
+    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -81,9 +87,7 @@ exports.deleteTusuw = async (req, res) => {
   try {
     const deletedTusuw = await Tusuw.findByIdAndDelete(req.params.id);
     if (!deletedTusuw) {
-      return res
-        .status(404)
-        .json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
+      return res.status(404).json({ message: "Уучлаарай!. уг төсөв олдсонгүй." });
     }
     res.status(200).json({ message: "Төсвийг амжилттай устгалаа." });
   } catch (error) {

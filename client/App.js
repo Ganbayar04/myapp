@@ -20,6 +20,9 @@ import Info from "./screens/auth/Info.js"
 import Turulz from "./screens/auth/zTurul.js";
 import Turulo from "./screens/auth/oTurul.js";
 import Completed from "./screens/tusuw/completed.js";
+import TOrlogo from "./screens/tusuw/TOrlogo.js";
+import TZarlaga from "./screens/tusuw/TZarlaga.js";
+import Details from "./screens/tusuw/Details.js";
 
 import { UserProvider } from "./src/contexts/userContext";
 
@@ -46,6 +49,9 @@ export default function App() {
           <Stack.Screen name="oTurul" component={Turulz} />
           <Stack.Screen name="zTurul" component={Turulo} />
           <Stack.Screen name="Completed" component={Completed} />
+          <Stack.Screen name="TOrlogo" component={TOrlogo} />
+          <Stack.Screen name="TZarlaga" component={TZarlaga} />
+          <Stack.Screen name="Details" component={Details} />
         </Stack.Navigator>
        
       </NavigationContainer>

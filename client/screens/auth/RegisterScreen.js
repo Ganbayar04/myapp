@@ -93,7 +93,7 @@ const RegisterScreen = ({ navigation }) => {
                 style={styles.backButton}
                 onPress={() => navigation.navigate("Login")}
               >
-                <Text style={styles.buttonText}>Back</Text>
+               
               </TouchableOpacity>
             </View>
           </>
@@ -145,13 +145,7 @@ const styles = StyleSheet.create({
     
   },
   
-  backButton: {
-    backgroundColor: "#ccc", // Lighter gray background
-    color: "#000", // Black text color
-    paddingHorizontal: 20, // Horizontal padding
-    paddingVertical: 10, // Vertical padding
-    borderRadius: 5, // Rounded corners
-  },
+ 
 });
 
 export default RegisterScreen;

@@ -21,6 +21,20 @@ exports.createTuluwluguutOrlogo = async (req, res) => {
   }
 };
 
+exports.getOrlogosBytusuwid = async (req, res) => {
+  try {
+    const orlogos = await TuluwluguutOrlogo.find({ tusuw_id: req.params.tusuw_id }).populate("tusuw_id");
+    if (orlogos.length === 0) {
+      return res.status(404).json({ message: "Уучлаарай! төлөвлөгөөт орлого олдсонгүй." });
+    }
+    res.status(200).json(orlogos);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 exports.getAllTuluwluguutOrlogo = async (req, res) => {
   try {
     const allOrlogo = await TuluwluguutOrlogo.find().populate("tusuw_id");

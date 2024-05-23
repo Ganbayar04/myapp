@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -13,15 +14,16 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { MaterialIcons } from "@expo/vector-icons"; // Import MaterialIcons
-import API from "../../config";
-import { useUser } from "../../src/contexts/userContext";
+import { MaterialIcons } from "@expo/vector-icons";
+import API from "../../config";  // Ensure this is correctly configured
+import { useUser } from "../../src/contexts/userContext";  // Ensure this context provides the correct user data
 
 const Tusuw = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { user } = useUser();
-  const userId = route.params?.userId || user?.id;
+  const { user } = useUser();  // Extract user data from context
+  const userId = route.params?.userId || user?.id;  // Ensure userId is correctly retrieved
+
   const [isLoading, setIsLoading] = useState(true);
   const [tusuws, setTusuws] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -30,12 +32,19 @@ const Tusuw = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    fetchAllTusuws();
+    if (userId) {
+      console.log("User ID:", userId);  // Debugging log
+      fetchAllTusuws();
+    } else {
+      console.error("User ID is not defined");
+    }
   }, [userId]);
 
   const fetchAllTusuws = async () => {
     try {
-      const response = await API.get(`/tusuw?userId=${userId}`);
+      console.log("Fetching tusuws for user ID:", userId); // Debugging log
+      const response = await API.get(`/tusuw/user/${userId}`);
+      console.log("Fetched Tusuws:", response.data); // Debugging log
       setTusuws(response.data);
     } catch (error) {
       console.error("Failed to fetch tusuws:", error);
@@ -44,6 +53,7 @@ const Tusuw = () => {
       setIsLoading(false);
     }
   };
+  
 
   const handleCreateTusuw = async () => {
     try {
@@ -52,18 +62,18 @@ const Tusuw = () => {
         year: selectedDate.getFullYear(),
         month: selectedDate.getMonth() + 1,
         tuluw: "Pending",
-        user_id: user.id,
+        user_id: user.id,  // Ensure user_id is correctly assigned
       };
-      console.log("Request Data:", requestData); // Log the request data for debugging
+      console.log("Request Data:", requestData);  // Debugging log
 
       const response = await API.post("/tusuw", requestData);
 
-      console.log("Created Tusuw:", response.data); // Log the response data
+      console.log("Created Tusuw:", response.data);  // Debugging log
 
       setTusuws((prevTusuws) => [...prevTusuws, response.data]);
       setIsModalVisible(false);
-      setName(""); // Clear the input field
-      setSelectedDate(new Date()); // Reset the date picker
+      setName("");  // Clear the input field
+      setSelectedDate(new Date());  // Reset the date picker
     } catch (error) {
       console.error("Failed to create tusuw:", error);
       Alert.alert("Error", "Failed to create tusuw.");
@@ -106,6 +116,10 @@ const Tusuw = () => {
     }
   };
 
+  const navigateToDetail = (tusuw_id) => {
+    navigation.navigate("Details", { tusuw_id });
+  };
+
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -137,24 +151,32 @@ const Tusuw = () => {
               {item.year} - {item.month}
             </Text>
             <Text style={styles.tusuwText}>{item.tuluw}</Text>
-            <MaterialIcons
-              name={
-                item.tuluw === "Completed"
-                  ? "check-circle"
-                  : item.tuluw === "Pending"
-                  ? "hourglass-empty"
-                  : "schedule"
-              }
-              size={24}
-              color={
-                item.tuluw === "Completed"
-                  ? "green"
-                  : item.tuluw === "Pending"
-                  ? "orange"
-                  : "blue"
-              }
-              onPress={() => toggleTusuwStatus(item)}
-            />
+            <View style={styles.iconContainer}>
+              <MaterialIcons
+                name={
+                  item.tuluw === "Completed"
+                    ? "check-circle"
+                    : item.tuluw === "Pending"
+                    ? "hourglass-empty"
+                    : "schedule"
+                }
+                size={24}
+                color={
+                  item.tuluw === "Completed"
+                    ? "green"
+                    : item.tuluw === "Pending"
+                    ? "orange"
+                    : "blue"
+                }
+                onPress={() => toggleTusuwStatus(item)}
+              />
+              <TouchableOpacity
+                style={styles.detailsButton}
+                onPress={() => navigateToDetail(item._id)}
+              >
+                <Text style={styles.detailsButtonText}>Дэлгэрэнгүй</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />
@@ -238,6 +260,18 @@ const styles = StyleSheet.create({
   },
   tusuwText: {
     fontSize: 16,
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  detailsButton: {
+    marginLeft: 10,
+    padding: 5,
+    borderRadius: 5,
+  },
+  detailsButtonText: {
+    color: "#000",
   },
   modalContainer: {
     flex: 1,
