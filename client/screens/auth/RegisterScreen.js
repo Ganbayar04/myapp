@@ -16,7 +16,7 @@ import { useBackHandler } from '@react-native-community/hooks';
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("user");
   const [isLoading, setIsLoading] = useState(false);
 
   useBackHandler(() => {
@@ -74,13 +74,7 @@ const RegisterScreen = ({ navigation }) => {
               style={[styles.input, styles.inputPlaceholder]}
               secureTextEntry
             />
-            <TextInput
-              placeholder="Role"
-              value={role}
-              onChangeText={setRole}
-              placeholderTextColor="#000"
-              style={[styles.input, styles.inputPlaceholder]}
-            />
+           
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity

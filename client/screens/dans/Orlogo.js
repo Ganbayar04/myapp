@@ -18,7 +18,7 @@ import RNPickerSelect from "react-native-picker-select";
 
 const Orlogo = () => {
   const navigation = useNavigation();
-  const route = useRoute(); 
+  const route = useRoute();
   const [orlogos, setOrlogos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -29,24 +29,27 @@ const Orlogo = () => {
     dun: "",
     tailbar: "",
     ognoo: new Date(),
+    t_orlogo_id: "",
   });
   const { user } = useUser();
   const [accounts, setAccounts] = useState([]);
   const [turulList, setTurulList] = useState([]);
+  const [tOrlogoList, setTOrlogoList] = useState([]);
   const [selectedDans, setSelectedDans] = useState(null);
   const userId = route.params?.userId || user?.id;
   const [selectedTurul, setSelectedTurul] = useState(null);
+  const [selectedTOrlogo, setSelectedTOrlogo] = useState(null);
 
   useEffect(() => {
     fetchAllOrlogos();
     fetchAccounts();
     fetchAllOrlogoTurul();
+    fetchAllTOrlogo(userId);
   }, [userId]);
 
   const fetchAllOrlogos = async () => {
     setIsLoading(true);
     try {
-      // Use the userId in the API request
       const response = await API.get(`/orlogo?userId=${userId}`);
       if (response.status === 200) {
         setOrlogos(response.data);
@@ -60,14 +63,13 @@ const Orlogo = () => {
       setIsLoading(false);
     }
   };
-  
 
   const deleteOrlogo = async (id) => {
     try {
       const response = await API.delete(`/orlogo/${id}`);
       if (response.status === 200) {
         Alert.alert("Success", "Орлого амжилттай устгалаа.");
-        fetchAllOrlogos(); // Refresh the list after a successful delete
+        fetchAllOrlogos();
       } else {
         Alert.alert("Error", `Failed to delete the orlogo with status: ${response.status}`);
       }
@@ -76,64 +78,59 @@ const Orlogo = () => {
       Alert.alert("Error", `Failed to delete orlogo: ${error.toString()}`);
     }
   };
-  
+
   const createOrlogo = async () => {
     setIsLoading(true);
 
-    // Ensure the user object is available and contains the id
     if (!user?.id) {
-        Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
-        navigation.navigate("Login");
-        setIsLoading(false);
-        return;
+      Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
+      navigation.navigate("Login");
+      setIsLoading(false);
+      return;
     }
 
     try {
-        const requestData = {
-            name: newOrlogo.name,
-            dans_id: selectedDans,
-            orlogo_turul_id: selectedTurul,
-            dun: Number(newOrlogo.dun), // Ensure dun is a number
-            tailbar: newOrlogo.tailbar,
-            ognoo: newOrlogo.ognoo,
-            userId: user.id // Automatically include userId
-        };
+      const requestData = {
+        name: newOrlogo.name,
+        dans_id: selectedDans,
+        orlogo_turul_id: selectedTurul,
+        dun: Number(newOrlogo.dun),
+        tailbar: newOrlogo.tailbar,
+        ognoo: newOrlogo.ognoo,
+        userId: user.id,
+        t_orlogo_id: selectedTOrlogo,
+      };
 
-        console.log("Request data:", requestData); // Log the request data for debugging
+      const response = await API.post("/orlogo", requestData);
 
-        const response = await API.post("/orlogo", requestData);
-
-        if (response.status === 201) {
-            Alert.alert("Success", "Орлого амжилттай үүсгэлээ.");
-            setNewOrlogo({
-                name: "",
-                dans_id: "",
-                orlogo_turul_id: "",
-                dun: "",
-                tailbar: "",
-                ognoo: new Date(),
-            });
-            setShowModal(false);
-            fetchAllOrlogos(); // Refresh the list after a successful create
-        } else {
-            throw new Error(`Failed to create orlogo with status: ${response.status}`);
-        }
+      if (response.status === 201) {
+        Alert.alert("Success", "Орлого амжилттай үүсгэлээ.");
+        setNewOrlogo({
+          name: "",
+          dans_id: "",
+          orlogo_turul_id: "",
+          dun: "",
+          tailbar: "",
+          ognoo: new Date(),
+          t_orlogo_id: "",
+        });
+        setShowModal(false);
+        fetchAllOrlogos();
+      } else {
+        throw new Error(`Failed to create orlogo with status: ${response.status}`);
+      }
     } catch (error) {
-        if (error.response) {
-            // Backend responded with an error
-            console.error("Backend error:", error.response.data);
-            Alert.alert("Error", `Failed to create orlogo: ${error.response.data.message || error.response.data}`);
-        } else {
-            // Network error or other issues
-            console.error("Create error:", error);
-            Alert.alert("Error", `Failed to create orlogo: ${error.toString()}`);
-        }
+      if (error.response) {
+        console.error("Backend error:", error.response.data);
+        Alert.alert("Error", `Failed to create orlogo: ${error.response.data.message || error.response.data}`);
+      } else {
+        console.error("Create error:", error);
+        Alert.alert("Error", `Failed to create orlogo: ${error.toString()}`);
+      }
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
-
-  
+  };
 
   const fetchAccounts = async () => {
     setIsLoading(true);
@@ -150,7 +147,6 @@ const Orlogo = () => {
       setIsLoading(false);
     }
   };
-  
 
   const fetchAllOrlogoTurul = async () => {
     setIsLoading(true);
@@ -164,6 +160,23 @@ const Orlogo = () => {
     } catch (error) {
       console.error("Failed to fetch orlogo turul:", error);
       Alert.alert("Error", "Failed to fetch orlogo turul.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAllTOrlogo = async (userId) => {
+    setIsLoading(true);
+    try {
+      const response = await API.get("/tuluw");
+      if (response.status === 200) {
+        setTOrlogoList(response.data);
+      } else {
+        throw new Error(`Unexpected HTTP status ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Failed to fetch t_orlogo:", error);
+      Alert.alert("Error", "Failed to fetch t_orlogo.");
     } finally {
       setIsLoading(false);
     }
@@ -186,13 +199,12 @@ const Orlogo = () => {
     );
   };
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>{item.name}</Text>
       <Text style={styles.itemText}>{item.dun}</Text>
       <Text style={styles.itemText}>{item.tailbar}</Text>
       <Text style={styles.itemText}>{new Date(item.ognoo).toLocaleDateString()}</Text>
-     
       <TouchableOpacity onPress={() => deleteOrlogo(item._id)}>
         <MaterialIcons name="delete" size={24} color="red" />
       </TouchableOpacity>
@@ -211,9 +223,9 @@ const Orlogo = () => {
 
   return (
     <View style={styles.container}>
-     <TouchableOpacity style={styles.footerButton} onPress={() => setShowModal(true)}>
-      <Text style={[styles.footerButtonText, { fontWeight: "bold" }]}>Орлого үүсгэх</Text>
-    </TouchableOpacity>
+      <TouchableOpacity style={styles.footerButton} onPress={() => setShowModal(true)}>
+        <Text style={[styles.footerButtonText, { fontWeight: "bold" }]}>Орлого үүсгэх</Text>
+      </TouchableOpacity>
       <FlatList
         data={orlogos}
         renderItem={renderItem}
@@ -230,8 +242,8 @@ const Orlogo = () => {
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Орлого үүсгэх</Text>
-  
+            <Text style={styles.modalTitle}>Орлого үүсгэх</Text>
+
             <TextInput
               style={styles.input}
               placeholder="Нэр"
@@ -261,6 +273,18 @@ const Orlogo = () => {
               placeholder={{ label: "Select a turul...", value: null }}
               useNativeAndroidPickerStyle={false}
             />
+          
+          {/*   <Text style={styles.label}>Төлөвлөгөөт орлого:</Text>
+           <RNPickerSelect
+              onValueChange={(value) => setSelectedTOrlogo(value)}
+              items={tOrlogoList.map((tOrlogo) => ({
+                label: tOrlogo.name,
+                value: tOrlogo._id,
+              }))}
+              style={pickerSelectStyles}
+              placeholder={{ label: "Select a orlogo...", value: null }}
+              useNativeAndroidPickerStyle={false}
+            />*/}
             <TextInput
               style={styles.input}
               placeholder="Дүн"
@@ -291,11 +315,9 @@ const Orlogo = () => {
           </View>
         </View>
       </Modal>
-      
     </View>
   );
 };
-
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -353,35 +375,27 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
- 
-  dashboardContainer: {
-    flexDirection: "row",
+  emptyContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
-    flexWrap: "wrap",
+    marginTop: 50,
   },
-  button: {
-    backgroundColor: "#fff",
+  emptyText: {
+    fontSize: 18,
+    color: "#999",
+  },
+  footerButton: {
+    backgroundColor: "#007AFF",
     padding: 15,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
   },
-  buttonText: {
+  footerButtonText: {
     fontSize: 18,
-    color: "#000",
-    fontWeight: "bold",
-  },
-  inputContainer: {
-    position: "absolute",
-    bottom: 40,
-    left: 40,
-    right: 40,
-    backgroundColor: "#000",
-    padding: 20,
-    borderRadius: 10,
+    color: "#fff",
   },
   input: {
     color: "#000",
@@ -411,7 +425,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
-    width: '80%',
+    width: "80%",
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
@@ -435,11 +449,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: "#000",
-  },
-  footerButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
   },
 });
 

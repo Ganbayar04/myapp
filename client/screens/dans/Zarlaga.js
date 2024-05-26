@@ -26,7 +26,7 @@ const Zarlaga = () => {
     name: "",
     dans_id: "",
     zarlaga_turul_id: "",
-    // t_Zarlaga_id: "",
+    t_zarlaga_id: "",
     dun: "",
     tailbar: "",
     ognoo: new Date(),
@@ -34,20 +34,22 @@ const Zarlaga = () => {
   const { user } = useUser();
   const [accounts, setAccounts] = useState([]);
   const [turulList, setTurulList] = useState([]);
+  const [tZarlagaList, setTZarlagaList] = useState([]);
   const [selectedDans, setSelectedDans] = useState(null);
   const userId = route.params?.userId || user?.id;
   const [selectedTurul, setSelectedTurul] = useState(null);
+  const [selectedTZarlaga, setSelectedTZarlaga] = useState(null);
 
   useEffect(() => {
     fetchAllZarlagas();
     fetchAccounts();
     fetchAllZarlagaTurul();
+    fetchAllTZarlaga();
   }, [userId]);
 
   const fetchAllZarlagas = async () => {
     setIsLoading(true);
     try {
-      // Use the userId in the API request
       const response = await API.get(`/zarlaga?userId=${userId}`);
       if (response.status === 200) {
         setZarlagas(response.data);
@@ -67,12 +69,9 @@ const Zarlaga = () => {
       const response = await API.delete(`/zarlaga/${id}`);
       if (response.status === 200) {
         Alert.alert("Success", "Зарлага амжилттай устгалаа.");
-        fetchAllZarlagas(); // Refresh the list after a successful delete
+        fetchAllZarlagas();
       } else {
-        Alert.alert(
-          "Error",
-          `Failed to delete the Zarlaga with status: ${response.status}`
-        );
+        Alert.alert("Error", `Failed to delete the Zarlaga with status: ${response.status}`);
       }
     } catch (error) {
       console.error("Delete error:", error);
@@ -82,8 +81,6 @@ const Zarlaga = () => {
 
   const createZarlaga = async () => {
     setIsLoading(true);
-
-    // Ensure the user object is available and contains the id
     if (!user?.id) {
       Alert.alert("Алдаа", "Хэрэглэгч олдсонгүй. Нэвтэрч орно уу!");
       navigation.navigate("Login");
@@ -96,13 +93,14 @@ const Zarlaga = () => {
         name: newZarlaga.name,
         dans_id: selectedDans,
         zarlaga_turul_id: selectedTurul,
-        dun: Number(newZarlaga.dun), // Ensure dun is a number
+        t_zarlaga_id: selectedTZarlaga,
+        dun: Number(newZarlaga.dun),
         tailbar: newZarlaga.tailbar,
         ognoo: newZarlaga.ognoo,
-        userId: user.id, // Automatically include userId
+        userId: user.id,
       };
 
-      console.log("Request data:", requestData); // Log the request data for debugging
+      console.log("Request data:", requestData);
 
       const response = await API.post("/zarlaga", requestData);
 
@@ -112,29 +110,21 @@ const Zarlaga = () => {
           name: "",
           dans_id: "",
           zarlaga_turul_id: "",
+          t_zarlaga_id: "",
           dun: "",
           tailbar: "",
           ognoo: new Date(),
         });
         setShowModal(false);
-        fetchAllZarlagas(); // Refresh the list after a successful create
+        fetchAllZarlagas();
       } else {
-        throw new Error(
-          `Failed to create Zarlaga with status: ${response.status}`
-        );
+        throw new Error(`Failed to create Zarlaga with status: ${response.status}`);
       }
     } catch (error) {
       if (error.response) {
-        // Backend responded with an error
         console.error("Backend error:", error.response.data);
-        Alert.alert(
-          "Error",
-          `Failed to create Zarlaga: ${
-            error.response.data.message || error.response.data
-          }`
-        );
+        Alert.alert("Error", `Failed to create Zarlaga: ${error.response.data.message || error.response.data}`);
       } else {
-        // Network error or other issues
         console.error("Create error:", error);
         Alert.alert("Error", `Failed to create Zarlaga: ${error.toString()}`);
       }
@@ -171,6 +161,23 @@ const Zarlaga = () => {
     } catch (error) {
       console.error("Failed to fetch Zarlaga turul:", error);
       Alert.alert("Error", "Failed to fetch Zarlaga turul.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAllTZarlaga = async () => {
+    setIsLoading(true);
+    try {
+      const response = await API.get("/tZarlaga");
+      if (response.status === 200) {
+        setTZarlagaList(response.data);
+      } else {
+        throw new Error(`Unexpected HTTP status ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Failed to fetch t_zarlaga:", error);
+      Alert.alert("Error", "Failed to fetch t_zarlaga.");
     } finally {
       setIsLoading(false);
     }
@@ -276,6 +283,17 @@ const Zarlaga = () => {
               placeholder={{ label: "Select a turul...", value: null }}
               useNativeAndroidPickerStyle={false}
             />
+            {/* <Text style={styles.label}>Төлөвлөгөөт төрөл:</Text>
+            <RNPickerSelect
+              onValueChange={(value) => setSelectedTZarlaga(value)}
+              items={tZarlagaList.map((tZarlaga) => ({
+                label: tZarlaga.name,
+                value: tZarlaga._id,
+              }))}
+              style={pickerSelectStyles}
+              placeholder={{ label: "Select a t_zarlaga...", value: null }}
+              useNativeAndroidPickerStyle={false}
+            />*/}
             <TextInput
               style={styles.input}
               placeholder="Дүн"
