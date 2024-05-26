@@ -11,7 +11,6 @@ import {
   Button,
   Image,
 } from "react-native";
-
 import { useUser } from "../../src/contexts/userContext.js";
 import API from "../../config.js";
 
@@ -22,6 +21,11 @@ const LoginScreen = ({ navigation }) => {
   const { setUser } = useUser();
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Алдаа", "Бүх талбарыг бөглөнө үү.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await API.post("/users/login", { email, password });
@@ -34,29 +38,28 @@ const LoginScreen = ({ navigation }) => {
           email: user.email,
         });
       } else {
-        Alert.alert("Нэвтрэлт амжилтгүй боллоо! ", " Хэрэглэгч олдсонгүй!");
+        Alert.alert("Нэвтрэлт амжилтгүй боллоо!", "Хэрэглэгч олдсонгүй!");
       }
     } catch (error) {
       setIsLoading(false);
       Alert.alert(
         "Нэвтрэлт амжилтгүй!",
-        error.response?.data?.message || "Дахин оролдоно уу!."
+        error.response?.data?.message || "Дахин оролдоно уу!"
       );
     }
   };
 
   const handleForgotPassword = () => {
-    // Navigate to ForgotPassword Screen or simply ask for email to send reset link
     Alert.prompt(
-      "Forgot Password",
-      "Enter your registered email address:",
+      "Нууц үг мартсан",
+      "И-мейл хаягаа оруулна уу:",
       [
         {
-          text: "Cancel",
+          text: "Болих",
           style: "cancel",
         },
         {
-          text: "Submit",
+          text: "Илгээх",
           onPress: (email) => forgotPassword(email),
         },
       ],
@@ -67,9 +70,10 @@ const LoginScreen = ({ navigation }) => {
 
   const forgotPassword = async (userEmail) => {
     if (!userEmail) {
-      Alert.alert("Input Error", "Please provide a valid email address.");
+      Alert.alert("Алдаа", "Зөв имэйл хаяг оруулна уу.");
       return;
     }
+
     try {
       setIsLoading(true);
       const response = await API.post("/users/forgot-password", {
@@ -78,28 +82,32 @@ const LoginScreen = ({ navigation }) => {
       setIsLoading(false);
       if (response.status === 200) {
         Alert.alert(
-          "Check Your Email",
-          "A password reset link has been sent to your email address."
+          "И-мейлээ шалгана уу",
+          "Нууц үг сэргээх линк таны и-мейл хаяг руу илгээгдлээ."
         );
       } else {
         Alert.alert(
-          "Failed",
-          "Failed to send password reset email. Please try again later."
+          "Алдаа",
+          "И-мейл илгээхэд алдаа гарлаа. Дахин оролдоно уу."
         );
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Forgot password error: ", error.response || error);
-      Alert.alert(
-        "Failed",
-        error.response?.data?.message || "Failed to send password reset email."
-      );
+      if (error.response?.status === 404) {
+        Alert.alert("Алдаа", "И-мейл хаяг бүртгэлгүй байна.");
+      } else {
+        Alert.alert(
+          "Алдаа",
+          error.response?.data?.message || "И-мейл илгээхэд алдаа гарлаа."
+        );
+      }
     }
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image
           source={require("../../assets/urkhiintusuv.png")}
           resizeMode="contain"
@@ -147,10 +155,13 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     padding: 20,
     backgroundColor: "#f5f5f5",
+  },
+  scrollContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexGrow: 1,
   },
   input: {
     height: 50,

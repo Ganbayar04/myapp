@@ -144,3 +144,47 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: "Хэрэглэгчийг устгахад алдаа гарлаа!..." });
   }
 };
+
+const forgotPassword = async (userEmail) => {
+  if (!userEmail) {
+    Alert.alert("Input Error", "Please provide a valid email address.");
+    return;
+  }
+
+  try {
+    setIsLoading(true);
+    console.log("Sending forgot password request for email:", userEmail);
+
+    const response = await API.post("/users/forgot-password", {
+      email: userEmail,
+    });
+
+    setIsLoading(false);
+
+    if (response.status === 200) {
+      console.log("Forgot password response:", response.data);
+      Alert.alert(
+        "Check Your Email",
+        "A password reset link has been sent to your email address."
+      );
+    } else {
+      console.log("Unexpected response status:", response.status);
+      Alert.alert(
+        "Failed",
+        "Failed to send password reset email. Please try again later."
+      );
+    }
+  } catch (error) {
+    setIsLoading(false);
+    console.error("Forgot password error:", error.response || error);
+
+    if (error.response?.status === 404) {
+      Alert.alert("Error", "Email not registered.");
+    } else {
+      Alert.alert(
+        "Failed",
+        error.response?.data?.message || "Failed to send password reset email."
+      );
+    }
+  }
+};

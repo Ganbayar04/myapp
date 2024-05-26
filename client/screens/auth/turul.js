@@ -107,7 +107,7 @@ const Turul = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.refreshButton} onPress={fetchAllDansTurul}>
-        <MaterialIcons name="refresh" size={24} color="#fff" />
+        <MaterialIcons name="refresh" size={24} color="#000" />
       </TouchableOpacity>
 
       <FlatList
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 20,
     top: 20,
-    backgroundColor: "#007AFF",
     padding: 10,
     borderRadius: 10,
     zIndex: 1000,

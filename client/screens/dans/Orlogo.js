@@ -375,27 +375,34 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  emptyContainer: {
-    flex: 1,
+  dashboardContainer: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 50,
+    marginBottom: 10,
+    flexWrap: "wrap",
   },
-  emptyText: {
-    fontSize: 18,
-    color: "#999",
-  },
-  footerButton: {
-    backgroundColor: "#007AFF",
+  button: {
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
   },
-  footerButtonText: {
+  buttonText: {
     fontSize: 18,
-    color: "#fff",
+    color: "#000",
+    fontWeight: "bold",
+  },
+  inputContainer: {
+    position: "absolute",
+    bottom: 40,
+    left: 40,
+    right: 40,
+    backgroundColor: "#000",
+    padding: 20,
+    borderRadius: 10,
   },
   input: {
     color: "#000",
@@ -450,6 +457,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: "#000",
   },
+  footerButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
 });
+
 
 export default Orlogo;
