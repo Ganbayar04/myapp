@@ -22,12 +22,12 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await API.get("/users"); // Adjust the endpoint as necessary
+      const response = await API.get("/users");
       setUsers(response.data);
-      setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch users:", error);
       Alert.alert("Error", "Failed to load users.");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -43,27 +43,24 @@ const Users = () => {
       ) : (
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={styles.headerCell}>Index</Text>
+            <Text style={styles.headerCell}></Text>
             <Text style={styles.headerCell}>Email</Text>
             <Text style={styles.headerCell}>Role</Text>
             <Text style={styles.headerCell}>Actions</Text>
           </View>
-          {users.map(
-            (user, index) =>
-              user.role === "user" && (
-                <View key={user._id} style={styles.tableRow}>
-                  <Text style={styles.cell}>{index + 1}</Text>
-                  <Text style={styles.cell}>{user.email}</Text>
-                  <Text style={styles.cell}>{user.role}</Text>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigateToDetails(user._id)}
-                  >
-                    <Text style={styles.buttonText}>Details</Text>
-                  </TouchableOpacity>
-                </View>
-              )
-          )}
+          {users.filter(user => user.role === "user").map((user, index) => (
+            <View key={user._id} style={styles.tableRow}>
+              <Text style={styles.cell}>{index + 1}</Text>
+              <Text style={styles.cell}>{user.email}</Text>
+              <Text style={styles.cell}>{user.role}</Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigateToDetails(user._id)}
+              >
+                <Text style={styles.buttonText}>Details</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
       )}
     </ScrollView>
@@ -73,7 +70,7 @@ const Users = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#333", // Set a dark background color
+    backgroundColor: "#fff", 
   },
   table: {
     marginTop: 20,
@@ -81,7 +78,7 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     padding: 10,
-    backgroundColor: "#555", // Slightly lighter dark shade for the header
+    backgroundColor: "#eee",
   },
   tableRow: {
     flexDirection: "row",
@@ -93,19 +90,19 @@ const styles = StyleSheet.create({
   headerCell: {
     flex: 1,
     fontWeight: "bold",
-    color: "#fff", // Text color for visibility on dark background
+    color: "#000", 
   },
   cell: {
     flex: 1,
-    color: "#fff", // Text color for visibility on dark background
+    color: "#000", 
   },
   button: {
     padding: 10,
-    backgroundColor: "#000", // Dark background for the button
+
     borderRadius: 5,
   },
   buttonText: {
-    color: "#fff", // Text color for visibility on dark background
+    color: "#000", 
     textAlign: "center",
   },
 });

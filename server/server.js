@@ -56,6 +56,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 9090; // Default port or environment variable
 const HOST = process.env.HOST || "localhost"; // Default host or environment variable
 
-app.listen(9090, "192.168.1.3", () => {
+app.listen(9090, "10.150.34.55", () => {
   console.log("port is listening");
 });

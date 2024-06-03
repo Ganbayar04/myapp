@@ -11,7 +11,6 @@ import Account from "./screens/dans/Account";
 import Haasan from "./screens/dans/Haasan";
 import Zasah from "./screens/dans/dansEdit.js";
 import Users from "./screens/auth/Users.js";
-import Dugtui from "./screens/Dugtui";
 import Turul from "./screens/auth/turul.js";
 import Tusuw from "./screens/tusuw/Tusuw";
 import Orlogo from "./screens/dans/Orlogo.js";
@@ -38,9 +37,7 @@ export default function App() {
           <Stack.Screen name="Admin" component={AdminScreen} />
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Haasan" component={Haasan} />
-          <Stack.Screen name="Zasah" component={Zasah} />
-          <Stack.Screen name="Dugtui" component={Dugtui} />
-          <Stack.Screen name="Tusuw" component={Tusuw} />
+          <Stack.Screen name="Zasah" component={Zasah} />       
           <Stack.Screen name="Orlogo" component={Orlogo} />
           <Stack.Screen name="Zarlaga" component={Zarlaga} />
           <Stack.Screen name="Users" component={Users} />
@@ -48,6 +45,7 @@ export default function App() {
           <Stack.Screen name="Info" component={Info} />
           <Stack.Screen name="oTurul" component={Turulz} />
           <Stack.Screen name="zTurul" component={Turulo} />
+          <Stack.Screen name="Tusuw" component={Tusuw} />
           <Stack.Screen name="Completed" component={Completed} />
           <Stack.Screen name="TOrlogo" component={TOrlogo} />
           <Stack.Screen name="TZarlaga" component={TZarlaga} />
@@ -67,8 +65,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-/*<Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Sambar" component={Sambar} />
-        <Stack.Screen name="Account" component={Account} />
-         <Stack.Screen name="Tailan" component={Tailan} />
-        */

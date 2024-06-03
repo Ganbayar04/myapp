@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -33,7 +32,6 @@ const Tusuw = () => {
 
   useEffect(() => {
     if (userId) {
-      console.log("User ID:", userId);  // Debugging log
       fetchAllTusuws();
     } else {
       console.error("User ID is not defined");
@@ -42,9 +40,7 @@ const Tusuw = () => {
 
   const fetchAllTusuws = async () => {
     try {
-      console.log("Fetching tusuws for user ID:", userId); // Debugging log
       const response = await API.get(`/tusuw/user/${userId}`);
-      console.log("Fetched Tusuws:", response.data); // Debugging log
       setTusuws(response.data);
     } catch (error) {
       console.error("Failed to fetch tusuws:", error);
@@ -53,7 +49,6 @@ const Tusuw = () => {
       setIsLoading(false);
     }
   };
-  
 
   const handleCreateTusuw = async () => {
     try {
@@ -64,11 +59,8 @@ const Tusuw = () => {
         tuluw: "Pending",
         user_id: user.id,  // Ensure user_id is correctly assigned
       };
-      console.log("Request Data:", requestData);  // Debugging log
 
       const response = await API.post("/tusuw", requestData);
-
-      console.log("Created Tusuw:", response.data);  // Debugging log
 
       setTusuws((prevTusuws) => [...prevTusuws, response.data]);
       setIsModalVisible(false);
@@ -138,6 +130,12 @@ const Tusuw = () => {
           onPress={() => navigation.navigate("Completed")}
         >
           <Text style={styles.buttonText}>Completed</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.refreshButton}
+          onPress={fetchAllTusuws}
+        >
+          <MaterialIcons name="refresh" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
@@ -249,6 +247,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#000",
     fontSize: 16,
+  },
+  refreshButton: {
+    padding: 10,
+    borderRadius: 5,
   },
   tusuwItem: {
     padding: 10,

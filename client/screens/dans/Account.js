@@ -45,7 +45,7 @@ const Account = ({ route }) => {
   const fetchAccounts = async () => {
     try {
       const response = await API.get(`/dans/accounts/${userId}`);
-      //console.log("Accounts fetched:", response.data);
+      console.log("Accounts fetched:", response.data);
       if (response.data && response.data.length > 0) {
         setAccounts(response.data);
       } else {
@@ -69,7 +69,7 @@ const Account = ({ route }) => {
         }, {});
         setTurulList(turulMapping);
         // Log to confirm structure
-        //console.log("Turul mapping:", turulMapping);
+        console.log("Turul mapping:", turulMapping);
       } else {
         throw new Error(`Unexpected HTTP status ${response.status}`);
       }
@@ -126,7 +126,7 @@ const Account = ({ route }) => {
       if (response.data) {
         Alert.alert("Данс амжилттай үүсгэлээ.");
         setIsModalVisible(false);
-        fetchAccounts(); // Refresh accounts list
+        fetchAccounts();
       }
     } catch (error) {
       console.error("Error creating account:", error);
@@ -139,21 +139,30 @@ const Account = ({ route }) => {
     }
   };
 
-  if (isLoading) {
-    return <ActivityIndicator size="large" color="#000" />;
-  }
+  const handleRefresh = () => {
+    setIsLoading(true);
+    fetchAccounts();
+  };
 
   return (
-    <View style={[styles.container]}>
-      <TouchableOpacity style={styles.refreshButton} onPress={fetchAccounts}>
-        <MaterialIcons name="refresh" size={24} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, { marginTop: 70 }]}
-        onPress={() => setIsModalVisible(true)}
-      >
-        <Text style={styles.buttonText}>Данс үүсгэх</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setIsModalVisible(true)}
+        >
+          <Text style={styles.buttonText}>Данс үүсгэх</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Haasan")}
+        >
+          <Text style={styles.buttonText}>Хаалттай данс</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
+          <MaterialIcons name="refresh" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={accounts}
@@ -162,14 +171,11 @@ const Account = ({ route }) => {
           <View style={styles.accountCard}>
             <View style={styles.iconsContainer}>
               <MaterialIcons
-                name={
-                  item.accountStatus === "Active" ? "check-circle" : "cancel"
-                }
+                name={item.accountStatus === "Active" ? "check-circle" : "cancel"}
                 size={24}
                 color={item.accountStatus === "Active" ? "green" : "red"}
                 onPress={() => toggleAccountStatus(item)}
               />
-
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("Zasah", { accountId: item._id })
@@ -179,10 +185,9 @@ const Account = ({ route }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.accountRow}>
-              <Text style={styles.accountText}>Нэр: {item.name}</Text>
-              <Text style={styles.accountText}>Үлдэгдэл: {item.uldegdel}</Text>
+              <Text style={styles.accountText}>{item.name}</Text>
+              <Text style={styles.accountText}>{item.uldegdel}</Text>
               <Text style={styles.accountText}>
-                Төрөл:
                 {turulList[item.turul_id] || "Unknown"}
               </Text>
             </View>
@@ -192,28 +197,25 @@ const Account = ({ route }) => {
         columnWrapperStyle={styles.row} // Style to apply on every row
         contentContainerStyle={{ marginTop: 40 }}
       />
+
       <View style={styles.footerButtons}>
         <RNPickerSelect
           onValueChange={(value) => {
-            if (value === "Haasan") {
-              navigation.navigate("Haasan");
+            if (value === "Orlogo") {
+              navigation.navigate("Orlogo");
             } else if (value === "Zarlaga") {
               navigation.navigate("Zarlaga");
-            } else if (value === "Orlogo") {
-              navigation.navigate("Orlogo");
             } else if (value === "Tusuw") {
               navigation.navigate("Tusuw");
-            } else if (value === "Account") navigation.navigate("Account");
+            }
           }}
           items={[
-            { label: "Хаасан данс харах", value: "Haasan" },
-            { label: "Зарлага", value: "Zarlaga" },
             { label: "Орлого", value: "Orlogo" },
+            { label: "Зарлага", value: "Zarlaga" },
             { label: "Төсөв", value: "Tusuw" },
-            // { label: "Данс", value: "Account" },
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: "Данс харах", value: "Account" }}
+          placeholder={{ label: "Данс харах", value: null }}
           useNativeAndroidPickerStyle={false}
         />
       </View>
@@ -263,10 +265,7 @@ const Account = ({ route }) => {
                   useNativeAndroidPickerStyle={false}
                 />
                 <Button title="Хадгалах" onPress={handleRegister} />
-                <Button
-                  title="Буцах"
-                  onPress={() => setIsModalVisible(false)}
-                />
+                <Button title="Буцах" onPress={() => setIsModalVisible(false)} />
               </ScrollView>
             )}
           </View>
@@ -282,8 +281,33 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: "#f5f5f5",
   },
-  darkModeContainer: {
-    backgroundColor: "#333",
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+  },
+  button: {
+
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  refreshButton: {
+  
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   accountCard: {
     backgroundColor: "#fff",
@@ -311,28 +335,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     marginBottom: 4,
-  },
-  button: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#000",
-    fontWeight: "bold",
-  },
-  refreshButton: {
-    padding: 10,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    top: 20,
-    left: 20,
-    zIndex: 1000,
   },
   footerButtons: {
     flexDirection: "row",
